@@ -82,7 +82,7 @@ class NestedLoop(torch.nn.Module):
         return a
 
 
-class SimpleWhileLoop(torch.nn.Module):
+class SimpleScalarWhileLoop(torch.nn.Module):
     def forward(self, inp):
         a = 1
         i = 0
@@ -92,17 +92,28 @@ class SimpleWhileLoop(torch.nn.Module):
         return a
 
 
+class SimpleWhileLoop(torch.nn.Module):
+    def forward(self, inp):
+        a = inp
+        i = 0
+        while i < inp.size(0):
+            a += a * float(i) * 2.0
+            i += 1
+        return a
+
+
 input_name = 'X'
 input_shapes = {input_name: (10, 20)}
 
 models = [
-    # SimpleIf(10, 20).eval(),
-    # NestedIf(10, 20).eval(),
+    SimpleIf(10, 20).eval(),
+    NestedIf(10, 20).eval(),
     ScalarLoop().eval(),
     SimpleLoop().eval(),
     LoopWithIf().eval(),
+    SimpleScalarWhileLoop().eval(),
     SimpleWhileLoop().eval(),
-    # NestedLoop().eval()  # not work yet (due to free variable issue)
+    # NestedLoop().eval()  # not work yet (due to free variable issue in vm)
 ]
 
 for raw_model in models:

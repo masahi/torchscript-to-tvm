@@ -220,7 +220,7 @@ class Transpose3(Module):
 
 class Size1(Module):
     def forward(self, *args):
-        return args[0].size(0) * args[0]
+        return float(args[0].size(0)) * args[0]
 
 class View1(Module):
     def forward(self, *args):
@@ -286,7 +286,7 @@ class Expand1(Module):
 
 class Pow1(Module):
     def forward(self, *args):
-        return args[0] ** 2
+        return args[0] ** 2.0
 
 class Chunk1(Module):
     def forward(self, *args):

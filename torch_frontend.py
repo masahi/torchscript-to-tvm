@@ -344,7 +344,6 @@ def parse_operators(operators, consts, op_in_types, outputs, output_index_map):
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
-    print(graph)
 
     params = script_module.state_dict()
     input_vars = parse_inputs(graph.inputs(), input_shapes)
