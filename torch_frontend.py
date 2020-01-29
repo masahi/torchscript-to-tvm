@@ -132,6 +132,10 @@ def get_input_types(op_node):
         else:
             input_list_types.append('UnsupportedType')
 
+    if op_node.kind() in ['aten::ones', 'aten::zeros']:
+        node_type = op_node.output().type()
+        input_list_types[0] = node_type.scalarType().lower()
+
     return input_list_types
 
 

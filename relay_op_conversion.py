@@ -118,7 +118,7 @@ def _ones():
         else:
             shape = inputs[0].shape
 
-        fill_value = _get_fill_value(input_types)
+        fill_value = _get_fill_value(input_types, 1)
 
         return get_relay_op('full')(fill_value, shape, dtype=_convert_data_type(input_types[0]))
     return _impl
