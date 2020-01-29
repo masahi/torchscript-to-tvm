@@ -73,11 +73,11 @@ class LoopWithIf(torch.nn.Module):
 
 class NestedLoop(torch.nn.Module):
     def forward(self, inp):
-        a = torch.zeros(inp.size())
+        a = inp
         for i in range(inp.size(0)):
-            b = a * i
+            b = a * float(i)
             for j in range(inp.size(1)):
-                a += b * j
+                a += b * float(j)
         return a
 
 
@@ -100,8 +100,8 @@ models = [
     ScalarLoop().eval(),
     SimpleLoop().eval(),
     LoopWithIf().eval(),
-    # SimpleWhileLoop().eval(),
     # NestedLoop().eval()  # not work yet (due to free variable issue)
+    # SimpleWhileLoop().eval(),
 ]
 
 for raw_model in models:

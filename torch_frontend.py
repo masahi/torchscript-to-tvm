@@ -8,7 +8,7 @@ from tvm.relay import module as _module
 from tvm.relay.loops import while_loop
 from tvm.relay import op as _op
 
-from relay_op_conversion import convert_map
+from relay_op_conversion import convert_map, wrap_const
 
 
 def parse_inputs(graph_inputs, input_shapes):
@@ -211,6 +211,20 @@ def update_outputs_from_pairs(name_output_pairs, outputs, output_index_map):
         outputs.append(output)
 
 
+def get_free_vars_from_block(block):
+    block_inp_names = get_input_names(block)
+    bound_names = block_inp_names
+    free_vars = set()
+
+    for node in block.nodes():
+        inp_names = get_input_names(node)
+        list_diff = [name for name in inp_names if name not in bound_names]
+        free_vars.update(list_diff)
+        bound_names += get_output_names(node)
+
+    return list(free_vars)
+
+
 def parse_block(block, consts, op_in_types, outputs, output_index_map):
     consts_block, ops, op_in_types_block = parse_ops(block.nodes())
     consts_block.update(consts)
@@ -250,15 +264,19 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
         return _op.logical_and(lhs, rhs)
 
     def body(*current_vals):
-        for (i, val) in enumerate(current_vals):
-            outputs[output_index_map[inames[i]]] = val
+        for (i, iname) in enumerate(inames):
+            outputs[output_index_map[iname]] = current_vals[i]
         ret = parse_block(body_block, consts, op_in_types,
                           outputs, output_index_map)
         incr = _expr.const(1, 'int32')
         return current_vals[0] + incr, ret
 
+    # free_vars = get_free_vars_from_block(body_block)
+    # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
+    # init_vals += [wrap_const(val) for val in fixed_vals]
+
     loop_count_var = _expr.var(inames[0], shape=(), dtype='int32')
-    loop_vars = [_expr.var(name) for name in inames[1:]]
+    loop_vars = [_expr.var(name) for name in inames[1:]]  # + free_vars]
     loop = while_loop(cond, [loop_count_var] + loop_vars, body)
     loop_val = loop(_expr.const(1), *init_vals)
     return _expr.TupleGetItem(loop_val, 1)
