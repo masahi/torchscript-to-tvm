@@ -258,24 +258,29 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
                               outputs, output_index_map)
 
     is_for_loop = isinstance(init_cond, _expr.Constant)
-    print("is_for_loop?", is_for_loop)
+
+    def get_outputs(outputs, output_index_map, names):
+        return [wrap_const(outputs[output_index_map[name]])
+                for name in names]
 
     def cond(*current_vals):
         i = current_vals[0]
         if is_for_loop:
             return _op.less_equal(i, max_loop_count)
-        return _op.equal(i, _expr.const(1, 'int32'))
+        return _op.equal(i, _expr.const(True, 'bool'))
 
     def body(*current_vals):
         for (i, iname) in enumerate(inames):
             outputs[output_index_map[iname]] = current_vals[i]
-        ret = parse_block(body_block, consts, op_in_types,
-                          outputs, output_index_map)
+
+        parse_block(body_block, consts, op_in_types, outputs, output_index_map)
+        block_output_names = get_output_names(body_block)
+        block_outputs = get_outputs(outputs, output_index_map,
+                                    block_output_names)
         if is_for_loop:
-            incr = _expr.const(1, 'int32')
-            return current_vals[0] + incr, ret
-        else:
-            return ret
+            incr = _expr.const(1, dtype="int32")
+            block_outputs[0] = current_vals[0] + incr
+        return block_outputs
 
     def get_var(val, name):
         if isinstance(val, _expr.Constant):
@@ -286,13 +291,17 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
     # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
     # init_vals += [wrap_const(val) for val in fixed_vals]
 
-    print("inames:", inames)
-    print("init_vals:", init_vals)
-    loop_count_var = _expr.var(inames[0], shape=(), dtype='int32')
+    if is_for_loop:
+        loop_iter_dtype = "int32"
+    else:
+        loop_iter_dtype = "bool"
+
+    loop_iter_var = _expr.var(inames[0], shape=(), dtype=loop_iter_dtype)
     loop_vars = [get_var(val, name) for (val, name) in
                  zip(init_vals, inames[1:])]  # + free_vars]
-    loop = while_loop(cond, [loop_count_var] + loop_vars, body)
-    loop_val = loop(_expr.const(1), *init_vals)
+    loop = while_loop(cond, [loop_iter_var] + loop_vars, body)
+    loop_val = loop(init_cond, *init_vals)
+
     return _expr.TupleGetItem(loop_val, 1)
 
 
