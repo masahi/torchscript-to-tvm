@@ -253,23 +253,29 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
 
     body_block = list(op_node.blocks())[0]
     inames = get_input_names(body_block)
-    loop_input_vals = [_expr.const(1), init_cond] + init_vals
+    loop_input_vals = [init_cond] + init_vals
     update_outputs_from_pairs(zip(inames, loop_input_vals),
                               outputs, output_index_map)
 
+    is_for_loop = isinstance(init_cond, _expr.Constant)
+    print("is_for_loop?", is_for_loop)
+
     def cond(*current_vals):
         i = current_vals[0]
-        lhs = _op.greater_equal(i, _expr.const(1, 'int32'))
-        rhs = _op.less_equal(i, max_loop_count)
-        return _op.logical_and(lhs, rhs)
+        if is_for_loop:
+            return _op.less_equal(i, max_loop_count)
+        return _op.equal(i, _expr.const(1, 'int32'))
 
     def body(*current_vals):
         for (i, iname) in enumerate(inames):
             outputs[output_index_map[iname]] = current_vals[i]
         ret = parse_block(body_block, consts, op_in_types,
                           outputs, output_index_map)
-        incr = _expr.const(1, 'int32')
-        return current_vals[0] + incr, ret
+        if is_for_loop:
+            incr = _expr.const(1, 'int32')
+            return current_vals[0] + incr, ret
+        else:
+            return ret
 
     def get_var(val, name):
         if isinstance(val, _expr.Constant):
@@ -280,6 +286,8 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
     # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
     # init_vals += [wrap_const(val) for val in fixed_vals]
 
+    print("inames:", inames)
+    print("init_vals:", init_vals)
     loop_count_var = _expr.var(inames[0], shape=(), dtype='int32')
     loop_vars = [get_var(val, name) for (val, name) in
                  zip(init_vals, inames[1:])]  # + free_vars]
@@ -326,6 +334,7 @@ def parse_operators(operators, consts, op_in_types, outputs, output_index_map):
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
+    print(graph)
 
     params = script_module.state_dict()
     input_vars = parse_inputs(graph.inputs(), input_shapes)
