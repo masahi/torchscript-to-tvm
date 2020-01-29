@@ -10,11 +10,17 @@ from tvm.relay.frontend.common import get_relay_op
 from tvm.relay.frontend.common import infer_shape as _infer_shape
 
 
+def wrap_const(c):
+    if not isinstance(c, _expr.Expr):
+        return _expr.const(c)
+    return c
+
+
 # operator implementation
 def _elemwise(name):
     def _impl(inputs, input_types):
-        data0 = convert_input(inputs[0])
-        data1 = convert_input(inputs[1])
+        data0 = wrap_const(inputs[0])
+        data1 = wrap_const(inputs[1])
 
         if not isinstance(data0, (_expr.Call, _expr.TupleGetItem, _expr.Var)):
             temp = data0
@@ -714,12 +720,6 @@ def _sqrt():
     return _impl
 
 
-def wrap_const(c):
-    if not isinstance(c, _expr.Expr):
-        return _expr.const(c)
-    return c
-
-
 def _gt():
     def _impl(inputs, input_types):
         assert len(inputs) == 2
@@ -751,23 +751,6 @@ def _Float():
         return _op.cast(inputs[0], "float")
     return _impl
 
-
-# Helper functions for operator implementation
-
-def convert_input(data):
-    """ Handle input conversion for elemwise op """
-    if isinstance(data, (_expr.Call, _expr.TupleGetItem, _expr.Var)):
-        return data
-    elif isinstance(data, str):
-        if len(data) == 1:
-            return _expr.const(int(data), dtype='float32')
-        else:
-            if '.' in data:
-                return _expr.const(float(data[1:-1]), dtype='float32')
-            else:
-                return _expr.const(int(data[1:-1]), dtype='float32')
-    else:
-        return _expr.const(float(data), dtype='float32')
 
 # Operator mappings
 convert_map = {

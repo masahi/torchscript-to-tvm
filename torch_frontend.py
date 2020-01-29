@@ -271,12 +271,18 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
         incr = _expr.const(1, 'int32')
         return current_vals[0] + incr, ret
 
+    def get_var(val, name):
+        if isinstance(val, _expr.Constant):
+            return _expr.var(name, shape=(), dtype=val.data.dtype)
+        return _expr.var(name)
+
     # free_vars = get_free_vars_from_block(body_block)
     # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
     # init_vals += [wrap_const(val) for val in fixed_vals]
 
     loop_count_var = _expr.var(inames[0], shape=(), dtype='int32')
-    loop_vars = [_expr.var(name) for name in inames[1:]]  # + free_vars]
+    loop_vars = [get_var(val, name) for (val, name) in
+                 zip(init_vals, inames[1:])]  # + free_vars]
     loop = while_loop(cond, [loop_count_var] + loop_vars, body)
     loop_val = loop(_expr.const(1), *init_vals)
     return _expr.TupleGetItem(loop_val, 1)
@@ -292,10 +298,11 @@ def parse_operators(operators, consts, op_in_types, outputs, output_index_map):
             outputs.append(consts[node_name])
         elif operator == 'prim::ListConstruct' and is_int_list(inputs):
             outputs.append(_expr.var(node_name, shape=inputs))
-        elif operator == 'prim::ListConstruct':
+        elif operator in ['prim::ListConstruct', 'prim::TupleConstruct']:
             outputs.append(inputs)
-        elif operator == "prim::ListUnpack":
-            update_outputs_from_pairs(zip(get_output_names(op_node), inputs[0]),
+        elif operator in ["prim::ListUnpack", 'prim::TupleUnpack']:
+            unpacked_names = get_output_names(op_node)
+            update_outputs_from_pairs(zip(unpacked_names, inputs[0]),
                                       outputs, output_index_map)
         elif operator == "prim::If":
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]

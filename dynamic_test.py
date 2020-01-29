@@ -40,10 +40,10 @@ class NestedIf(torch.nn.Module):
 
 class ScalarLoop(torch.nn.Module):
     def forward(self, inp):
-        a = 0.0
+        a = 0
         for i in range(inp.size(0)):
             b = i * i
-            b = float(b) + 1
+            b = b + 1
             a += b
         return a
 
@@ -52,7 +52,7 @@ class SimpleLoop(torch.nn.Module):
     def forward(self, inp):
         a = inp
         for i in range(inp.size(0)):
-            b = a * 2
+            b = a * 2.
             c = a + b
             a += c
         return a
@@ -62,7 +62,7 @@ class LoopWithIf(torch.nn.Module):
     def forward(self, inp):
         a = inp
         for i in range(inp.size(0)):
-            b = a * 2
+            b = a * 2.
             b = a + b
             if b.sum() > 0.0:
                 a += b
@@ -75,20 +75,20 @@ class NestedLoop(torch.nn.Module):
     def forward(self, inp):
         a = inp
         for i in range(inp.size(0)):
-            b = a * float(i)
+            b = a * i
             for j in range(inp.size(1)):
-                a += b * float(j)
+                a += b * j
         return a
 
 
-# class SimpleWhileLoop(torch.nn.Module):
-#     def forward(self, inp):
-#         a = 1
-#         i = 0
-#         while i < 10:
-#             a += i
-#             i += 2
-#         return a
+class SimpleWhileLoop(torch.nn.Module):
+    def forward(self, inp):
+        a = 1
+        i = 0
+        while i < 10:
+            a += i
+            i += 2
+        return a
 
 
 input_name = 'X'
