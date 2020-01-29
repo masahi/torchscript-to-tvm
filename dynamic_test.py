@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import tvm
 from tvm import relay
@@ -85,7 +86,7 @@ class SimpleWhileLoop(torch.nn.Module):
     def forward(self, inp):
         a = 1
         i = 0
-        while i < 10:
+        while i < inp.size(0):
             a += i
             i += 2
         return a
@@ -95,13 +96,13 @@ input_name = 'X'
 input_shapes = {input_name: (10, 20)}
 
 models = [
-    SimpleIf(10, 20).eval(),
-    NestedIf(10, 20).eval(),
+    # SimpleIf(10, 20).eval(),
+    # NestedIf(10, 20).eval(),
     ScalarLoop().eval(),
     SimpleLoop().eval(),
     LoopWithIf().eval(),
+    SimpleWhileLoop().eval(),
     # NestedLoop().eval()  # not work yet (due to free variable issue)
-    # SimpleWhileLoop().eval(),
 ]
 
 for raw_model in models:
@@ -121,7 +122,10 @@ for raw_model in models:
         params[input_name] = inp.numpy()
         op_res = evaluator(**params)
         if not isinstance(pt_result, torch.Tensor):
-            print(pt_result, op_res)
+            tvm_res = np.asscalar(op_res.asnumpy())
+            print(abs(pt_result - tvm_res))
+            assert pt_result == tvm_res
         else:
+            print(np.max(np.abs(op_res.asnumpy() - pt_result.numpy())))
             tvm.testing.assert_allclose(op_res.asnumpy(), pt_result.numpy(),
                                         rtol=1e-5, atol=1e-5)

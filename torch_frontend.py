@@ -251,13 +251,19 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
     num_loop_var = len(list(op_node.inputs())) - 2
     init_vals = [get_input(i + 2) for i in range(num_loop_var)]
 
+    is_for_loop = isinstance(init_cond, _expr.Constant)
+    if is_for_loop:
+        loop_iter_dtype = "int32"
+        init_loop_iter_val = _expr.const(0, dtype="int32")
+    else:
+        loop_iter_dtype = "bool"
+        init_loop_iter_val = init_cond
+
     body_block = list(op_node.blocks())[0]
     inames = get_input_names(body_block)
-    loop_input_vals = [init_cond] + init_vals
+    loop_input_vals = [init_loop_iter_val] + init_vals
     update_outputs_from_pairs(zip(inames, loop_input_vals),
                               outputs, output_index_map)
-
-    is_for_loop = isinstance(init_cond, _expr.Constant)
 
     def get_outputs(outputs, output_index_map, names):
         return [wrap_const(outputs[output_index_map[name]])
@@ -266,7 +272,7 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
     def cond(*current_vals):
         i = current_vals[0]
         if is_for_loop:
-            return _op.less_equal(i, max_loop_count)
+            return _op.less(i, max_loop_count)
         return _op.equal(i, _expr.const(True, 'bool'))
 
     def body(*current_vals):
@@ -291,16 +297,11 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
     # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
     # init_vals += [wrap_const(val) for val in fixed_vals]
 
-    if is_for_loop:
-        loop_iter_dtype = "int32"
-    else:
-        loop_iter_dtype = "bool"
-
     loop_iter_var = _expr.var(inames[0], shape=(), dtype=loop_iter_dtype)
     loop_vars = [get_var(val, name) for (val, name) in
                  zip(init_vals, inames[1:])]  # + free_vars]
     loop = while_loop(cond, [loop_iter_var] + loop_vars, body)
-    loop_val = loop(init_cond, *init_vals)
+    loop_val = loop(init_loop_iter_val, *init_vals)
 
     return _expr.TupleGetItem(loop_val, 1)
 
