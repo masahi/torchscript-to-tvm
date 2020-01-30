@@ -749,6 +749,26 @@ def _Float():
     return _impl
 
 
+def _stack():
+    def _impl(inputs, input_types):
+        print("stack input:", inputs)
+        return _op.tensor.stack(inputs[0], 0)
+    return _impl
+
+
+def _mm():
+    def _impl(inputs, input_types):
+        print("mm input:", inputs)
+        return _op.nn.dense(inputs[0], inputs[1])
+    return _impl
+
+
+def _getitem():
+    def _impl(inputs, input_types):
+        return _expr.TupleGetItem(inputs[0], inputs[1])
+    return _impl
+
+
 # Operator mappings
 convert_map = {
     'aten::device'                          : _device(),
@@ -813,5 +833,8 @@ convert_map = {
     'aten::Bool'                            : _Bool(),
     'aten::Float'                           : _Float(),
     'aten::neg'                             : _neg(),
-    'aten::tanh'                            : _tanh()
+    'aten::tanh'                            : _tanh(),
+    'aten::stack'                           : _stack(),
+    'aten::mm'                              : _matmul(),
+    'aten::__getitem__'                     : _getitem()
 }

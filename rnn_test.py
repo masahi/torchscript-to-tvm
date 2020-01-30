@@ -52,18 +52,17 @@ hidden_size = 4
 num_layers = 4
 
 models = [
-    RNNLoop(gate).eval(),
+#    RNNLoop(gate).eval(),
     rnn_layer(input_size, hidden_size).eval(),
-    stacked_rnn(input_size, hidden_size, num_layers).eval(),
-    stacked_lnlstm(input_size, hidden_size, num_layers).eval()
+#    stacked_rnn(input_size, hidden_size, num_layers).eval(),
+#    stacked_lnlstm(input_size, hidden_size, num_layers).eval()
 ]
 """
 Missing conversion
-['aten::mm', 'aten::unbind', 'aten::__getitem__', 'aten::stack', 'aten::len', 'aten::layer_norm']
+['aten::__getitem__', 'aten::layer_norm']
 """
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
-    continue
     mod, params = parse_script_module(script_module, input_shapes)
     print(mod)
 
