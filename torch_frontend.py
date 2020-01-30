@@ -340,10 +340,6 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
             assert len(loop) == len(unpacked_names)
             update_outputs_from_pairs(zip(unpacked_names, loop),
                                       outputs, output_index_map)
-            # for name, val in zip(unpacked_names, loop):
-            #     print("Loop: unpacked_name =", name)
-            #     print("Loop: loop res =", len(loop), val)
-            #     print("")
         else:
             output_index_map[node_name] = len(outputs)
             relay_op = convert_map[operator]
@@ -365,7 +361,7 @@ def get_all_op_names(graph):
         for prim_node in prim_nodes:
             for block in prim_node.blocks():
                 nodes += block.nodes()
-    return [node.kind() for node in set(nodes)]
+    return set([node.kind() for node in nodes])
 
 
 def report_missing_conversion(graph):
@@ -385,6 +381,7 @@ def report_missing_conversion(graph):
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
+    print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
