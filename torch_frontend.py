@@ -172,22 +172,17 @@ def get_constant(node):
 
 def parse_ops(nodes):
     ops = {}
-    op_inputs_types = {}
-    consts = {}
     # Traverse nodes and add to graph
     for node in nodes:
         if node.outputsSize() > 1:
             node_name = "_".join(get_output_names(node))
         else:
             node_name = get_output_name(node)
-            if node.kind() == "prim::Constant":
-                consts[node_name] = get_constant(node)
 
         if node.kind() != "prim::GetAttr":
             ops[node_name] = node
-            op_inputs_types[node_name] = get_input_types(node)
 
-    return consts, ops, op_inputs_types
+    return ops
 
 
 def get_input_node_names(op_node, output_index_map):
@@ -227,21 +222,19 @@ def get_free_vars_from_block(block):
     return list(free_vars)
 
 
-def parse_block(block, consts, op_in_types, outputs, output_index_map):
-    consts_block, ops, op_in_types_block = parse_ops(block.nodes())
-    consts_block.update(consts)
-    op_in_types_block.update(op_in_types)
+def parse_block(block, outputs, output_index_map):
+    ops = parse_ops(block.nodes())
     ret_name = get_input_names(block.returnNode())[0]
-    return parse_operators(ops, consts_block, op_in_types_block,
-                           outputs, output_index_map, ret_name)
+    return parse_operators(ops, outputs, output_index_map, ret_name)
 
 
-def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
+def parse_loop(op_node, outputs, output_index_map):
 
     def get_input(index):
+        inode = op_node.inputsAt(index).node()
+        if inode.kind() == "prim::Constant":
+            return _expr.const(get_constant(inode))
         var_name = op_node.inputsAt(index).debugName()
-        if var_name in consts:
-            return _expr.const(consts[var_name])
         assert var_name in output_index_map
         output_ind = output_index_map[var_name]
         out = outputs[output_ind]
@@ -282,13 +275,14 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
         for (i, iname) in enumerate(inames):
             outputs[output_index_map[iname]] = current_vals[i]
 
-        parse_block(body_block, consts, op_in_types, outputs, output_index_map)
+        parse_block(body_block, outputs, output_index_map)
         block_output_names = get_output_names(body_block)
         block_outputs = get_outputs(outputs, output_index_map,
                                     block_output_names)
         if is_for_loop:
             incr = _expr.const(1, dtype="int32")
             block_outputs[0] = current_vals[0] + incr
+
         return block_outputs
 
     def get_var(val, name):
@@ -312,15 +306,14 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
     return loop_res
 
 
-def parse_operators(operators, consts, op_in_types, outputs,
-                    output_index_map, ret_name):
+def parse_operators(operators, outputs, output_index_map, ret_name):
     for node_name, op_node in operators.items():
         operator = op_node.kind()
         output_index_map[node_name] = len(outputs)
         inputs = get_op_inputs(op_node, outputs, output_index_map)
 
         if operator == "prim::Constant":
-            outputs.append(consts[node_name])
+            outputs.append(get_constant(op_node))
         elif operator == 'prim::ListConstruct' and is_int_list(inputs):
             outputs.append(_expr.var(node_name, shape=inputs))
         elif operator in ['prim::ListConstruct', 'prim::TupleConstruct']:
@@ -333,16 +326,13 @@ def parse_operators(operators, consts, op_in_types, outputs,
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]
             outputs.append(None)  # placeholder
             blocks = list(op_node.blocks())
-            true_branch = parse_block(blocks[0], consts, op_in_types,
-                                      outputs, output_index_map)
-            false_branch = parse_block(blocks[1], consts, op_in_types,
-                                       outputs, output_index_map)
+            true_branch = parse_block(blocks[0], outputs, output_index_map)
+            false_branch = parse_block(blocks[1], outputs, output_index_map)
             if_expr = _expr.If(cond, true_branch, false_branch)
             assert outputs[output_index_map[node_name]] is None
             outputs[output_index_map[node_name]] = if_expr
         elif operator == "prim::Loop":
-            loop = parse_loop(op_node, consts, op_in_types,
-                              outputs, output_index_map)
+            loop = parse_loop(op_node, outputs, output_index_map)
             unpacked_names = get_output_names(op_node)
             assert len(loop) == len(unpacked_names)
             update_outputs_from_pairs(zip(unpacked_names, loop),
@@ -353,7 +343,7 @@ def parse_operators(operators, consts, op_in_types, outputs,
             #     print("")
         else:
             relay_op = convert_map[operator]
-            outputs.append(relay_op(inputs, op_in_types[node_name]))
+            outputs.append(relay_op(inputs, get_input_types(op_node)))
 
     ret = outputs[output_index_map[ret_name]]
     if isinstance(ret, list):
@@ -397,14 +387,13 @@ def parse_script_module(script_module, input_shapes):
     params = script_module.state_dict()
     input_vars = parse_inputs(graph.inputs(), input_shapes)
     param_vars, tensors = parse_params(graph, params)
-    consts, ops, op_in_types = parse_ops(graph.nodes())
 
     input_vars.update(param_vars)
     outputs = list(input_vars.values())
     output_index_map = dict(zip(input_vars.keys(), range(len(outputs))))
     ret_name = get_input_names(graph.return_node())[0]
 
-    body = parse_operators(ops, consts, op_in_types, outputs,
+    body = parse_operators(parse_ops(graph.nodes()), outputs,
                            output_index_map, ret_name)
     func = tvm.relay.Function(_analysis.free_vars(body), body)
     tvm_params = {k: tvm.nd.array(v) for k, v in tensors.items()}
