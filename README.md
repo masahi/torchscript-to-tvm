@@ -1,4 +1,7 @@
-Translate PyTorch modules with control flow to TVM Relay via TorchScript
+For a background on motivation of this repo, see [this post](https://discuss.tvm.ai/t/discuss-adding-a-pytorch-frontend/5026/6) on TVM discussion forum.
+
+
+This is a demo of translating PyTorch modules with control flow to TVM Relay via TorchScript.
 
 
 * TorchScript `prim::If` node maps directly to Relay's `If` expression.

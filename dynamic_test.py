@@ -102,9 +102,43 @@ class SimpleWhileLoop(torch.nn.Module):
         return a
 
 
+class DecisionGate(torch.nn.Module):
+    def forward(self, x):
+        if x.sum() > 0:
+            return x
+        else:
+            return -x
+
+
+class Cell(torch.nn.Module):
+    def __init__(self, dg):
+        super(Cell, self).__init__()
+        self.dg = dg
+        self.linear = torch.nn.Linear(4, 4)
+
+    def forward(self, x, h):
+        new_h = torch.tanh(self.dg(self.linear(x)) + h)
+        return new_h, new_h
+
+
+class RNNLoop(torch.nn.Module):
+    def __init__(self, scripted_gate):
+        super().__init__()
+        x = torch.rand(10, 4)
+        h = torch.rand(10, 4)
+        self.cell = torch.jit.trace(Cell(scripted_gate), (x, h))
+
+    def forward(self, xs):
+        h, y = torch.zeros(10, 4), torch.zeros(10, 4)
+        for i in range(xs.size(0)):
+            y, h = self.cell(xs[i], h)
+        return y, h
+
+
 input_name = 'X'
 input_shapes = {input_name: (10, 20)}
 
+gate = DecisionGate()
 models = [
     SimpleIf(10, 20).eval(),
     NestedIf(10, 20).eval(),
@@ -114,6 +148,7 @@ models = [
     SimpleScalarWhileLoop().eval(),
     SimpleWhileLoop().eval(),
     # NestedLoop().eval()  # not work yet (due to free variable issue in vm)
+    # RNNLoop(gate).eval()
 ]
 
 for raw_model in models:

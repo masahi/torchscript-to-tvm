@@ -134,7 +134,9 @@ def get_input_types(op_node):
 
     if op_node.kind() in ['aten::ones', 'aten::zeros']:
         node_type = op_node.output().type()
-        input_list_types[0] = node_type.scalarType().lower()
+        scala_type = node_type.scalarType()
+        if scala_type:
+            input_list_types[0] = scala_type.lower()
 
     return input_list_types
 
@@ -341,9 +343,36 @@ def parse_operators(operators, consts, op_in_types, outputs, output_index_map):
     return outputs[-1]
 
 
+def get_all_op_names(graph):
+    nodes = list(graph.nodes())
+    prim_with_blocks = ["prim::If", "prim::Loop"]
+    for prim in prim_with_blocks:
+        prim_nodes = graph.findAllNodes(prim, recurse=True)
+        for prim_node in prim_nodes:
+            for block in prim_node.blocks():
+                nodes += block.nodes()
+    return [node.kind() for node in set(nodes)]
+
+
+def report_missing_conversion(graph):
+    known_ops = ["prim::Constant", "prim::GetAttr",
+                 "prim::ListConstruct", "prim::ListConstruct",
+                 "prim::TupleConstruct", "prim::TupleUnpack",
+                 "prim::If", "prim::Loop"]
+    known_ops += list(convert_map.keys())
+    missing = [op_name for op_name in get_all_op_names(graph)
+               if op_name not in known_ops]
+
+    if missing:
+        msg = "The following operators are not implemented: {}".format(missing)
+        raise NotImplementedError(msg)
+
+
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
+    report_missing_conversion(graph)
+    print(graph)
 
     params = script_module.state_dict()
     input_vars = parse_inputs(graph.inputs(), input_shapes)
