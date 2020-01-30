@@ -267,8 +267,10 @@ def parse_loop(op_node, outputs, output_index_map):
 
     def cond(*current_vals):
         i = current_vals[0]
+
         if is_for_loop:
             return _op.less(i, max_loop_count)
+
         return _op.equal(i, _expr.const(True, 'bool'))
 
     def body(*current_vals):
@@ -276,6 +278,7 @@ def parse_loop(op_node, outputs, output_index_map):
             outputs[output_index_map[iname]] = current_vals[i]
 
         parse_block(body_block, outputs, output_index_map)
+
         block_output_names = get_output_names(body_block)
         block_outputs = get_outputs(outputs, output_index_map,
                                     block_output_names)
@@ -309,14 +312,16 @@ def parse_loop(op_node, outputs, output_index_map):
 def parse_operators(operators, outputs, output_index_map, ret_name):
     for node_name, op_node in operators.items():
         operator = op_node.kind()
-        output_index_map[node_name] = len(outputs)
         inputs = get_op_inputs(op_node, outputs, output_index_map)
 
         if operator == "prim::Constant":
+            output_index_map[node_name] = len(outputs)
             outputs.append(get_constant(op_node))
         elif operator == 'prim::ListConstruct' and is_int_list(inputs):
+            output_index_map[node_name] = len(outputs)
             outputs.append(_expr.var(node_name, shape=inputs))
         elif operator in ['prim::ListConstruct', 'prim::TupleConstruct']:
+            output_index_map[node_name] = len(outputs)
             outputs.append(inputs)
         elif operator in ["prim::ListUnpack", 'prim::TupleUnpack']:
             unpacked_names = get_output_names(op_node)
@@ -324,13 +329,11 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
                                       outputs, output_index_map)
         elif operator == "prim::If":
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]
-            outputs.append(None)  # placeholder
             blocks = list(op_node.blocks())
             true_branch = parse_block(blocks[0], outputs, output_index_map)
             false_branch = parse_block(blocks[1], outputs, output_index_map)
-            if_expr = _expr.If(cond, true_branch, false_branch)
-            assert outputs[output_index_map[node_name]] is None
-            outputs[output_index_map[node_name]] = if_expr
+            output_index_map[node_name] = len(outputs)
+            outputs.append(_expr.If(cond, true_branch, false_branch))
         elif operator == "prim::Loop":
             loop = parse_loop(op_node, outputs, output_index_map)
             unpacked_names = get_output_names(op_node)
@@ -342,6 +345,7 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
             #     print("Loop: loop res =", len(loop), val)
             #     print("")
         else:
+            output_index_map[node_name] = len(outputs)
             relay_op = convert_map[operator]
             outputs.append(relay_op(inputs, get_input_types(op_node)))
 
@@ -366,7 +370,7 @@ def get_all_op_names(graph):
 
 def report_missing_conversion(graph):
     known_ops = ["prim::Constant", "prim::GetAttr",
-                 "prim::ListConstruct", "prim::ListConstruct",
+                 "prim::ListConstruct", "prim::ListUnpack",
                  "prim::TupleConstruct", "prim::TupleUnpack",
                  "prim::If", "prim::Loop"]
     known_ops += list(convert_map.keys())
@@ -381,7 +385,6 @@ def report_missing_conversion(graph):
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
-    print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
