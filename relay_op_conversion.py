@@ -110,7 +110,7 @@ def _ones():
 
         fill_value = _get_fill_value(input_types, 1)
 
-        return get_relay_op('full')(fill_value, shape, dtype=_convert_data_type(input_types[0]))
+        return get_relay_op('full')(fill_value, shape, dtype="float32")
     return _impl
 
 def _zeros():
@@ -125,8 +125,7 @@ def _zeros():
             shape = inputs[0].shape
 
         fill_value = _get_fill_value(input_types, 0)
-
-        return _op.full(fill_value, shape, dtype=input_types[0])
+        return _op.full(fill_value, shape, dtype="float32")
     return _impl
 
 def _get_fill_value(input_types, int_val):
