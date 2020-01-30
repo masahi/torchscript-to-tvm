@@ -74,25 +74,9 @@ def _slice():
 def _select():
     def _impl(inputs, input_types):
         data = inputs[0]
-        inferred_shape = _infer_shape(data)
-        end = []
-
-        for infer in inferred_shape:
-            end.append(int(infer))
-
-        begin = [0]*len(end)
-        dim = int(inputs[1])
-        index = int(inputs[2])
-
-        end[dim] = index+1
-        begin[dim] = index
-
-        strides = [1]*len(end)
-
-        sym = _op.transform.strided_slice(data, begin, end, strides)
-        axis = [dim]
-
-        return _op.transform.squeeze(sym, axis)
+        axis = int(inputs[1])
+        index = wrap_const(inputs[2])
+        return _op.transform.take(data, index, axis=axis)
     return _impl
 
 def _convert_data_type(input_type):
@@ -720,6 +704,20 @@ def _sqrt():
     return _impl
 
 
+def _neg():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return _op.tensor.negative(data)
+    return _impl
+
+
+def _tanh():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return _op.tensor.tanh(data)
+    return _impl
+
+
 def _gt():
     def _impl(inputs, input_types):
         assert len(inputs) == 2
@@ -814,5 +812,7 @@ convert_map = {
     'aten::lt'                              : _lt(),
     'aten::gt'                              : _gt(),
     'aten::Bool'                            : _Bool(),
-    'aten::Float'                           : _Float()
+    'aten::Float'                           : _Float(),
+    'aten::neg'                             : _neg(),
+    'aten::tanh'                            : _tanh()
 }

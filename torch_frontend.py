@@ -231,8 +231,9 @@ def parse_block(block, consts, op_in_types, outputs, output_index_map):
     consts_block, ops, op_in_types_block = parse_ops(block.nodes())
     consts_block.update(consts)
     op_in_types_block.update(op_in_types)
+    ret_name = get_input_names(block.returnNode())[0]
     return parse_operators(ops, consts_block, op_in_types_block,
-                           outputs, output_index_map)
+                           outputs, output_index_map, ret_name)
 
 
 def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
@@ -304,11 +305,15 @@ def parse_loop(op_node, consts, op_in_types, outputs, output_index_map):
                  zip(init_vals, inames[1:])]  # + free_vars]
     loop = while_loop(cond, [loop_iter_var] + loop_vars, body)
     loop_val = loop(init_loop_iter_val, *init_vals)
+    loop_res = []
+    for i in range(len(loop_vars)):
+        loop_res.append(_expr.TupleGetItem(loop_val, i+1))
 
-    return _expr.TupleGetItem(loop_val, 1)
+    return loop_res
 
 
-def parse_operators(operators, consts, op_in_types, outputs, output_index_map):
+def parse_operators(operators, consts, op_in_types, outputs,
+                    output_index_map, ret_name):
     for node_name, op_node in operators.items():
         operator = op_node.kind()
         output_index_map[node_name] = len(outputs)
@@ -326,21 +331,36 @@ def parse_operators(operators, consts, op_in_types, outputs, output_index_map):
                                       outputs, output_index_map)
         elif operator == "prim::If":
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]
+            outputs.append(None)  # placeholder
             blocks = list(op_node.blocks())
             true_branch = parse_block(blocks[0], consts, op_in_types,
                                       outputs, output_index_map)
             false_branch = parse_block(blocks[1], consts, op_in_types,
                                        outputs, output_index_map)
-            outputs.append(_expr.If(cond, true_branch, false_branch))
+            if_expr = _expr.If(cond, true_branch, false_branch)
+            assert outputs[output_index_map[node_name]] is None
+            outputs[output_index_map[node_name]] = if_expr
         elif operator == "prim::Loop":
             loop = parse_loop(op_node, consts, op_in_types,
                               outputs, output_index_map)
-            outputs.append(loop)
+            unpacked_names = get_output_names(op_node)
+            assert len(loop) == len(unpacked_names)
+            update_outputs_from_pairs(zip(unpacked_names, loop),
+                                      outputs, output_index_map)
+            # for name, val in zip(unpacked_names, loop):
+            #     print("Loop: unpacked_name =", name)
+            #     print("Loop: loop res =", len(loop), val)
+            #     print("")
         else:
             relay_op = convert_map[operator]
             outputs.append(relay_op(inputs, op_in_types[node_name]))
 
-    return outputs[-1]
+    ret = outputs[output_index_map[ret_name]]
+    if isinstance(ret, list):
+        ret = _expr.Tuple(ret)
+    else:
+        ret = wrap_const(ret)
+    return ret
 
 
 def get_all_op_names(graph):
@@ -371,8 +391,8 @@ def report_missing_conversion(graph):
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
-    report_missing_conversion(graph)
     print(graph)
+    report_missing_conversion(graph)
 
     params = script_module.state_dict()
     input_vars = parse_inputs(graph.inputs(), input_shapes)
@@ -382,8 +402,10 @@ def parse_script_module(script_module, input_shapes):
     input_vars.update(param_vars)
     outputs = list(input_vars.values())
     output_index_map = dict(zip(input_vars.keys(), range(len(outputs))))
+    ret_name = get_input_names(graph.return_node())[0]
 
-    body = parse_operators(ops, consts, op_in_types, outputs, output_index_map)
+    body = parse_operators(ops, consts, op_in_types, outputs,
+                           output_index_map, ret_name)
     func = tvm.relay.Function(_analysis.free_vars(body), body)
     tvm_params = {k: tvm.nd.array(v) for k, v in tensors.items()}
 
