@@ -4,6 +4,7 @@ import tvm
 from tvm import relay
 
 from torch_frontend import parse_script_module
+from torch_frontend import *
 
 from custom_lstms import rnn_layer, stacked_rnn, stacked_lnlstm
 
@@ -52,8 +53,8 @@ hidden_size = 4
 num_layers = 4
 
 models = [
-#    RNNLoop(gate).eval(),
-    rnn_layer(input_size, hidden_size).eval(),
+    RNNLoop(gate).eval(),
+#    rnn_layer(input_size, hidden_size).eval(),
 #    stacked_rnn(input_size, hidden_size, num_layers).eval(),
 #    stacked_lnlstm(input_size, hidden_size, num_layers).eval()
 ]
@@ -63,11 +64,11 @@ Missing conversion
 """
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
-    mod, params = parse_script_module(script_module, input_shapes)
-    print(mod)
+    # mod, params = parse_script_module(script_module, input_shapes)
+    # print(mod)
 
-    executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
-    evaluator = executor.evaluate()
+    # executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
+    # evaluator = executor.evaluate()
 
     # for i in range(5):
     #     LSTMState = namedtuple('LSTMState', ['hx', 'cx'])
@@ -90,3 +91,9 @@ for raw_model in models:
     #         print(np.max(np.abs(op_res.asnumpy() - pt_result.numpy())))
     #         tvm.testing.assert_allclose(op_res.asnumpy(), pt_result.numpy(),
     #                                     rtol=1e-5, atol=1e-5)
+
+graph = script_module.graph
+loop_op = graph.findNode("prim::Loop")
+body_block = list(loop_op.blocks())[0]
+free_vars = get_free_vars_from_block(body_block)
+print(graph)

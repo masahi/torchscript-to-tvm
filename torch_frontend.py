@@ -216,7 +216,8 @@ def get_free_vars_from_block(block):
     for node in block.nodes():
         inp_names = get_input_names(node)
         list_diff = [name for name in inp_names if name not in bound_names]
-        free_vars.update(list_diff)
+        if node.kind() != "prim::GetAttr":
+            free_vars.update(list_diff)
         bound_names += get_output_names(node)
 
     return list(free_vars)
@@ -261,6 +262,10 @@ def parse_loop(op_node, outputs, output_index_map):
     update_outputs_from_pairs(zip(inames, loop_input_vals),
                               outputs, output_index_map)
 
+    # free_vars = get_free_vars_from_block(body_block)
+    # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
+    # init_vals += [wrap_const(val) for val in fixed_vals]
+
     def get_outputs(outputs, output_index_map, names):
         return [wrap_const(outputs[output_index_map[name]])
                 for name in names]
@@ -292,10 +297,6 @@ def parse_loop(op_node, outputs, output_index_map):
         if isinstance(val, _expr.Constant):
             return _expr.var(name, shape=(), dtype=val.data.dtype)
         return _expr.var(name)
-
-    # free_vars = get_free_vars_from_block(body_block)
-    # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
-    # init_vals += [wrap_const(val) for val in fixed_vals]
 
     loop_iter_var = _expr.var(inames[0], shape=(), dtype=loop_iter_dtype)
     loop_vars = [get_var(val, name) for (val, name) in
