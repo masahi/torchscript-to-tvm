@@ -52,8 +52,8 @@ hidden_size = 4
 num_layers = 4
 
 models = [
-#    RNNLoop(gate).eval(),
-    rnn_layer(input_size, hidden_size).eval(),
+    RNNLoop(gate).eval(),
+#    rnn_layer(input_size, hidden_size).eval(),
 #    stacked_rnn(input_size, hidden_size, num_layers).eval(),
 #    stacked_lnlstm(input_size, hidden_size, num_layers).eval()
 ]

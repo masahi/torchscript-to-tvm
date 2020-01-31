@@ -16,6 +16,8 @@ def parse_inputs(graph_inputs, input_shapes):
     ir_names = [i.debugName() for i in ir_inputs]
     input_vars = {}
 
+    assert len(input_shapes) == len(ir_inputs) - 1
+
     for input_name, ir_input in zip(input_shapes, ir_inputs[1:]):
         input_shape = input_shapes[input_name]
         ir_input.setDebugName(input_name)
@@ -134,9 +136,9 @@ def get_input_types(op_node):
 
     if op_node.kind() in ['aten::ones', 'aten::zeros']:
         node_type = op_node.output().type()
-        scala_type = node_type.scalarType()
-        if scala_type:
-            input_list_types[0] = scala_type.lower()
+        scalar_type = node_type.scalarType()
+        if scalar_type:
+            input_list_types[0] = scalar_type.lower()
 
     return input_list_types
 
@@ -208,20 +210,6 @@ def update_outputs_from_pairs(name_output_pairs, outputs, output_index_map):
         outputs.append(output)
 
 
-def get_free_vars_from_block(block):
-    block_inp_names = get_input_names(block)
-    bound_names = block_inp_names
-    free_vars = set()
-
-    for node in block.nodes():
-        inp_names = get_input_names(node)
-        list_diff = [name for name in inp_names if name not in bound_names]
-        free_vars.update(list_diff)
-        bound_names += get_output_names(node)
-
-    return list(free_vars)
-
-
 def parse_block(block, outputs, output_index_map):
     ops = parse_ops(block.nodes())
     ret_name = get_input_names(block.returnNode())[0]
@@ -248,6 +236,7 @@ def parse_loop(op_node, outputs, output_index_map):
     init_vals = [get_input(i + 2) for i in range(num_loop_var)]
 
     is_for_loop = isinstance(init_cond, _expr.Constant)
+
     if is_for_loop:
         loop_iter_dtype = "int32"
         init_loop_iter_val = _expr.const(0, dtype="int32")
@@ -258,8 +247,8 @@ def parse_loop(op_node, outputs, output_index_map):
     body_block = list(op_node.blocks())[0]
     inames = get_input_names(body_block)
     loop_input_vals = [init_loop_iter_val] + init_vals
-    update_outputs_from_pairs(zip(inames, loop_input_vals),
-                              outputs, output_index_map)
+    name_val_pairs = list(zip(inames, loop_input_vals))
+    update_outputs_from_pairs(name_val_pairs, outputs, output_index_map)
 
     def get_outputs(outputs, output_index_map, names):
         return [wrap_const(outputs[output_index_map[name]])
@@ -288,25 +277,17 @@ def parse_loop(op_node, outputs, output_index_map):
 
         return block_outputs
 
-    def get_var(val, name):
+    def get_var(name, val):
         if isinstance(val, _expr.Constant):
             return _expr.var(name, shape=(), dtype=val.data.dtype)
         return _expr.var(name)
 
-    # free_vars = get_free_vars_from_block(body_block)
-    # fixed_vals = [outputs[output_index_map[name]] for name in free_vars]
-    # init_vals += [wrap_const(val) for val in fixed_vals]
-
     loop_iter_var = _expr.var(inames[0], shape=(), dtype=loop_iter_dtype)
-    loop_vars = [get_var(val, name) for (val, name) in
-                 zip(init_vals, inames[1:])]  # + free_vars]
+    loop_vars = [get_var(name, val) for name, val in name_val_pairs[1:]]
     loop = while_loop(cond, [loop_iter_var] + loop_vars, body)
     loop_val = loop(init_loop_iter_val, *init_vals)
-    loop_res = []
-    for i in range(len(loop_vars)):
-        loop_res.append(_expr.TupleGetItem(loop_val, i+1))
 
-    return loop_res
+    return [_expr.TupleGetItem(loop_val, i+1) for i in range(num_loop_var)]
 
 
 def parse_operators(operators, outputs, output_index_map, ret_name):
@@ -381,7 +362,6 @@ def report_missing_conversion(graph):
 def parse_script_module(script_module, input_shapes):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
-    print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
