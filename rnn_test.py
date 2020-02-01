@@ -3,6 +3,7 @@ import torch
 import tvm
 from tvm import relay
 from tvm.relay.backend import vm
+from tvm.relay import TupleType, TensorType
 from torch_frontend import parse_script_module
 
 from custom_lstms import rnn_layer, stacked_rnn, stacked_lnlstm
@@ -41,19 +42,23 @@ class RNNLoop(torch.nn.Module):
         return y
 
 
-input_name = 'X'
-input_shapes = {input_name: (10, 10, 4)}
-
-gate = DecisionGate()
 seq_len = 5
 batch = 2
 input_size = 3
 hidden_size = 4
 num_layers = 4
 
+input_name = 'X'
+# input_shapes = {input_name: (10, 10, 4)}
+input_shapes = {}
+input_types = {input_name: TensorType((seq_len, batch, hidden_size)),
+               "states": TupleType([TensorType((batch, hidden_size)),
+                                    TensorType((batch, hidden_size))])}
+
+gate = DecisionGate()
+
 models = [
-    RNNLoop(gate).eval(),
-#    rnn_layer(input_size, hidden_size).eval(),
+    rnn_layer(input_size, hidden_size).eval(),
 #    stacked_rnn(input_size, hidden_size, num_layers).eval(),
 #    stacked_lnlstm(input_size, hidden_size, num_layers).eval()
 ]
@@ -63,7 +68,8 @@ Missing conversion
 """
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
-    mod, params = parse_script_module(script_module, input_shapes)
+    mod, params = parse_script_module(script_module, input_shapes, input_types)
+    continue
     # print(mod)
     # for k, v in params.items():
     #     print(k, v.shape)

@@ -11,18 +11,30 @@ from tvm.relay import op as _op
 from relay_op_conversion import convert_map, wrap_const
 
 
-def parse_inputs(graph_inputs, input_shapes):
+def is_int_seq(seq):
+    return all([isinstance(i, int) for i in seq])
+
+
+def parse_inputs(graph_inputs, input_shapes, input_types):
     ir_inputs = list(graph_inputs)
     ir_names = [i.debugName() for i in ir_inputs]
     input_vars = {}
+    num_ir_inputs = len(ir_inputs)
+    input_names = list(input_shapes.keys()) + list(input_types.keys())
+    assert len(input_names) == len(ir_inputs) - 1
 
-    assert len(input_shapes) == len(ir_inputs) - 1
+    for i in range(1, num_ir_inputs):
+        iname = input_names[i-1]
+        ir_inputs[i].setDebugName(iname)
 
-    for input_name, ir_input in zip(input_shapes, ir_inputs[1:]):
-        input_shape = input_shapes[input_name]
-        ir_input.setDebugName(input_name)
-        input_vars[input_name] = _expr.var(input_name,
-                                           shape=input_shapes[input_name])
+        if i-1 >= len(input_shapes):
+            itype = input_types[iname]
+            input_vars[iname] = _expr.var(iname, type_annotation=itype)
+        else:
+            ishape = input_shapes[iname]
+            assert ishape and is_int_seq(ishape)
+            input_vars[iname] = _expr.var(iname, shape=ishape)
+
     # Add self (first input of a PyTorch graph) to inputs
     input_shape = [3]
     tensor = tvm.nd.array(np.zeros(input_shape).astype(np.float32))
@@ -196,10 +208,6 @@ def get_op_inputs(op_node, outputs, output_index_map):
     return [outputs[name] for name in input_names]
 
 
-def is_int_list(lst):
-    return all([isinstance(i, int) for i in lst])
-
-
 def run_jit_passes(graph):
     torch._C._jit_pass_inline(graph)
 
@@ -280,6 +288,8 @@ def parse_loop(op_node, outputs, output_index_map):
     def get_var(name, val):
         if isinstance(val, _expr.Constant):
             return _expr.var(name, shape=(), dtype=val.data.dtype)
+        if isinstance(val, _expr.Var):
+            return _expr.var(name, type_annotation=val.type_annotation)
         return _expr.var(name)
 
     loop_iter_var = _expr.var(inames[0], shape=(), dtype=loop_iter_dtype)
@@ -298,7 +308,7 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
         if operator == "prim::Constant":
             output_index_map[node_name] = len(outputs)
             outputs.append(get_constant(op_node))
-        elif operator == 'prim::ListConstruct' and is_int_list(inputs):
+        elif operator == 'prim::ListConstruct' and is_int_seq(inputs):
             output_index_map[node_name] = len(outputs)
             outputs.append(_expr.var(node_name, shape=inputs))
         elif operator in ['prim::ListConstruct', 'prim::TupleConstruct']:
@@ -306,8 +316,12 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
             outputs.append(inputs)
         elif operator in ["prim::ListUnpack", 'prim::TupleUnpack']:
             unpacked_names = get_output_names(op_node)
-            update_outputs_from_pairs(zip(unpacked_names, inputs[0]),
-                                      outputs, output_index_map)
+            if isinstance(inputs[0], list):
+                update_outputs_from_pairs(zip(unpacked_names, inputs[0]),
+                                          outputs, output_index_map)
+            else:
+                print(inputs)
+                assert False
         elif operator == "prim::If":
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]
             blocks = list(op_node.blocks())
@@ -359,13 +373,14 @@ def report_missing_conversion(graph):
         raise NotImplementedError(msg)
 
 
-def parse_script_module(script_module, input_shapes):
+def parse_script_module(script_module, input_shapes, input_types={}):
     graph = script_module.graph.copy()
     run_jit_passes(graph)
+    print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
-    input_vars = parse_inputs(graph.inputs(), input_shapes)
+    input_vars = parse_inputs(graph.inputs(), input_shapes, input_types)
     param_vars, tensors = parse_params(graph, params)
 
     input_vars.update(param_vars)
