@@ -12,7 +12,6 @@ input_shapes = {input_name: (1, 3, 224, 224)}
 
 models = [
     models.resnet.resnet18(pretrained=True).eval(),
-    models.vgg.vgg16_bn(pretrained=True).eval(),
     models.mobilenet.mobilenet_v2(pretrained=True).eval(),
     models.squeezenet.squeezenet1_1(pretrained=True).eval(),
     models.densenet.densenet121(pretrained=True).eval(),

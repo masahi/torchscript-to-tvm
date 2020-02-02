@@ -12,6 +12,7 @@ from tvm.relay import op as _op
 from relay_op_conversion import convert_map, wrap_const
 from relay_op_conversion import py_list_to_relay_list
 
+
 def is_int_seq(seq):
     return len(seq) > 0 and all([isinstance(i, int) for i in seq])
 
@@ -71,6 +72,23 @@ def getattr_attr_name(node):
     return attr_name
 
 
+def get_use_chains(root_node, terminate=lambda _: False):
+    def concat_lists(lists):
+        return itertools.chain.from_iterable(lists)
+
+    def inner(current, accum):
+        users = []
+        for output in current.outputs():
+            users += [use.user for use in output.uses()]
+
+        if not users or terminate(users):
+            return [accum]
+
+        return concat_lists([inner(nxt, accum + [nxt]) for nxt in users])
+
+    return inner(root_node, [root_node])
+
+
 def get_attr_chains(root_getattr_node):
     """Returns chains of attribute access starting from root_getattr_node
 
@@ -83,20 +101,11 @@ def get_attr_chains(root_getattr_node):
     and "self.block.0._packed_params" will return the parameters of the first
     submodule.
     """
-    def concat_lists(lists):
-        return itertools.chain.from_iterable(lists)
-
-    def inner(current, accum):
-        users = [use.user for use in current.output().uses()]
+    def terminate(users):
         next_attrs = [user for user in users if user.kind() == "prim::GetAttr"]
+        return len(next_attrs) == 0
 
-        if not users or not next_attrs:
-            # no next GetAttr -> this is the last attr
-            return [accum]
-
-        return concat_lists([inner(nxt, accum + [nxt]) for nxt in next_attrs])
-
-    return inner(root_getattr_node, [root_getattr_node])
+    return get_use_chains(root_getattr_node, terminate)
 
 
 def get_full_attr_name(getattrs):
@@ -305,6 +314,27 @@ def parse_loop(op_node, outputs, output_index_map):
     return [_expr.TupleGetItem(loop_val, i+1) for i in range(num_loop_var)]
 
 
+def handle_unpack(op_node, outputs, output_index_map, inp):
+    def unpack_and_update(tup, num_fields):
+        assert num_fields == len(unpacked_names)
+        unpacked = [_expr.TupleGetItem(tup, i) for i in range(num_fields)]
+        update_outputs_from_pairs(zip(unpacked_names, unpacked),
+                                  outputs, output_index_map)
+    unpacked_names = get_output_names(op_node)
+
+    if isinstance(inp, list):
+        update_outputs_from_pairs(zip(unpacked_names, inp),
+                                  outputs, output_index_map)
+    else:
+        if isinstance(inp, relay.Tuple):
+            unpack_and_update(inp, len(inp.fields))
+        elif isinstance(inp.type_annotation, relay.TupleType):
+            fields = inp.type_annotation.fields
+            unpack_and_update(inp, len(fields))
+        else:
+            assert False
+
+
 def parse_operators(operators, outputs, output_index_map, ret_name):
     for node_name, op_node in operators.items():
         operator = op_node.kind()
@@ -324,25 +354,7 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
             outputs.append(relay.Tuple(inputs))
         elif operator in ["prim::ListUnpack", 'prim::TupleUnpack']:
             assert len(inputs) == 1
-            unpacked_names = get_output_names(op_node)
-
-            if isinstance(inputs[0], list):
-                update_outputs_from_pairs(zip(unpacked_names, inputs[0]),
-                                          outputs, output_index_map)
-            else:
-                def unpack_and_update(tup, num_fields):
-                    assert num_fields == len(unpacked_names)
-                    unpacked = [_expr.TupleGetItem(tup, i) for i in range(num_fields)]
-                    update_outputs_from_pairs(zip(unpacked_names, unpacked),
-                                              outputs, output_index_map)
-                if isinstance(inputs[0], relay.Tuple):
-                    unpack_and_update(inputs[0], len(inputs[0].fields))
-                elif isinstance(inputs[0].type_annotation, relay.TupleType):
-                    fields = inputs[0].type_annotation.fields
-                    unpack_and_update(inputs[0], len(fields))
-                else:
-                    assert False
-
+            handle_unpack(op_node, outputs, output_index_map, inputs[0])
         elif operator == "prim::If":
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]
             blocks = list(op_node.blocks())
@@ -394,7 +406,11 @@ def report_missing_conversion(graph):
                  "prim::ListConstruct", "prim::ListUnpack",
                  "prim::TupleConstruct", "prim::TupleUnpack",
                  "prim::If", "prim::Loop"]
+    known_ops += ["relay::tensor_array_create",
+                  "relay::tensor_array_stack",
+                  "relay::tensor_array_write"]
     known_ops += list(convert_map.keys())
+
     missing = [op_name for op_name in get_all_op_names(graph)
                if op_name not in known_ops]
 
@@ -404,22 +420,6 @@ def report_missing_conversion(graph):
 
 
 def rewrite_for_tensor_array(graph):
-    def get_use_chains(root_node):
-        def concat_lists(lists):
-            return itertools.chain.from_iterable(lists)
-
-        def inner(current, accum):
-            users = []
-            for output in current.outputs():
-                users += [use.user for use in output.uses()]
-
-            if not users:
-                return [accum]
-
-            return concat_lists([inner(nxt, accum + [nxt]) for nxt in users])
-
-        return inner(root_node, [root_node])
-
     def has_kind(chain, kind):
         return any([node.kind() == kind for node in chain])
 
