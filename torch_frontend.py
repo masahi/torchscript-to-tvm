@@ -449,9 +449,9 @@ def rewrite_for_tensor_array(graph):
         tensor_list_op = chain[0]
         loop_op = get_node(chain, "prim::Loop")
 
-        tarray_create_node = graph.create("relay::empty_list")
-        tarray_create_node.insertBefore(loop_op)
-        tensor_list_op.replaceAllUsesWith(tarray_create_node)
+        empty_list_node = graph.create("relay::empty_list")
+        empty_list_node.insertBefore(loop_op)
+        tensor_list_op.replaceAllUsesWith(empty_list_node)
         tensor_list_op.destroy()
 
         rev_list_node = graph.create("relay::rev_list",
@@ -468,19 +468,19 @@ def rewrite_for_tensor_array(graph):
         loop_block = list(loop_op.blocks())[0]
         loop_nodes = list(loop_block.nodes())
 
-        list_add_op = get_node(loop_nodes, "aten::add_",
-                               lambda node: node_type(node) == "List[Tensor]")
+        add_op = get_node(loop_nodes, "aten::add_",
+                          lambda node: node_type(node) == "List[Tensor]")
 
-        list_singlton_op = list_add_op.inputsAt(1).node()
+        list_singlton_op = add_op.inputsAt(1).node()
         list_singlton_op_input = list_singlton_op.inputsAt(0)
         list_singlton_op.output().replaceAllUsesWith(list_singlton_op_input)
         list_singlton_op.destroy()
 
-        tarray_write_node = graph.create("relay::cons_list",
-                                         list(reversed(list(list_add_op.inputs()))))
-        tarray_write_node.insertBefore(list_add_op)
-        list_add_op.replaceAllUsesWith(tarray_write_node)
-        list_add_op.destroy()
+        cons_list_node = graph.create("relay::cons_list",
+                                      list(reversed(list(add_op.inputs()))))
+        cons_list_node.insertBefore(add_op)
+        add_op.replaceAllUsesWith(cons_list_node)
+        add_op.destroy()
 
 
 def parse_script_module(script_module, input_shapes, input_types={}):

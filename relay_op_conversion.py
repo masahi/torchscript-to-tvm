@@ -13,9 +13,6 @@ from tvm.relay.prelude import Prelude
 
 mod = relay.Module()
 p = Prelude(mod)
-nil = p.nil
-cons = p.cons
-concat = p.concat
 
 
 def wrap_const(c):
@@ -781,18 +778,28 @@ def _mm():
     return _impl
 
 
-def _getitem():
+def _empty_list():
     def _impl(inputs, input_types):
-        return _expr.TupleGetItem(inputs[0], inputs[1])
+        return p.nil()
     return _impl
 
 
-def _append():
+def _cons_list():
     def _impl(inputs, input_types):
-        lst1 = inputs[0]
-        lst2 = py_list_to_relay_list([inputs[1]])
-        print(lst1)
-        return concat(lst1, lst2)
+        return p.cons(inputs[0], inputs[1])
+    return _impl
+
+
+def _rev_list():
+    def _impl(inputs, input_types):
+        return p.rev(inputs[0])
+    return _impl
+
+
+def _tensor_array_stack():
+    def _impl(inputs, input_types):
+        stack = p.get_var('tensor_array_stack', "float32")
+        return stack(inputs[0])
     return _impl
 
 
@@ -863,6 +870,9 @@ convert_map = {
     'aten::tanh'                            : _tanh(),
     'aten::stack'                           : _stack(),
     'aten::mm'                              : _matmul(),
-    'aten::__getitem__'                     : _getitem(),
-    'aten::append'                          : _append()
+    'relay::empty_list'                     : _empty_list(),
+    'relay::cons_list'                      : _cons_list(),
+    'relay::rev_list'                       : _rev_list(),
+    'relay::tensor_array_stack'             : _tensor_array_stack()
+
 }
