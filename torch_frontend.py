@@ -8,9 +8,9 @@ from tvm.relay import analysis as _analysis
 from tvm.relay import module as _module
 from tvm.relay.loops import while_loop
 from tvm.relay import op as _op
+from tvm.relay.prelude import Prelude
 
 from relay_op_conversion import convert_map, wrap_const
-from relay_op_conversion import py_list_to_relay_list
 
 
 def is_int_seq(seq):
@@ -501,7 +501,9 @@ def parse_script_module(script_module, input_shapes, input_types={}):
 
     body = parse_operators(parse_ops(graph.nodes()), outputs,
                            output_index_map, ret_name)
-    func = tvm.relay.Function(_analysis.free_vars(body), body)
     tvm_params = {k: tvm.nd.array(v) for k, v in tensors.items()}
 
-    return _module.Module.from_expr(func), tvm_params
+    from relay_op_conversion import mod
+    mod["main"] = tvm.relay.Function(_analysis.free_vars(body), body)
+
+    return mod, tvm_params

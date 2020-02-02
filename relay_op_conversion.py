@@ -21,13 +21,6 @@ def wrap_const(c):
     return c
 
 
-def py_list_to_relay_list(py_list):
-    lst = nil()
-    for elem in py_list:
-        lst = cons(elem, lst)
-    return lst
-
-
 # operator implementation
 def _elemwise(name):
     def _impl(inputs, input_types):
