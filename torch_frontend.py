@@ -406,9 +406,11 @@ def report_missing_conversion(graph):
                  "prim::ListConstruct", "prim::ListUnpack",
                  "prim::TupleConstruct", "prim::TupleUnpack",
                  "prim::If", "prim::Loop"]
-    known_ops += ["relay::tensor_array_create",
-                  "relay::tensor_array_stack",
-                  "relay::tensor_array_write"]
+    known_ops += ["relay::empty_list",
+                  "relay::cons_list",
+                  "relay::rev_list",
+                  "relay::tensor_array_stack"]
+
     known_ops += list(convert_map.keys())
 
     missing = [op_name for op_name in get_all_op_names(graph)
@@ -447,15 +449,18 @@ def rewrite_for_tensor_array(graph):
         tensor_list_op = chain[0]
         loop_op = get_node(chain, "prim::Loop")
 
-        tarray_create_node = graph.create("relay::tensor_array_create",
-                                          [loop_op.inputsAt(0)])
+        tarray_create_node = graph.create("relay::empty_list")
         tarray_create_node.insertBefore(loop_op)
         tensor_list_op.replaceAllUsesWith(tarray_create_node)
         tensor_list_op.destroy()
 
+        rev_list_node = graph.create("relay::rev_list",
+                                     [loop_op.outputsAt(0)])
+        rev_list_node.insertAfter(loop_op)
+
         stack_op = get_node(chain, "aten::stack")
         tarray_stack_node = graph.create("relay::tensor_array_stack",
-                                         [loop_op.outputsAt(0)])
+                                         [rev_list_node.output()])
         tarray_stack_node.insertBefore(stack_op)
         stack_op.replaceAllUsesWith(tarray_stack_node)
         stack_op.destroy()
@@ -471,8 +476,8 @@ def rewrite_for_tensor_array(graph):
         list_singlton_op.output().replaceAllUsesWith(list_singlton_op_input)
         list_singlton_op.destroy()
 
-        tarray_write_node = graph.create("relay::tensor_array_write",
-                                         list(list_add_op.inputs()))
+        tarray_write_node = graph.create("relay::cons_list",
+                                         list(reversed(list(list_add_op.inputs()))))
         tarray_write_node.insertBefore(list_add_op)
         list_add_op.replaceAllUsesWith(tarray_write_node)
         list_add_op.destroy()
