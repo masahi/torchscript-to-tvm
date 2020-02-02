@@ -70,15 +70,11 @@ Missing conversion
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
     mod, params = parse_script_module(script_module, input_shapes, input_types)
-    print(mod)
+
+    comp = vm.VMCompiler()
+    opt_mod, _ = comp.optimize(mod, "llvm", params)
+    print(opt_mod["main"])
     continue
-
-    for k, v in params.items():
-        print(k, v.shape)
-
-    # comp = vm.VMCompiler()
-    # opt_mod, _ = comp.optimize(mod, "llvm", params)
-    # print(opt_mod)
 
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
     evaluator = executor.evaluate()

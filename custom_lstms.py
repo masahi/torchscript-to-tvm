@@ -86,13 +86,6 @@ class LSTMLayer(jit.ScriptModule):
             outputs += [out]
         return torch.stack(outputs), state
 
-        # out_shape = (input.size(0), input.size(1), self.cell.hidden_size)
-        # outputs = torch.zeros(out_shape, dtype=torch.float)
-        # for i in range(input.size(0)):
-        #     out, state = self.cell(input[i], state)
-        #     outputs[i] = out
-        # return outputs, state
-
 
 def init_stacked_lstm(num_layers, layer, first_layer_args, other_layer_args):
     layers = [layer(*first_layer_args)] + [layer(*other_layer_args)

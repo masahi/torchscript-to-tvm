@@ -371,18 +371,10 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
         else:
             output_index_map[node_name] = len(outputs)
             relay_op = convert_map[operator]
-
-            if operator == "aten::append" and isinstance(inputs[0], list):
-                inputs[0] = py_list_to_relay_list(inputs[0])
-
             outputs.append(relay_op(inputs, get_input_types(op_node)))
 
-            if operator == "aten::append":
-                #  append is an in place op
-                list_name = op_node.inputsAt(0).debugName()
-                outputs[output_index_map[list_name]] = outputs[-1]
-
     ret = outputs[output_index_map[ret_name]]
+
     if isinstance(ret, list):
         ret = _expr.Tuple(ret)
     else:
@@ -504,6 +496,9 @@ def parse_script_module(script_module, input_shapes, input_types={}):
     tvm_params = {k: tvm.nd.array(v) for k, v in tensors.items()}
 
     from relay_op_conversion import mod
-    mod["main"] = tvm.relay.Function(_analysis.free_vars(body), body)
+    free_vars = _analysis.free_vars(body)
+    mod["main"] = tvm.relay.Function(free_vars, body)
+    print("free vars:", free_vars)
+    print("body", mod["main"])
 
     return mod, tvm_params

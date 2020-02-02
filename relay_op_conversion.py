@@ -779,7 +779,8 @@ def _empty_list():
 
 def _cons_list():
     def _impl(inputs, input_types):
-        return p.cons(inputs[0], inputs[1])
+        tensor2 = p.get_var('tensor2', "float32")
+        return p.cons(tensor2(inputs[0]), inputs[1])
     return _impl
 
 
@@ -792,7 +793,8 @@ def _rev_list():
 def _tensor_array_stack():
     def _impl(inputs, input_types):
         stack = p.get_var('tensor_array_stack', "float32")
-        return stack(inputs[0])
+        stacked = stack(inputs[0])
+        return stacked
     return _impl
 
 
