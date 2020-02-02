@@ -5,6 +5,7 @@ from tvm import relay
 from tvm.relay.backend import vm
 from tvm.relay import TupleType, TensorType
 from torch_frontend import parse_script_module
+import itertools
 
 from custom_lstms import rnn_layer, stacked_rnn, stacked_lnlstm
 
@@ -68,6 +69,7 @@ Missing conversion
 """
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
+    break
     mod, params = parse_script_module(script_module, input_shapes, input_types)
     print(mod)
     continue
@@ -102,3 +104,38 @@ for raw_model in models:
             print(np.max(np.abs(op_res.asnumpy() - pt_result.numpy())))
             tvm.testing.assert_allclose(op_res.asnumpy(), pt_result.numpy(),
                                         rtol=1e-5, atol=1e-5)
+
+graph = script_module.graph
+list_construct_ops = graph.findAllNodes("prim::ListConstruct")
+tensor_list_ops = [op for op in list_construct_ops if str(op.output().type()) == "List[Tensor]"]
+
+
+def get_use_chains(root_node):
+    def concat_lists(lists):
+        return itertools.chain.from_iterable(lists)
+
+    def inner(current, accum):
+        users = []
+        for output in current.outputs():
+            users += [use.user for use in output.uses()]
+
+        if not users:
+            return [accum]
+
+        return concat_lists([inner(nxt, accum + [nxt]) for nxt in users])
+
+    return inner(root_node, [root_node])
+
+
+def has_kind(chain, kind):
+    return any([node.kind() == kind for node in chain])
+
+
+chains = []
+for tensor_list_op in tensor_list_ops:
+    chains += get_use_chains(tensor_list_op)
+
+chains = [chain for chain in chains
+          if has_kind(chain, "aten::stack") and has_kind(chain, "prim::Loop")]
+# for use in outputs1.output().uses():
+#     print(use.user)
