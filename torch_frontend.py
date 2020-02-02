@@ -10,7 +10,7 @@ from tvm.relay.loops import while_loop
 from tvm.relay import op as _op
 
 from relay_op_conversion import convert_map, wrap_const
-
+from relay_op_conversion import py_list_to_relay_list
 
 def is_int_seq(seq):
     return len(seq) > 0 and all([isinstance(i, int) for i in seq])
@@ -309,7 +309,6 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
     for node_name, op_node in operators.items():
         operator = op_node.kind()
         inputs = get_op_inputs(op_node, outputs, output_index_map)
-        print(operator)
 
         if operator == "prim::Constant":
             output_index_map[node_name] = len(outputs)
@@ -360,7 +359,16 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
         else:
             output_index_map[node_name] = len(outputs)
             relay_op = convert_map[operator]
+
+            if operator == "aten::append" and isinstance(inputs[0], list):
+                inputs[0] = py_list_to_relay_list(inputs[0])
+
             outputs.append(relay_op(inputs, get_input_types(op_node)))
+
+            if operator == "aten::append":
+                #  append is an in place op
+                list_name = op_node.inputsAt(0).debugName()
+                outputs[output_index_map[list_name]] = outputs[-1]
 
     ret = outputs[output_index_map[ret_name]]
     if isinstance(ret, list):

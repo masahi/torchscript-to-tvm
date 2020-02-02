@@ -83,7 +83,7 @@ class LSTMLayer(jit.ScriptModule):
         outputs = []
         for i in range(input.size(0)):
             out, state = self.cell(input[i], state)
-            outputs.append(out)
+            outputs += [out]
         return torch.stack(outputs), state
 
 

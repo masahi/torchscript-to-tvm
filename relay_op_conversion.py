@@ -3,17 +3,32 @@
 import numpy as np
 
 import tvm
-
+from tvm import relay
 from tvm.relay import expr as _expr
 from tvm.relay import op as _op
 from tvm.relay.frontend.common import get_relay_op
 from tvm.relay.frontend.common import infer_shape as _infer_shape
+from tvm.relay.prelude import Prelude
+
+
+mod = relay.Module()
+p = Prelude(mod)
+nil = p.nil
+cons = p.cons
+concat = p.concat
 
 
 def wrap_const(c):
     if not isinstance(c, _expr.Expr) and not isinstance(c, list):
         return _expr.const(c)
     return c
+
+
+def py_list_to_relay_list(py_list):
+    lst = nil()
+    for elem in py_list:
+        lst = cons(elem, lst)
+    return lst
 
 
 # operator implementation
@@ -751,8 +766,11 @@ def _Float():
 
 def _stack():
     def _impl(inputs, input_types):
-        print("stack input:", inputs)
-        return _op.tensor.stack(inputs[0], 0)
+        if isinstance(inputs[0], list):
+            return _op.tensor.stack(inputs[0], 0)
+        else:
+            return wrap_const(1)
+            assert False
     return _impl
 
 
@@ -771,8 +789,10 @@ def _getitem():
 
 def _append():
     def _impl(inputs, input_types):
-        inputs[0].append(inputs[1])
-        return inputs[0]
+        lst1 = inputs[0]
+        lst2 = py_list_to_relay_list([inputs[1]])
+        print(lst1)
+        return concat(lst1, lst2)
     return _impl
 
 

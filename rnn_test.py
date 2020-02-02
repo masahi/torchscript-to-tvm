@@ -69,8 +69,9 @@ Missing conversion
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
     mod, params = parse_script_module(script_module, input_shapes, input_types)
-    continue
     print(mod)
+    continue
+
     for k, v in params.items():
         print(k, v.shape)
 
