@@ -131,11 +131,45 @@ def has_kind(chain, kind):
     return any([node.kind() == kind for node in chain])
 
 
+def get_node(node_list, kind, filter_func=lambda node: True):
+    for node in node_list:
+        if node.kind() == kind and filter_func(node):
+            return node
+    assert False
+    return None
+
+
 chains = []
 for tensor_list_op in tensor_list_ops:
     chains += get_use_chains(tensor_list_op)
 
 chains = [chain for chain in chains
           if has_kind(chain, "aten::stack") and has_kind(chain, "prim::Loop")]
+
+for chain in chains:
+    tensor_list_op = chain[0]
+    loop_op = get_node(chain, "prim::Loop")
+    stack_op = get_node(chain, "aten::stack")
+
+    loop_block = list(loop_op.blocks())[0]
+    loop_nodes = list(loop_block.nodes())
+
+    list_add_op = get_node(loop_nodes, "aten::add_",
+                           lambda node: str(node.output().type()) == "List[Tensor]")
+    list_singlton_op = list_add_op.inputsAt(1).node()
+
+    tarray_create_node = graph.create("relay::tensor_array_create")
+    tarray_create_node.insertBefore(loop_op)
+    tensor_list_op.replaceAllUsesWith(tarray_create_node)
+    tensor_list_op.destroy()
+
+    tarray_stack_node = graph.create("relay::tensor_array_stack", [])
+    tarray_stack_node.insertBefore(stack_op)
+    stack_op.replaceAllUsesWith(tarray_stack_node)
+    stack_op.destroy()
+
+#torch._C._jit_pass_dce(graph)
+#torch._C._jit_pass_inline(graph)
+print(graph)
 # for use in outputs1.output().uses():
 #     print(use.user)
