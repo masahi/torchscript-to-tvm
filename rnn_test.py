@@ -149,24 +149,34 @@ chains = [chain for chain in chains
 for chain in chains:
     tensor_list_op = chain[0]
     loop_op = get_node(chain, "prim::Loop")
-    stack_op = get_node(chain, "aten::stack")
-
-    loop_block = list(loop_op.blocks())[0]
-    loop_nodes = list(loop_block.nodes())
-
-    list_add_op = get_node(loop_nodes, "aten::add_",
-                           lambda node: str(node.output().type()) == "List[Tensor]")
-    list_singlton_op = list_add_op.inputsAt(1).node()
 
     tarray_create_node = graph.create("relay::tensor_array_create")
     tarray_create_node.insertBefore(loop_op)
     tensor_list_op.replaceAllUsesWith(tarray_create_node)
     tensor_list_op.destroy()
 
-    tarray_stack_node = graph.create("relay::tensor_array_stack", [])
+    stack_op = get_node(chain, "aten::stack")
+    tarray_stack_node = graph.create("relay::tensor_array_stack", [loop_op.outputsAt(0)])
     tarray_stack_node.insertBefore(stack_op)
     stack_op.replaceAllUsesWith(tarray_stack_node)
     stack_op.destroy()
+
+    loop_block = list(loop_op.blocks())[0]
+    loop_nodes = list(loop_block.nodes())
+
+    list_add_op = get_node(loop_nodes, "aten::add_",
+                           lambda node: str(node.output().type()) == "List[Tensor]")
+
+    list_singlton_op = list_add_op.inputsAt(1).node()
+    list_singlton_op_input = list_singlton_op.inputsAt(0)
+    list_singlton_op.output().replaceAllUsesWith(list_singlton_op_input)
+    list_singlton_op.destroy()
+
+    tarray_write_node = graph.create("relay::tensor_array_write", list(list_add_op.inputs()))
+    tarray_write_node.insertBefore(list_add_op)
+    list_add_op.replaceAllUsesWith(tarray_write_node)
+    list_add_op.destroy()
+
 
 #torch._C._jit_pass_dce(graph)
 #torch._C._jit_pass_inline(graph)
