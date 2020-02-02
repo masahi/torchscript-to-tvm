@@ -80,10 +80,10 @@ class LSTMLayer(jit.ScriptModule):
     @jit.script_method
     def forward(self, input, state):
         # type: (Tensor, Tuple[Tensor, Tensor]) -> Tuple[Tensor, Tuple[Tensor, Tensor]]
-        outputs = torch.jit.annotate(List[Tensor], [])
+        outputs = []
         for i in range(input.size(0)):
             out, state = self.cell(input[i], state)
-            outputs += [out]
+            outputs.append(out)
         return torch.stack(outputs), state
 
 

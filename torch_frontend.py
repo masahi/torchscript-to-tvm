@@ -2,6 +2,7 @@ import itertools
 import numpy as np
 import torch
 import tvm
+from tvm import relay
 from tvm.relay import expr as _expr
 from tvm.relay import analysis as _analysis
 from tvm.relay import module as _module
@@ -12,7 +13,7 @@ from relay_op_conversion import convert_map, wrap_const
 
 
 def is_int_seq(seq):
-    return all([isinstance(i, int) for i in seq])
+    return len(seq) > 0 and all([isinstance(i, int) for i in seq])
 
 
 def parse_inputs(graph_inputs, input_shapes, input_types):
@@ -236,6 +237,8 @@ def parse_loop(op_node, outputs, output_index_map):
         out = outputs[output_ind]
         if isinstance(out, _expr.Expr):  # TODO: remove this condition
             return out
+        if isinstance(out, list):
+            return out
         return _expr.const(out)
 
     max_loop_count = get_input(0)
@@ -290,6 +293,8 @@ def parse_loop(op_node, outputs, output_index_map):
             return _expr.var(name, shape=(), dtype=val.data.dtype)
         if isinstance(val, _expr.Var):
             return _expr.var(name, type_annotation=val.type_annotation)
+        if isinstance(val, list):
+            assert False
         return _expr.var(name)
 
     loop_iter_var = _expr.var(inames[0], shape=(), dtype=loop_iter_dtype)
@@ -304,6 +309,7 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
     for node_name, op_node in operators.items():
         operator = op_node.kind()
         inputs = get_op_inputs(op_node, outputs, output_index_map)
+        print(operator)
 
         if operator == "prim::Constant":
             output_index_map[node_name] = len(outputs)
@@ -311,17 +317,33 @@ def parse_operators(operators, outputs, output_index_map, ret_name):
         elif operator == 'prim::ListConstruct' and is_int_seq(inputs):
             output_index_map[node_name] = len(outputs)
             outputs.append(_expr.var(node_name, shape=inputs))
-        elif operator in ['prim::ListConstruct', 'prim::TupleConstruct']:
+        elif operator == 'prim::ListConstruct':
             output_index_map[node_name] = len(outputs)
             outputs.append(inputs)
+        elif operator == 'prim::TupleConstruct':
+            output_index_map[node_name] = len(outputs)
+            outputs.append(relay.Tuple(inputs))
         elif operator in ["prim::ListUnpack", 'prim::TupleUnpack']:
+            assert len(inputs) == 1
             unpacked_names = get_output_names(op_node)
+
             if isinstance(inputs[0], list):
                 update_outputs_from_pairs(zip(unpacked_names, inputs[0]),
                                           outputs, output_index_map)
             else:
-                print(inputs)
-                assert False
+                def unpack_and_update(tup, num_fields):
+                    assert num_fields == len(unpacked_names)
+                    unpacked = [_expr.TupleGetItem(tup, i) for i in range(num_fields)]
+                    update_outputs_from_pairs(zip(unpacked_names, unpacked),
+                                              outputs, output_index_map)
+                if isinstance(inputs[0], relay.Tuple):
+                    unpack_and_update(inputs[0], len(inputs[0].fields))
+                elif isinstance(inputs[0].type_annotation, relay.TupleType):
+                    fields = inputs[0].type_annotation.fields
+                    unpack_and_update(inputs[0], len(fields))
+                else:
+                    assert False
+
         elif operator == "prim::If":
             cond = outputs[output_index_map[op_node.inputsAt(0).debugName()]]
             blocks = list(op_node.blocks())

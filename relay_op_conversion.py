@@ -11,7 +11,7 @@ from tvm.relay.frontend.common import infer_shape as _infer_shape
 
 
 def wrap_const(c):
-    if not isinstance(c, _expr.Expr):
+    if not isinstance(c, _expr.Expr) and not isinstance(c, list):
         return _expr.const(c)
     return c
 
@@ -769,6 +769,13 @@ def _getitem():
     return _impl
 
 
+def _append():
+    def _impl(inputs, input_types):
+        inputs[0].append(inputs[1])
+        return inputs[0]
+    return _impl
+
+
 # Operator mappings
 convert_map = {
     'aten::device'                          : _device(),
@@ -836,5 +843,6 @@ convert_map = {
     'aten::tanh'                            : _tanh(),
     'aten::stack'                           : _stack(),
     'aten::mm'                              : _matmul(),
-    'aten::__getitem__'                     : _getitem()
+    'aten::__getitem__'                     : _getitem(),
+    'aten::append'                          : _append()
 }

@@ -51,7 +51,7 @@ num_layers = 4
 input_name = 'X'
 # input_shapes = {input_name: (10, 10, 4)}
 input_shapes = {}
-input_types = {input_name: TensorType((seq_len, batch, hidden_size)),
+input_types = {input_name: TensorType((seq_len, batch, input_size)),
                "states": TupleType([TensorType((batch, hidden_size)),
                                     TensorType((batch, hidden_size))])}
 
@@ -70,29 +70,27 @@ for raw_model in models:
     script_module = torch.jit.script(raw_model)
     mod, params = parse_script_module(script_module, input_shapes, input_types)
     continue
-    # print(mod)
-    # for k, v in params.items():
-    #     print(k, v.shape)
+    print(mod)
+    for k, v in params.items():
+        print(k, v.shape)
 
-    comp = vm.VMCompiler()
-    opt_mod, _ = comp.optimize(mod, "llvm", params)
-    print(opt_mod)
+    # comp = vm.VMCompiler()
+    # opt_mod, _ = comp.optimize(mod, "llvm", params)
+    # print(opt_mod)
 
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
     evaluator = executor.evaluate()
 
     for i in range(5):
-        # LSTMState = namedtuple('LSTMState', ['hx', 'cx'])
-        # inp = torch.randn(seq_len, batch, input_size)
-        # states = [LSTMState(torch.randn(batch, hidden_size),
-        #                     torch.randn(batch, hidden_size))
-        #           for _ in range(num_layers)]
+        inp = torch.randn(seq_len, batch, input_size)
+        states = [(torch.randn(batch, hidden_size), torch.randn(batch, hidden_size))
+                  for _ in range(num_layers)]
 
-        inp = torch.randn(input_shapes[input_name], dtype=torch.float)
         with torch.no_grad():
-            pt_result = raw_model(inp.clone())
+            pt_result = raw_model(inp.clone(), states[0])
 
         params[input_name] = inp.numpy()
+        params["states"] = (st.numpy() for st in states[0])
         op_res = evaluator(**params)
 
         if not isinstance(pt_result, torch.Tensor):
