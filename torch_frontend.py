@@ -403,10 +403,86 @@ def report_missing_conversion(graph):
         raise NotImplementedError(msg)
 
 
+def rewrite_for_tensor_array(graph):
+    def get_use_chains(root_node):
+        def concat_lists(lists):
+            return itertools.chain.from_iterable(lists)
+
+        def inner(current, accum):
+            users = []
+            for output in current.outputs():
+                users += [use.user for use in output.uses()]
+
+            if not users:
+                return [accum]
+
+            return concat_lists([inner(nxt, accum + [nxt]) for nxt in users])
+
+        return inner(root_node, [root_node])
+
+    def has_kind(chain, kind):
+        return any([node.kind() == kind for node in chain])
+
+    def needs_rewrite(chain):
+        return has_kind(chain, "aten::stack") and has_kind(chain, "prim::Loop")
+
+    def get_node(node_list, kind, filter_func=lambda node: True):
+        for node in node_list:
+            if node.kind() == kind and filter_func(node):
+                return node
+        assert False
+        return None
+
+    def node_type(node):
+        return str(node.output().type())
+
+    list_construct_ops = graph.findAllNodes("prim::ListConstruct")
+    tensor_list_ops = [op for op in list_construct_ops
+                       if node_type(op) == "List[Tensor]"]
+    chains = []
+    for tensor_list_op in tensor_list_ops:
+        chains += get_use_chains(tensor_list_op)
+
+    for chain in [chain for chain in chains if needs_rewrite(chain)]:
+        tensor_list_op = chain[0]
+        loop_op = get_node(chain, "prim::Loop")
+
+        tarray_create_node = graph.create("relay::tensor_array_create",
+                                          [loop_op.inputsAt(0)])
+        tarray_create_node.insertBefore(loop_op)
+        tensor_list_op.replaceAllUsesWith(tarray_create_node)
+        tensor_list_op.destroy()
+
+        stack_op = get_node(chain, "aten::stack")
+        tarray_stack_node = graph.create("relay::tensor_array_stack",
+                                         [loop_op.outputsAt(0)])
+        tarray_stack_node.insertBefore(stack_op)
+        stack_op.replaceAllUsesWith(tarray_stack_node)
+        stack_op.destroy()
+
+        loop_block = list(loop_op.blocks())[0]
+        loop_nodes = list(loop_block.nodes())
+
+        list_add_op = get_node(loop_nodes, "aten::add_",
+                               lambda node: node_type(node) == "List[Tensor]")
+
+        list_singlton_op = list_add_op.inputsAt(1).node()
+        list_singlton_op_input = list_singlton_op.inputsAt(0)
+        list_singlton_op.output().replaceAllUsesWith(list_singlton_op_input)
+        list_singlton_op.destroy()
+
+        tarray_write_node = graph.create("relay::tensor_array_write",
+                                         list(list_add_op.inputs()))
+        tarray_write_node.insertBefore(list_add_op)
+        list_add_op.replaceAllUsesWith(tarray_write_node)
+        list_add_op.destroy()
+
+
 def parse_script_module(script_module, input_shapes, input_types={}):
     graph = script_module.graph.copy()
-    run_jit_passes(graph)
+    rewrite_for_tensor_array(graph)
     print(graph)
+    run_jit_passes(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
