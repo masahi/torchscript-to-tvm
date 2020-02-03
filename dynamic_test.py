@@ -102,24 +102,33 @@ class SimpleWhileLoop(torch.nn.Module):
         return a
 
 
+class SimpleLoopVM_bug(torch.nn.Module):
+    def forward(self, inp):
+        a = inp
+        for i in range(inp.size(0)):
+            a += inp
+        return a
+
+
 input_name = 'X'
 input_shapes = {input_name: (10, 20)}
 
 models = [
-    SimpleIf(10, 20).eval(),
-    NestedIf(10, 20).eval(),
-    ScalarLoop().eval(),
-    SimpleLoop().eval(),
-    LoopWithIf().eval(),
-    SimpleScalarWhileLoop().eval(),
-    SimpleWhileLoop().eval(),
-    NestedLoop().eval()
+    # SimpleIf(10, 20).eval(),
+    # NestedIf(10, 20).eval(),
+    # ScalarLoop().eval(),
+    # SimpleLoop().eval(),
+    # LoopWithIf().eval(),
+    # SimpleScalarWhileLoop().eval(),
+    # SimpleWhileLoop().eval(),
+    # NestedLoop().eval()
+    SimpleLoopVM_bug().eval(),
 ]
 
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
     mod, params = parse_script_module(script_module, input_shapes)
-    print(mod)
+    print(mod["main"])
 
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
     evaluator = executor.evaluate()
