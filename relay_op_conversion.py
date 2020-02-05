@@ -794,7 +794,27 @@ def _tensor_array_stack():
     def _impl(inputs, input_types):
         stack = p.get_var('tensor_array_stack', "float32")
         stacked = stack(inputs[0])
-        return stacked
+        get_tensor_func = p.get_var("get_tensor2", "float32")
+        return get_tensor_func(stacked)
+    return _impl
+
+
+def _upsample(method):
+    def _impl(inputs, input_types):
+        if isinstance(inputs[1], _expr.Var):
+            out_size = _infer_shape(inputs[1])
+        elif isinstance(inputs[1], list):
+            infer_res = [_infer_value(size, {}) for size in inputs[1]]
+            out_size = [np.asscalar(res.asnumpy().astype(np.int)) for res in infer_res]
+        data = inputs[0]
+
+        align_corners = inputs[2]
+        if align_corners:
+            coord_trans = "align_corners"
+        else:
+            coord_trans = "half_pixel"
+        # read that we should actually start to use interpolate(..., mode='bilinear', align_corners=True) instead of upsample
+        return _op.image.resize(data, out_size, "NCHW", "bilinear", coord_trans)
     return _impl
 
 
@@ -868,6 +888,6 @@ convert_map = {
     'relay::empty_list'                     : _empty_list(),
     'relay::cons_list'                      : _cons_list(),
     'relay::rev_list'                       : _rev_list(),
-    'relay::tensor_array_stack'             : _tensor_array_stack()
-
+    'relay::tensor_array_stack'             : _tensor_array_stack(),
+    'aten::upsample_bilinear2d'             : _upsample("bilinear"),
 }

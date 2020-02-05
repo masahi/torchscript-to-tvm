@@ -478,8 +478,8 @@ def rewrite_for_tensor_array(graph):
 def parse_script_module(script_module, input_shapes, input_types={}):
     graph = script_module.graph.copy()
     rewrite_for_tensor_array(graph)
-    print(graph)
     run_jit_passes(graph)
+    # print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
@@ -498,7 +498,5 @@ def parse_script_module(script_module, input_shapes, input_types={}):
     from relay_op_conversion import mod
     free_vars = _analysis.free_vars(body)
     mod["main"] = tvm.relay.Function(free_vars, body)
-    print("free vars:", free_vars)
-    print("body", mod["main"])
 
     return mod, tvm_params
