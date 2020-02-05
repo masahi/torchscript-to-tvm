@@ -37,7 +37,8 @@ class RNNLoop(torch.nn.Module):
         self.cell = torch.jit.trace(Cell(scripted_gate), (x, h))
 
     def forward(self, xs):
-        h, y = torch.zeros(10, 4, dtype=torch.float), torch.zeros(10, 4, dtype=torch.float)
+        h = torch.zeros(10, 4, dtype=torch.float)
+        y = torch.zeros(10, 4, dtype=torch.float)
         for i in range(xs.size(0)):
             y, h = self.cell(xs[i], h)
         return y
@@ -50,18 +51,20 @@ hidden_size = 4
 num_layers = 4
 
 input_name = 'X'
-# input_shapes = {input_name: (10, 10, 4)}
-input_shapes = {}
-input_types = {input_name: TensorType((seq_len, batch, input_size)),
-               "states": TupleType([TensorType((batch, hidden_size)),
-                                    TensorType((batch, hidden_size))])}
+input_shapes = {input_name: (10, 10, 4)}
+input_types = {}
 
-gate = DecisionGate()
+# for lstm
+# input_shapes = {}
+# input_types = {input_name: TensorType((seq_len, batch, input_size)),
+#                "states": TupleType([TensorType((batch, hidden_size)),
+#                                     TensorType((batch, hidden_size))])}
 
 models = [
-    rnn_layer(input_size, hidden_size).eval(),
-#    stacked_rnn(input_size, hidden_size, num_layers).eval(),
-#    stacked_lnlstm(input_size, hidden_size, num_layers).eval()
+  RNNLoop(DecisionGate())
+  # rnn_layer(input_size, hidden_size).eval(),
+  # stacked_rnn(input_size, hidden_size, num_layers).eval(),
+  # stacked_lnlstm(input_size, hidden_size, num_layers).eval()
 ]
 """
 Missing conversion
@@ -71,25 +74,33 @@ for raw_model in models:
     script_module = torch.jit.script(raw_model)
     mod, params = parse_script_module(script_module, input_shapes, input_types)
 
-    comp = vm.VMCompiler()
-    opt_mod, _ = comp.optimize(mod, "llvm", params)
-    print(opt_mod["main"])
-    continue
+    # comp = vm.VMCompiler()
+    # opt_mod, _ = comp.optimize(mod, "llvm", params)
+    # print(opt_mod["main"])
+    # continue
 
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
     evaluator = executor.evaluate()
 
     for i in range(5):
-        inp = torch.randn(seq_len, batch, input_size)
-        states = [(torch.randn(batch, hidden_size), torch.randn(batch, hidden_size))
-                  for _ in range(num_layers)]
-
+        inp = torch.randn(input_shapes[input_name], dtype=torch.float)
         with torch.no_grad():
-            pt_result = raw_model(inp.clone(), states[0])
+            pt_result = raw_model(inp.clone())
 
         params[input_name] = inp.numpy()
-        params["states"] = (st.numpy() for st in states[0])
         op_res = evaluator(**params)
+
+        # for lstm
+        # inp = torch.randn(seq_len, batch, input_size)
+        # states = [(torch.randn(batch, hidden_size), torch.randn(batch, hidden_size))
+        #           for _ in range(num_layers)]
+
+        # with torch.no_grad():
+        #     pt_result = raw_model(inp.clone(), states[0])
+
+        # params[input_name] = inp.numpy()
+        # params["states"] = (st.numpy() for st in states[0])
+        # op_res = evaluator(**params)
 
         if not isinstance(pt_result, torch.Tensor):
             tvm_res = np.asscalar(op_res.asnumpy())

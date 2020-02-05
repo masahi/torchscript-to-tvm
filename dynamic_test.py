@@ -114,15 +114,15 @@ input_name = 'X'
 input_shapes = {input_name: (10, 20)}
 
 models = [
-    # SimpleIf(10, 20).eval(),
-    # NestedIf(10, 20).eval(),
-    # ScalarLoop().eval(),
-    # SimpleLoop().eval(),
-    # LoopWithIf().eval(),
-    # SimpleScalarWhileLoop().eval(),
-    # SimpleWhileLoop().eval(),
-    # NestedLoop().eval()
-    SimpleLoopVM_bug().eval(),
+    SimpleIf(10, 20).eval(),
+    NestedIf(10, 20).eval(),
+    ScalarLoop().eval(),
+    SimpleLoop().eval(),
+    LoopWithIf().eval(),
+    SimpleScalarWhileLoop().eval(),
+    SimpleWhileLoop().eval(),
+    NestedLoop().eval()
+    # SimpleLoopVM_bug().eval(),
 ]
 
 for raw_model in models:

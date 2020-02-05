@@ -5,10 +5,8 @@ import tvm
 from tvm import relay
 from tvm.relay import expr as _expr
 from tvm.relay import analysis as _analysis
-from tvm.relay import module as _module
 from tvm.relay.loops import while_loop
 from tvm.relay import op as _op
-from tvm.relay.prelude import Prelude
 
 from relay_op_conversion import convert_map, wrap_const
 
@@ -398,6 +396,7 @@ def report_missing_conversion(graph):
                  "prim::ListConstruct", "prim::ListUnpack",
                  "prim::TupleConstruct", "prim::TupleUnpack",
                  "prim::If", "prim::Loop"]
+    # ops added during rewrite
     known_ops += ["relay::empty_list",
                   "relay::cons_list",
                   "relay::rev_list",
@@ -496,7 +495,6 @@ def parse_script_module(script_module, input_shapes, input_types={}):
     tvm_params = {k: tvm.nd.array(v) for k, v in tensors.items()}
 
     from relay_op_conversion import mod
-    free_vars = _analysis.free_vars(body)
-    mod["main"] = tvm.relay.Function(free_vars, body)
+    mod["main"] = tvm.relay.Function(_analysis.free_vars(body), body)
 
     return mod, tvm_params
