@@ -39,6 +39,9 @@ def run_on_models(models, inp, input_shapes, target="llvm"):
         print(np.max(np.abs(tvm_result - pt_result)),
               np.mean(np.abs(tvm_result - pt_result)))
 
+        tvm.testing.assert_allclose(tvm_result, pt_result,
+                                    rtol=1e-3, atol=1e-3)
+
 
 def imagenet_test():
     inp = torch.rand(1, 3, 224, 224, dtype=torch.float)
@@ -51,10 +54,13 @@ def imagenet_test():
         models.squeezenet.squeezenet1_1(pretrained=True).eval(),
         models.densenet.densenet121(pretrained=True).eval(),
         models.inception.inception_v3(pretrained=True).eval(),
-        models.mnasnet.mnasnet1_0(pretrained=True).eval()
+        models.mnasnet.mnasnet1_0(pretrained=True).eval(),
+        models.alexnet(pretrained=True).eval(),
+        models.vgg.vgg11_bn(pretrained=True).eval(),
     ]
 
-    run_on_models(test_models, inp, input_shapes)
+    for target in ["llvm", "cuda"]:
+        run_on_models(test_models, inp, input_shapes, target)
 
 
 def segmentation_test():
@@ -70,7 +76,8 @@ def segmentation_test():
        WrapperModule(deeplab),
     ]
 
-    run_on_models(test_models, inp, input_shapes, "llvm")
+    for target in ["llvm", "cuda"]:
+        run_on_models(test_models, inp, input_shapes, target)
 
 
 imagenet_test()
