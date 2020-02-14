@@ -102,14 +102,6 @@ class SimpleWhileLoop(torch.nn.Module):
         return a
 
 
-class SimpleLoopVM_bug(torch.nn.Module):
-    def forward(self, inp):
-        a = inp
-        for i in range(inp.size(0)):
-            a += inp
-        return a
-
-
 input_name = 'X'
 input_shapes = {input_name: (10, 20)}
 
@@ -122,7 +114,6 @@ models = [
     SimpleScalarWhileLoop().eval(),
     SimpleWhileLoop().eval(),
     NestedLoop().eval()
-    # SimpleLoopVM_bug().eval(),
 ]
 
 for raw_model in models:
