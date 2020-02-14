@@ -3,16 +3,15 @@
 import numpy as np
 
 import tvm
-from tvm import relay
 from tvm.relay import expr as _expr
 from tvm.relay import op as _op
 from tvm.relay.frontend.common import get_relay_op
 from tvm.relay.frontend.common import infer_shape as _infer_shape
 from tvm.relay.frontend.common import infer_value as _infer_value
 from tvm.relay.prelude import Prelude
+from tvm.ir import module
 
-
-mod = relay.Module()
+mod = module.IRModule()
 p = Prelude(mod)
 
 
@@ -390,7 +389,7 @@ def _transpose():
         else:
             ndims = data.shape
 
-        if isinstance(data, tvm.ndarray.NDArray):
+        if isinstance(data, tvm.runtime.ndarray.NDArray):
             ndims = len(data.shape)
         axes = list(range(ndims))
 
