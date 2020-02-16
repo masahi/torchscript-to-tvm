@@ -7,6 +7,7 @@ from tvm.relay import expr as _expr
 from tvm.relay import analysis as _analysis
 from tvm.relay.loops import while_loop
 from tvm.relay import op as _op
+from tvm.ir import module as _module
 
 from relay_op_conversion import convert_map, wrap_const
 
@@ -494,7 +495,6 @@ def parse_script_module(script_module, input_shapes, input_types={}):
                            output_index_map, ret_name)
     tvm_params = {k: tvm.nd.array(v) for k, v in tensors.items()}
 
-    from relay_op_conversion import mod
-    mod["main"] = tvm.relay.Function(_analysis.free_vars(body), body)
+    func = tvm.relay.Function(_analysis.free_vars(body), body)
 
-    return mod, tvm_params
+    return _module.IRModule.from_expr(func), tvm_params

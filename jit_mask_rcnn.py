@@ -1,32 +1,68 @@
 import torch
 import torchvision
+import numpy as np
 
 
-def do_script(model):
+def do_script(model, in_size=100):
     model_script = torch.jit.script(model)
     model_script.eval()
-
-    # compute predictions
-    # predictions = model_script([torch.rand(3, 300, 300)])
-
-    torch._C._jit_pass_inline(model_script.graph)
-
-    print(model_script.graph)
+    return model_script
 
 
-# trace not working yet
-def do_trace(model):
-    model.eval()
-    model_trace = torch.jit.trace(model, torch.rand(1, 3, 300, 300))
+def do_trace(model, in_size=100):
+    model_trace = torch.jit.trace(model, torch.rand(1, 3, in_size, in_size))
     model_trace.eval()
-
-    # compute predictions
-    # predictions = model_trace([torch.rand(3, 300, 300)])
-
-    # torch._C._jit_pass_inline(model_trace.graph)
-
-    print(model_trace.graph)
+    return model_trace
 
 
-model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
-do_script(model)
+def dict_to_tuple(out_dict):
+    if "masks" in out_dict.keys():
+        return (out_dict["boxes"], out_dict["scores"], out_dict["labels"], out_dict["masks"])
+    return (out_dict["boxes"], out_dict["scores"], out_dict["labels"])
+
+
+class TraceWrapper(torch.nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
+
+    def forward(self, inp):
+        out = self.model(inp)
+        return dict_to_tuple(out[0])
+
+
+model_funcs = [torchvision.models.detection.fasterrcnn_resnet50_fpn,
+               torchvision.models.detection.maskrcnn_resnet50_fpn]
+
+script = False
+names = ["faster_rcnn", "mask_rcnn"]
+
+for name, model_func in zip(names, model_funcs):
+    if script:
+        model = model_func(num_classes=50, pretrained_backbone=False)
+    else:
+        model = TraceWrapper(model_func(num_classes=50, pretrained_backbone=False))
+
+    model.eval()
+    in_size = 100
+    inp = torch.rand(1, 3, in_size, in_size)
+
+    with torch.no_grad():
+        out = model(inp)
+
+        if script:
+            out = dict_to_tuple(out[0])
+            script_module = do_script(model)
+            script_out = script_module([inp[0]])[1]
+            script_out = dict_to_tuple(script_out[0])
+        else:
+            script_module = do_trace(model)
+            script_out = script_module(inp)
+
+        assert len(out[0]) > 0 and len(script_out[0]) > 0
+
+        # compare bbox coord
+        print(np.max(np.abs(out[0].numpy() - script_out[0].numpy())))
+
+        torch._C._jit_pass_inline(script_module.graph)
+        torch.jit.save(script_module, name + ".pt")
