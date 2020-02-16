@@ -197,48 +197,33 @@ def _convolution():
         if inputs[6] == '1':
             use_transpose = True
 
-        use_bias = False
-        if isinstance(inputs[2], _expr.Var):
-            use_bias = True
+        groups = int(inputs[8])
+        use_bias = isinstance(inputs[2], _expr.Var)
 
-            data = inputs[0]
-            weight = inputs[1]
-            bias = inputs[2]
+        data = inputs[0]
+        weight = inputs[1]
+        bias = inputs[2]
 
-            if isinstance(weight, (_expr.Call, _expr.Var, _expr.TupleGetItem)):
-                inferred_shape = _infer_shape(weight)
-                weight_shape = []
-                for infer in inferred_shape:
-                    weight_shape.append(infer)
-            else:
-                weight_shape = weight.shape
-            channels = weight_shape[0]
-
-            strides = inputs[3]
-            padding = inputs[4]
-            dilation = inputs[5]
-
-            kernel_size = weight_shape[2:]
-
+        if isinstance(weight, (_expr.Call, _expr.Var, _expr.TupleGetItem)):
+            inferred_shape = _infer_shape(weight)
+            weight_shape = []
+            for infer in inferred_shape:
+                weight_shape.append(infer)
         else:
-            data = inputs[0]
-            weight = inputs[1]
-            bias = inputs[2]
+            weight_shape = weight.shape
 
-            if isinstance(weight, (_expr.Call, _expr.Var, _expr.TupleGetItem)):
-                inferred_shape = _infer_shape(weight)
-                weight_shape = []
-                for infer in inferred_shape:
-                    weight_shape.append(infer)
-            else:
-                weight_shape = weight.shape
-            channels = weight_shape[0]
+        channels = weight_shape[0]
 
-            strides = inputs[3]
-            padding = inputs[4]
-            dilation = inputs[5]
+        if groups > 1 and channels % groups == 0:
+            channel_multiplier = channels // groups
+            weight = _op.transform.reshape(inputs[1], (groups, channel_multiplier, 3, 3))
+            groups *= channel_multiplier
 
-            kernel_size = weight_shape[2:]
+        strides = inputs[3]
+        padding = inputs[4]
+        dilation = inputs[5]
+
+        kernel_size = weight_shape[2:]
 
         if isinstance(strides, _expr.Var):
             strides = _infer_shape(strides)
@@ -248,8 +233,6 @@ def _convolution():
 
         if isinstance(dilation, _expr.Var):
             dilation = _infer_shape(dilation)
-
-        groups = int(inputs[8])
 
         if use_transpose:
             conv_out = _op.nn.conv2d_transpose(data,

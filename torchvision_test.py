@@ -68,9 +68,11 @@ def imagenet_test():
         models.mnasnet.mnasnet1_0(pretrained=True).eval(),
         models.alexnet(pretrained=True).eval(),
         models.vgg.vgg11_bn(pretrained=True).eval(),
+        # torch.nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3,
+        #                 padding=1, groups=16, bias=True)
     ]
 
-    for target in ["llvm"]:
+    for target in ["llvm", "cuda"]:
         run_on_models(test_models, inp, input_shapes, target)
 
 
