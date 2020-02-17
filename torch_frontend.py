@@ -477,7 +477,6 @@ def rewrite_for_tensor_array(graph):
 
 def parse_script_module(script_module, input_shapes, input_types={}):
     graph = script_module.graph.copy()
-    rewrite_for_tensor_array(graph)
     run_jit_passes(graph)
     # print(graph)
     report_missing_conversion(graph)

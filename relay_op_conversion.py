@@ -691,6 +691,13 @@ def _sqrt():
     return _impl
 
 
+def _rsqrt():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return _op.tensor.rsqrt(data)
+    return _impl
+
+
 def _neg():
     def _impl(inputs, input_types):
         data = inputs[0]
@@ -711,6 +718,24 @@ def _gt():
         lhs = wrap_const(inputs[0])
         rhs = wrap_const(inputs[1])
         return _op.tensor.greater(lhs, rhs)
+    return _impl
+
+
+def _ge():
+    def _impl(inputs, input_types):
+        assert len(inputs) == 2
+        lhs = wrap_const(inputs[0])
+        rhs = wrap_const(inputs[1])
+        return _op.tensor.greater_equal(lhs, rhs)
+    return _impl
+
+
+def _eq():
+    def _impl(inputs, input_types):
+        assert len(inputs) == 2
+        lhs = wrap_const(inputs[0])
+        rhs = wrap_const(inputs[1])
+        return _op.tensor.eq(lhs, rhs)
     return _impl
 
 
@@ -796,8 +821,104 @@ def _upsample(method):
             coord_trans = "align_corners"
         else:
             coord_trans = "half_pixel"
-        # read that we should actually start to use interpolate(..., mode='bilinear', align_corners=True) instead of upsample
-        return _op.image.resize(data, out_size, "NCHW", "bilinear", coord_trans)
+        return _op.image.resize(data, out_size, "NCHW", method, coord_trans)
+    return _impl
+
+
+def _zeros_like():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("zeros_like")(data)
+    return _impl
+
+
+def _full_like():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("full_like")(data)
+    return _impl
+
+
+def _floor():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("floor")(data)
+    return _impl
+
+
+def _ceil():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("ceil")(data)
+    return _impl
+
+
+def _full():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("full")(data)
+    return _impl
+
+
+def _reshape():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("reshape")(data)
+    return _impl
+
+
+def _squeeze():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("squeeze")(data)
+    return _impl
+
+
+def _exp():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("exp")(data)
+    return _impl
+
+
+def _arange():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("arange")(data)
+    return _impl
+
+
+def _clip():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("clip")(data)
+    return _impl
+
+
+def _nms():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("non_max_suppression")(data)
+    return _impl
+
+
+def _roi_align():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return get_relay_op("roi_align")(data)
+    return _impl
+
+
+def _topk():
+    def _impl(inputs, input_types):
+        data = inputs[0]
+        return _op.algorithm.topk(data)
+    return _impl
+
+
+def _identity():
+    def _impl(inputs, input_types):
+        return inputs[0]
     return _impl
 
 
@@ -860,6 +981,7 @@ convert_map = {
     'aten::sum'                             : _reduce('sum'),
     'aten::prod'                            : _reduce('prod'),
     'aten::sqrt'                            : _sqrt(),
+    'aten::rsqrt'                            : _rsqrt(),
     'aten::lt'                              : _lt(),
     'aten::gt'                              : _gt(),
     'aten::Bool'                            : _Bool(),
@@ -873,4 +995,22 @@ convert_map = {
     'relay::rev_list'                       : _rev_list(),
     'relay::tensor_array_stack'             : _tensor_array_stack(),
     'aten::upsample_bilinear2d'             : _upsample("bilinear"),
+    'aten::upsample_nearest2d'             : _upsample("nearest"),
+    'aten::detach'                          : _identity(),
+    'aten::unbind'                          : _identity(),
+    'aten::floor'                           : _floor(),
+    'aten::ceil'                            : _ceil(),
+    'aten::zeros_like'                      : _zeros_like(),
+    'aten::full'                            : _full(),
+    'aten::reshape'                         : _reshape(),
+    'aten::squeeze'                         : _squeeze(),
+    'aten::exp'                             : _exp(),
+    'torchvision::nms'                      : _nms(),
+    'torchvision::roi_align'                : _roi_align(),
+    'aten::ge'                              : _ge(),
+    'aten::eq'                              : _eq(),
+    'aten::full_like'                       : _full_like(),
+    'aten::topk'                            : _topk(),
+    'aten::arange'                          : _arange(),
+    'aten::clamp'                           : _clip()
 }
