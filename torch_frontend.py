@@ -1,4 +1,5 @@
 import itertools
+import inspect
 import numpy as np
 import torch
 import tvm
@@ -164,6 +165,22 @@ def get_input_types(op_node):
     return input_list_types
 
 
+def get_constant_list(list_node, attr_name):
+    list_ty = list_node.output().type()
+    elem_ty = list_ty.getElementType()
+    if elem_ty == torch._C.IntType.get():
+        # workaround for "list_node.is(...)" being a syntax error
+        methods = inspect.getmembers(list_node, predicate=inspect.ismethod)
+        is_method = next(tup[1] for tup in methods if tup[0] == "is")
+        return is_method(attr_name)
+    elif elem_ty == torch._C.FloatType.get():
+        return list_node.fs(attr_name)
+    elif elem_ty == torch._C.TensorType.get():
+        return list_node.ts(attr_name)
+    else:
+        assert False, "unsupported elem ty %s" % str(elem_ty)
+
+
 def get_constant(node):
     attribute_names = node.attributeNames()
     num_attributes = len(attribute_names)
@@ -185,6 +202,8 @@ def get_constant(node):
             return node.s(attr_name)
         elif ty == "FunctionType":
             return None
+        elif ty == "ListType":
+            return get_constant_list(node, attr_name)
         else:
             print(ty, node)
             assert False  # TODO: handle other types
@@ -475,10 +494,15 @@ def rewrite_for_tensor_array(graph):
         add_op.destroy()
 
 
+def get_optimized_graph(script_module, input_shapes):
+    inputs = [torch.rand(shape) for shape in input_shapes.values()]
+    with torch.no_grad():
+        return script_module.graph_for(*inputs).copy()
+
+
 def parse_script_module(script_module, input_shapes, input_types={}):
-    graph = script_module.graph.copy()
-    run_jit_passes(graph)
-    # print(graph)
+    graph = get_optimized_graph(script_module, input_shapes)
+    print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
