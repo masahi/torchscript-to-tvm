@@ -215,7 +215,7 @@ def get_constant(node):
 def parse_ops(nodes):
     ops = {}
     # Traverse nodes and add to graph
-    for node in nodes:
+    for node in filter(lambda node: node.outputsSize() > 0, nodes):
         if node.outputsSize() > 1:
             node_name = "_".join(get_output_names(node))
         else:
