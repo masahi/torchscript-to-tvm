@@ -175,7 +175,7 @@ def get_constant_list(list_node, attr_name):
     elif elem_ty == torch._C.FloatType.get():
         return list_node.fs(attr_name)
     elif elem_ty == torch._C.TensorType.get():
-        return list_node.ts(attr_name)
+        return [t.numpy() for t in list_node.ts(attr_name)]
     else:
         assert False, "unsupported elem ty %s" % str(elem_ty)
 
@@ -196,7 +196,7 @@ def get_constant(node):
             tensor = node.t(attr_name)
             if len(tensor.shape) == 0:  # tensor(0.1)
                 return float(tensor)
-            return tensor
+            return tensor.numpy()
         elif ty == "DeviceObjType":
             return node.s(attr_name)
         elif ty == "FunctionType":
@@ -316,7 +316,7 @@ def parse_loop(op_node, outputs, output_index_map):
 
     def get_var(name, val):
         if isinstance(val, _expr.Constant):
-            return _expr.var(name, shape=(), dtype=val.data.dtype)
+            return _expr.var(name, shape=val.data.shape, dtype=val.data.dtype)
         if isinstance(val, _expr.Var):
             return _expr.var(name, type_annotation=val.type_annotation)
         if isinstance(val, list):
@@ -507,10 +507,10 @@ def get_optimized_graph(script_module, input_shapes):
 def parse_script_module(script_module, input_shapes, input_types={}):
     graph = get_optimized_graph(script_module, input_shapes)
     report_missing_conversion(graph)
+    print(graph)
 
-    params = script_module.state_dict()
     input_vars = parse_inputs(graph.inputs(), input_shapes, input_types)
-    param_vars, tensors = parse_params(graph, params)
+    param_vars, tensors = parse_params(graph, script_module.state_dict())
 
     input_vars.update(param_vars)
     outputs = list(input_vars.values())

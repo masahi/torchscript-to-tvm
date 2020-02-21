@@ -3,7 +3,7 @@ import torch
 import tvm
 from tvm import relay
 from tvm.relay import TupleType, TensorType
-from torch_frontend import parse_script_module
+from torch_frontend import parse_script_module, get_graph_input_names
 
 
 def run_and_compare(mod, params, pt_result):
@@ -54,11 +54,11 @@ def simple_rnn_test():
                 y, h = self.cell(xs[i], h)
             return y
 
-    input_name = 'X'
-    input_shapes = {input_name: (10, 10, 4)}
-
     raw_model = RNNLoop()
     script_module = torch.jit.script(raw_model)
+    input_name = get_graph_input_names(script_module)[0]
+    input_shapes = {input_name: (10, 10, 4)}
+
     mod, params = parse_script_module(script_module, input_shapes, {})
 
     for i in range(5):
