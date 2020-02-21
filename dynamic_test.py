@@ -3,7 +3,7 @@ import torch
 import tvm
 from tvm import relay
 
-from torch_frontend import parse_script_module
+from torch_frontend import parse_script_module, get_graph_input_names
 
 
 class SimpleIf(torch.nn.Module):
@@ -102,9 +102,6 @@ class SimpleWhileLoop(torch.nn.Module):
         return a
 
 
-input_name = 'X'
-input_shapes = {input_name: (10, 20)}
-
 models = [
     SimpleIf(10, 20).eval(),
     NestedIf(10, 20).eval(),
@@ -118,6 +115,8 @@ models = [
 
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
+    input_name = get_graph_input_names(script_module)[0]
+    input_shapes = {input_name: (10, 20)}
     mod, params = parse_script_module(script_module, input_shapes)
     print(mod["main"])
 

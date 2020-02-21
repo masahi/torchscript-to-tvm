@@ -4,7 +4,7 @@ import tvm
 from tvm import relay
 from torchvision import models
 
-from torch_frontend import parse_script_module
+from torch_frontend import parse_script_module, get_graph_input_names
 
 
 class SegmentationModelWrapper(torch.nn.Module):
@@ -28,13 +28,15 @@ class DetectionModelWrapper(torch.nn.Module):
         return out[0][self.output_key]
 
 
-def run_on_models(models, inp, input_shapes, target="llvm"):
+def run_on_models(models, inputs, target="llvm"):
     torch._C._jit_set_profiling_executor(False)
     for raw_model in models:
         with torch.no_grad():
-            pt_result = raw_model(inp).numpy()
-            script_module = torch.jit.trace(raw_model, inp).eval()
+            pt_result = raw_model(*inputs).numpy()
+            script_module = torch.jit.trace(raw_model, *inputs).eval()
 
+        input_names = get_graph_input_names(script_module)
+        input_shapes = dict(zip(input_names, [inp.shape for inp in inputs]))
         mod, params = parse_script_module(script_module, input_shapes)
 
         with relay.build_config(opt_level=3):
@@ -43,7 +45,8 @@ def run_on_models(models, inp, input_shapes, target="llvm"):
         ctx = tvm.context(target, 0)
         runtime = tvm.contrib.graph_runtime.create(json, lib, ctx)
         runtime.set_input(**params)
-        runtime.set_input("X", inp.numpy())
+        for name, inp in zip(input_names, inputs):
+            runtime.set_input(name, inp.numpy())
         runtime.run()
 
         tvm_result = runtime.get_output(0).asnumpy()
@@ -67,15 +70,12 @@ def imagenet_test():
         models.mnasnet.mnasnet1_0(pretrained=True).eval(),
         models.alexnet(pretrained=True).eval(),
         models.vgg.vgg11_bn(pretrained=True).eval(),
-        # torch.nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3,
-        #                 padding=1, groups=16, bias=True)
+        # torch.nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3,
+        #                 padding=1, groups=1, bias=True)
     ]
 
-    input_name = 'X'
-    input_shapes = {input_name: (1, 3, 224, 224)}
-
     for target in ["llvm"]:
-        run_on_models(test_models, inp, input_shapes, target)
+        run_on_models(test_models, [inp], target)
 
 
 def segmentation_test():
@@ -92,7 +92,7 @@ def segmentation_test():
     ]
 
     for target in ["llvm", "cuda"]:
-        run_on_models(test_models, inp, input_shapes, target)
+        run_on_models(test_models, [inp], target)
 
 
 def detection_test():

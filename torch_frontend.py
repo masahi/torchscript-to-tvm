@@ -27,7 +27,6 @@ def parse_inputs(graph_inputs, input_shapes, input_types):
 
     for i in range(1, num_ir_inputs):
         iname = input_names[i-1]
-        ir_inputs[i].setDebugName(iname)
 
         if i-1 >= len(input_shapes):
             itype = input_types[iname]
@@ -61,8 +60,8 @@ def get_output_names(node):
     return [output.debugName() for output in node.outputs()]
 
 
-def get_input_names(node):
-    return [inp.debugName() for inp in node.inputs()]
+def get_input_names(node_or_graph):
+    return [inp.debugName() for inp in node_or_graph.inputs()]
 
 
 def getattr_attr_name(node):
@@ -494,15 +493,19 @@ def rewrite_for_tensor_array(graph):
         add_op.destroy()
 
 
+def get_graph_input_names(script_module):
+    return get_input_names(script_module.graph)[1:]  # remove self at the 0th
+
+
 def get_optimized_graph(script_module, input_shapes):
-    inputs = [torch.rand(shape) for shape in input_shapes.values()]
+    input_names = get_graph_input_names(script_module)
+    inputs = [torch.rand(input_shapes[name]) for name in input_names]
     with torch.no_grad():
         return script_module.graph_for(*inputs).copy()
 
 
 def parse_script_module(script_module, input_shapes, input_types={}):
     graph = get_optimized_graph(script_module, input_shapes)
-    print(graph)
     report_missing_conversion(graph)
 
     params = script_module.state_dict()
