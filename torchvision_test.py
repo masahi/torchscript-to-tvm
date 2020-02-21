@@ -79,9 +79,7 @@ def imagenet_test():
 
 
 def segmentation_test():
-    input_name = 'X'
-    input_shapes = {input_name: (1, 3, 300, 300)}
-    inp = torch.rand(input_shapes[input_name], dtype=torch.float)
+    inp = torch.rand((1, 3, 300, 300), dtype=torch.float)
 
     fcn = models.segmentation.fcn_resnet101(pretrained=True).eval()
     deeplab = models.segmentation.deeplabv3_resnet101(pretrained=True).eval()
@@ -91,7 +89,7 @@ def segmentation_test():
        SegmentationModelWrapper(deeplab),
     ]
 
-    for target in ["llvm", "cuda"]:
+    for target in ["llvm"]:
         run_on_models(test_models, [inp], target)
 
 
@@ -107,7 +105,7 @@ def detection_test():
         detection_model = model_func(num_classes=50, pretrained_backbone=False)
         test_models.append(DetectionModelWrapper(detection_model.eval(), output_key))
 
-    # for target in ["llvm", "cuda"]:
+    # for target in ["llvm"]:
     #     run_on_models(test_models, inp, input_shapes, target)
 
 
@@ -115,3 +113,18 @@ imagenet_test()
 # deeplab test broken due to FusionGroup created during optimization
 # segmentation_test()
 # detection_test()
+# inp = torch.rand((1, 3, 300, 300), dtype=torch.float)
+
+# deeplab = models.segmentation.deeplabv3_resnet101(pretrained=True).eval()
+
+# test_models = [
+#    SegmentationModelWrapper(deeplab),
+# ]
+
+# inputs = [inp]
+# torch._C._jit_set_profiling_executor(False)
+# for raw_model in test_models:
+#     with torch.no_grad():
+#         script_module = torch.jit.trace(raw_model, *inputs).eval()
+#         graph = script_module.graph_for(inp)
+#         fusion_groups = graph.findAllNodes("prim::FusionGroup", recurse=True)

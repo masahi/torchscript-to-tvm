@@ -235,10 +235,6 @@ def get_op_inputs(op_node, outputs, output_index_map):
     return [outputs[name] for name in input_names]
 
 
-def run_jit_passes(graph):
-    torch._C._jit_pass_inline(graph)
-
-
 def update_outputs_from_pairs(name_output_pairs, outputs, output_index_map):
     for output_name, output in name_output_pairs:
         output_index_map[output_name] = len(outputs)
@@ -507,7 +503,6 @@ def get_optimized_graph(script_module, input_shapes):
 def parse_script_module(script_module, input_shapes, input_types={}):
     graph = get_optimized_graph(script_module, input_shapes)
     report_missing_conversion(graph)
-    print(graph)
 
     input_vars = parse_inputs(graph.inputs(), input_shapes, input_types)
     param_vars, tensors = parse_params(graph, script_module.state_dict())
