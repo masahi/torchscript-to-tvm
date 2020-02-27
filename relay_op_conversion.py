@@ -479,7 +479,7 @@ def _numtotensor():
         val = inputs[0]
         dtype = type(val)
 
-        if isinstance(val, tvm.expr.IntImm):
+        if isinstance(val, tvm.tir.IntImm):
             val = val.__int__()
             dtype = int
 
@@ -912,8 +912,11 @@ def _nms():
 
 def _roi_align():
     def _impl(inputs, input_types):
-        data = inputs[0]
-        return get_relay_op("roi_align")(data)
+        spatial_scale = inputs[2]
+        pooled_size = (inputs[3], inputs[4])
+        sampling_ratio = inputs[5]
+        return _op.vision.roi_align(inputs[0], inputs[1],
+                                    pooled_size, spatial_scale, sampling_ratio)
     return _impl
 
 
