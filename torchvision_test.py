@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import tvm
 from tvm import relay
+import torchvision
 from torchvision import models
 
 from torch_frontend import parse_script_module, get_graph_input_names
@@ -29,7 +30,6 @@ class DetectionModelWrapper(torch.nn.Module):
 
 
 def run_on_models(models, inputs, target="llvm"):
-    torch._C._jit_set_profiling_executor(False)
     for raw_model in models:
         with torch.no_grad():
             pt_result = raw_model(*inputs).numpy()
@@ -70,8 +70,6 @@ def imagenet_test():
         models.mnasnet.mnasnet1_0(pretrained=True).eval(),
         models.alexnet(pretrained=True).eval(),
         models.vgg.vgg11_bn(pretrained=True).eval(),
-        # torch.nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3,
-        #                 padding=1, groups=1, bias=True)
     ]
 
     for target in ["llvm"]:
@@ -99,32 +97,60 @@ def detection_test():
     inp = torch.rand(input_shapes[input_name], dtype=torch.float)
 
     test_models = []
+
     for model_func, output_key in zip([models.detection.maskrcnn_resnet50_fpn,
                                        models.detection.fasterrcnn_resnet50_fpn],
                                       ["masks", "boxes"]):
+        continue  # not supported yet
         detection_model = model_func(num_classes=50, pretrained_backbone=False)
-        test_models.append(DetectionModelWrapper(detection_model.eval(), output_key))
+        wrapper = DetectionModelWrapper(detection_model.eval(), output_key)
+        test_models.append(wrapper)
 
-    # for target in ["llvm"]:
-    #     run_on_models(test_models, inp, input_shapes, target)
+    for target in ["llvm"]:
+        run_on_models(test_models, [inp], target)
+
+
+def nms_test():
+    def create_tensors_with_iou(N, iou_thresh):
+        boxes = torch.rand(N, 4) * 100
+        boxes[:, 2:] += boxes[:, :2]
+        boxes[-1, :] = boxes[0, :]
+        x0, y0, x1, y1 = boxes[-1].tolist()
+        boxes[-1, 2] += (x1 - x0) * (1 - iou_thresh) / iou_thresh
+        scores = torch.rand(N)
+        return boxes, scores
+
+    class NMS(torch.nn.Module):
+        def __init__(self, iou):
+            super().__init__()
+            self.iou = iou
+
+        def forward(self, boxes, scores):
+            return torchvision.ops.nms(boxes, scores, self.iou)
+
+    iou = 0.2
+    boxes, scores = create_tensors_with_iou(1000, iou)
+    nms = NMS(iou)
+    out = nms(boxes, scores)
+    print(out, out.shape, boxes.shape, scores.shape)
+
+
+def roi_align_test():
+    pool_size = 5
+    n_channels = 2 * (pool_size ** 2)
+    x = torch.rand(2, n_channels, 10, 10)
+    rois = torch.tensor([[0, 0, 0, 9, 9],  # format is (xyxy)
+                         [0, 0, 5, 4, 9],
+                         [0, 5, 5, 9, 9],
+                         [1, 0, 0, 9, 9]], dtype=torch.float)
+    roi_align = torchvision.ops.RoIAlign(pool_size, spatial_scale=1,
+                                         sampling_ratio=-1)
+    out = roi_align(x, rois)
+    print(out, out.shape)
 
 
 imagenet_test()
-# deeplab test broken due to FusionGroup created during optimization
-# segmentation_test()
-# detection_test()
-# inp = torch.rand((1, 3, 300, 300), dtype=torch.float)
-
-# deeplab = models.segmentation.deeplabv3_resnet101(pretrained=True).eval()
-
-# test_models = [
-#    SegmentationModelWrapper(deeplab),
-# ]
-
-# inputs = [inp]
-# torch._C._jit_set_profiling_executor(False)
-# for raw_model in test_models:
-#     with torch.no_grad():
-#         script_module = torch.jit.trace(raw_model, *inputs).eval()
-#         graph = script_module.graph_for(inp)
-#         fusion_groups = graph.findAllNodes("prim::FusionGroup", recurse=True)
+segmentation_test()
+detection_test()
+nms_test()
+roi_align_test()

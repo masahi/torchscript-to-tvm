@@ -501,7 +501,8 @@ def get_optimized_graph(script_module, input_shapes):
 
 
 def parse_script_module(script_module, input_shapes, input_types={}):
-    graph = get_optimized_graph(script_module, input_shapes)
+    graph = script_module.graph.copy()
+    torch._C._jit_pass_inline(graph)
     report_missing_conversion(graph)
 
     input_vars = parse_inputs(graph.inputs(), input_shapes, input_types)

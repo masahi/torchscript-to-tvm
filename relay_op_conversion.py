@@ -152,7 +152,7 @@ def _relu():
 def _adaptive_avg_2d():
     def _impl(inputs, input_types):
         data = inputs[0]
-        output_size = inputs[1]
+        output_size = _infer_shape(inputs[1])
 
         return _op.contrib.contrib.adaptive_avg_pool2d(
             data,
@@ -173,9 +173,9 @@ def _maxpool_2d():
     def _impl(inputs, input_types):
         data = inputs[0]
 
-        pool_size = inputs[1]
-        strides = inputs[2]
-        padding = inputs[3]
+        pool_size = _infer_shape(inputs[1])
+        strides = _infer_shape(inputs[2])
+        padding = _infer_shape(inputs[3])
 
         ceil_mode = int(inputs[5])
 
@@ -525,9 +525,9 @@ def _avg_pool2d():
     def _impl(inputs, input_types):
         data = inputs[0]
 
-        pool_size = inputs[1]
-        strides = inputs[2]
-        padding = inputs[3]
+        pool_size = _infer_shape(inputs[1])
+        strides = _infer_shape(inputs[2])
+        padding = _infer_shape(inputs[3])
 
         ceil_mode = int(inputs[4])
         count_include_pad = int(inputs[5])
@@ -558,7 +558,7 @@ def _mean():
     def _impl(inputs, input_types):
         data = inputs[0]
         if inputs[1]:
-            axis = inputs[1]
+            axis = _infer_shape(inputs[1])
         else:
             axis = None
         if len(inputs) > 2 and inputs[2]:
