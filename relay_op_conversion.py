@@ -897,8 +897,16 @@ def _clip():
 
 def _nms():
     def _impl(inputs, input_types):
-        data = inputs[0]
-        return get_relay_op("non_max_suppression")(data)
+        scores = _op.expand_dims(inputs[1], 1)
+        boxes = inputs[0]
+        data = _op.expand_dims(_op.concatenate([scores, boxes], axis=1), 0)
+        ret = _op.vision.get_valid_counts(data, score_threshold=inputs[2],
+                                          id_index=-1, score_index=0)
+        valid_count = ret[0]
+        new_data = ret[1]
+        return _op.vision.non_max_suppression(new_data, valid_count,
+                                              id_index=-1, score_index=0,
+                                              return_indices=False)
     return _impl
 
 
