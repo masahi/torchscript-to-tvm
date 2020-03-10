@@ -2,8 +2,7 @@ import numpy as np
 import torch
 import tvm
 from tvm import relay
-
-from torch_frontend import parse_script_module, get_graph_input_names
+from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
 
 
 class SimpleIf(torch.nn.Module):
@@ -117,7 +116,7 @@ for raw_model in models:
     script_module = torch.jit.script(raw_model)
     input_name = get_graph_input_names(script_module)[0]
     input_shapes = {input_name: (10, 20)}
-    mod, params = parse_script_module(script_module, input_shapes)
+    mod, params = from_pytorch(script_module, input_shapes)
     print(mod["main"])
 
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")

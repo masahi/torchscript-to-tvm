@@ -1,14 +1,8 @@
-For a background on motivation of this repo, see [this post](https://discuss.tvm.ai/t/discuss-adding-a-pytorch-frontend/5026/6) on TVM discussion forum.
+This repo has some examples and WIP test cases on converting PyTorch models to TVM.
 
+Below is an example of Python module -> Torchscript -> TVM Relay Translation.
 
-This is a demo of translating PyTorch modules with control flow to TVM Relay via TorchScript.
-
-
-* TorchScript `prim::If` node maps directly to Relay's `If` expression.
-* `prim::Loop` node is translated to conditional and tail recursion in Relay.
-
-Below is an example of how a simple TorchScript module looks like after translation to PyTorch JIT IR and TVM Relay.
-See dynamic_test.py for more examples.
+See dynamic_test.py and rnn_test.py for more examples.
 
 
 PyTorch module

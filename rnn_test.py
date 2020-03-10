@@ -3,7 +3,7 @@ import torch
 import tvm
 from tvm import relay
 from tvm.relay import TupleType, TensorType
-from torch_frontend import parse_script_module, get_graph_input_names
+from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
 
 
 def run_and_compare(mod, params, pt_result):
@@ -59,7 +59,7 @@ def simple_rnn_test():
     input_name = get_graph_input_names(script_module)[0]
     input_shapes = {input_name: (10, 10, 4)}
 
-    mod, params = parse_script_module(script_module, input_shapes, {})
+    mod, params = from_pytorch(script_module, input_shapes, {})
 
     for i in range(5):
         inp = torch.randn(input_shapes[input_name], dtype=torch.float)
@@ -94,7 +94,7 @@ def custom_lstm_test():
 
     for raw_model in models:
         script_module = torch.jit.script(raw_model)
-        mod, params = parse_script_module(script_module, input_shapes, input_types)
+        mod, params = from_pytorch(script_module, input_shapes, input_types)
 
         # comp = relay.backend.vm.VMCompiler()
         # opt_mod, _ = comp.optimize(mod, "llvm", params)

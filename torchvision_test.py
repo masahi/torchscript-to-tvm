@@ -3,8 +3,7 @@ import torch
 import tvm
 from tvm import relay
 from torchvision import models
-
-from torch_frontend import parse_script_module, get_graph_input_names
+from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
 
 
 class SegmentationModelWrapper(torch.nn.Module):
@@ -37,7 +36,7 @@ def run_on_models(models, inputs, target="llvm"):
 
         input_names = get_graph_input_names(script_module)
         input_shapes = dict(zip(input_names, [inp.shape for inp in inputs]))
-        mod, params = parse_script_module(script_module, input_shapes)
+        mod, params = from_pytorch(script_module, input_shapes)
 
         with relay.build_config(opt_level=3):
             json, lib, params = relay.build(mod, target=target, params=params)
@@ -70,8 +69,6 @@ def imagenet_test():
         models.mnasnet.mnasnet1_0(pretrained=True).eval(),
         models.alexnet(pretrained=True).eval(),
         models.vgg.vgg11_bn(pretrained=True).eval(),
-        # torch.nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3,
-        #                 padding=1, groups=1, bias=True)
     ]
 
     for target in ["llvm"]:
@@ -110,21 +107,5 @@ def detection_test():
 
 
 imagenet_test()
-# deeplab test broken due to FusionGroup created during optimization
-# segmentation_test()
+segmentation_test()
 # detection_test()
-# inp = torch.rand((1, 3, 300, 300), dtype=torch.float)
-
-# deeplab = models.segmentation.deeplabv3_resnet101(pretrained=True).eval()
-
-# test_models = [
-#    SegmentationModelWrapper(deeplab),
-# ]
-
-# inputs = [inp]
-# torch._C._jit_set_profiling_executor(False)
-# for raw_model in test_models:
-#     with torch.no_grad():
-#         script_module = torch.jit.trace(raw_model, *inputs).eval()
-#         graph = script_module.graph_for(inp)
-#         fusion_groups = graph.findAllNodes("prim::FusionGroup", recurse=True)
