@@ -28,7 +28,6 @@ class DetectionModelWrapper(torch.nn.Module):
 
 
 def run_on_models(models, inputs, target="llvm"):
-    torch._C._jit_set_profiling_executor(False)
     for raw_model in models:
         with torch.no_grad():
             pt_result = raw_model(*inputs).numpy()
@@ -106,6 +105,21 @@ def detection_test():
     #     run_on_models(test_models, inp, input_shapes, target)
 
 
-imagenet_test()
-segmentation_test()
+# imagenet_test()
+# segmentation_test()
 # detection_test()
+
+input_shape = (1, 3, 4, 112, 112)
+inputs = [torch.rand(input_shape)]
+model = models.video.r3d_18(pretrained=True)
+
+with torch.no_grad():
+    pt_result = model(*inputs).numpy()
+    script_module = torch.jit.trace(model, *inputs).eval()
+
+graph = script_module.graph
+torch._C._jit_pass_inline(graph)
+print(graph)
+# input_names = get_graph_input_names(script_module)
+# input_shapes = dict(zip(input_names, [inp.shape for inp in inputs]))
+# mod, params = from_pytorch(script_module, input_shapes)
