@@ -82,8 +82,7 @@ def convert_roi_align():
 
 
 script_module = torch.jit.load("mask_rcnn.pt")
-input_name = get_graph_input_names(script_module)[0]
-input_shapes = {input_name: (1, 3, 300, 300)}
+input_shapes = [("input", (1, 3, 300, 300))]
 custom_map = {'torchvision::roi_align': convert_roi_align()}
 from_pytorch(script_module, input_shapes, custom_map)
 """

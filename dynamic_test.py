@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import tvm
 from tvm import relay
-from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
+from tvm.relay.frontend.pytorch import from_pytorch
 
 
 class SimpleIf(torch.nn.Module):
@@ -114,8 +114,8 @@ models = [
 
 for raw_model in models:
     script_module = torch.jit.script(raw_model)
-    input_name = get_graph_input_names(script_module)[0]
-    input_shapes = {input_name: (10, 20)}
+    input_name = "input"
+    input_shapes = [(input_name, (10, 20))]
     mod, params = from_pytorch(script_module, input_shapes)
     print(mod["main"])
 
@@ -123,7 +123,7 @@ for raw_model in models:
     evaluator = executor.evaluate()
 
     for i in range(5):
-        inp = torch.rand(input_shapes[input_name], dtype=torch.float)
+        inp = torch.rand(input_shapes[0][1], dtype=torch.float)
 
         with torch.no_grad():
             pt_result = raw_model(inp.clone())

@@ -3,7 +3,7 @@ import torch
 import tvm
 from tvm import relay
 from tvm.relay import TupleType, TensorType
-from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
+from tvm.relay.frontend.pytorch import from_pytorch
 
 
 def run_and_compare(mod, params, pt_result):
@@ -56,13 +56,13 @@ def simple_rnn_test():
 
     raw_model = RNNLoop()
     script_module = torch.jit.script(raw_model)
-    input_name = get_graph_input_names(script_module)[0]
-    input_shapes = {input_name: (10, 10, 4)}
+    input_name = "input"
+    input_shapes = [(input_name, (10, 10, 4))]
 
     mod, params = from_pytorch(script_module, input_shapes, {})
 
     for i in range(5):
-        inp = torch.randn(input_shapes[input_name], dtype=torch.float)
+        inp = torch.randn(input_shapes[0][1], dtype=torch.float)
         with torch.no_grad():
             pt_result = raw_model(inp.clone())
 

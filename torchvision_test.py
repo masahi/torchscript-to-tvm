@@ -3,7 +3,7 @@ import torch
 import tvm
 from tvm import relay
 from torchvision import models
-from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
+from tvm.relay.frontend.pytorch import from_pytorch
 
 
 class SegmentationModelWrapper(torch.nn.Module):
@@ -33,8 +33,9 @@ def run_on_models(models, inputs, target="llvm"):
             pt_result = raw_model(*inputs).numpy()
             script_module = torch.jit.trace(raw_model, *inputs).eval()
 
-        input_names = get_graph_input_names(script_module)
-        input_shapes = dict(zip(input_names, [inp.shape for inp in inputs]))
+        num_inputs = len(inputs)
+        input_names = ["input%d" % i for i in range(num_inputs)]
+        input_shapes = list(zip(input_names, [inp.shape for inp in inputs]))
         mod, params = from_pytorch(script_module, input_shapes)
 
         with relay.build_config(opt_level=3):
