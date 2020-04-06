@@ -2,24 +2,70 @@ import numpy as np
 import torch
 import tvm
 from tvm import relay
-from tvm.relay import TupleType, TensorType
 from tvm.relay.frontend.pytorch import from_pytorch
+from tvm.relay.prelude import Prelude
+
+mod = tvm.IRModule()
+p = Prelude(mod)
+
+
+def vmobj_to_list(o, dtype="float32"):
+    if isinstance(o, tvm.nd.NDArray):
+        return [o]
+    elif isinstance(o, tvm.runtime.container.ADT):
+        if len(o) == 0:
+            tensor_nil = p.get_var("tensor_nil", dtype=dtype)
+            if tensor_nil.tag == o.tag:
+                return [0]
+            return []
+
+        result = []
+        for f in o:
+            result.extend(vmobj_to_list(f, dtype))
+        return result
+    else:
+        raise RuntimeError("Unknown object type: %s" % type(o))
+
+
+def assert_equal(tvm_result, torch_result):
+    if isinstance(torch_result, (tuple, list)):
+        assert isinstance(tvm_result, list)
+        for tvm_res, pt_res in zip(tvm_result, torch_result):
+            assert_equal(tvm_res, pt_res)
+    elif isinstance(torch_result, torch.Tensor):
+        print(np.max(np.abs(tvm_result.asnumpy() - torch_result.numpy())))
+        tvm.testing.assert_allclose(tvm_result.asnumpy(), torch_result.numpy(),
+                                    rtol=1e-5, atol=1e-5)
+    else:
+        tvm_res = np.asscalar(tvm_result.asnumpy())
+        print(abs(torch_result - tvm_res))
+        assert torch_result == tvm_res
 
 
 def run_and_compare(mod, params, pt_result):
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
     evaluator = executor.evaluate()
 
-    op_res = evaluator(**params)
+    exec_res = evaluator(**params)
 
-    if not isinstance(pt_result, torch.Tensor):
-        tvm_res = np.asscalar(op_res.asnumpy())
-        print(abs(pt_result - tvm_res))
-        assert pt_result == tvm_res
+    def flatten(nested):
+        res = []
+        for r in nested:
+            if isinstance(r, torch.Tensor):
+                res.append(r)
+            else:
+                res.extend(flatten(r))
+        return res
+
+    if isinstance(exec_res, tvm.runtime.container.ADT):
+        assert not isinstance(pt_result, torch.Tensor)
+        tvm_res = vmobj_to_list(exec_res)
+        torch_res = flatten(pt_result)
     else:
-        print(np.max(np.abs(op_res.asnumpy() - pt_result.numpy())))
-        tvm.testing.assert_allclose(op_res.asnumpy(), pt_result.numpy(),
-                                    rtol=1e-5, atol=1e-5)
+        tvm_res = exec_res
+        torch_res = pt_result
+
+    assert_equal(tvm_res, torch_res)
 
 
 def simple_rnn_test():
@@ -61,47 +107,45 @@ def simple_rnn_test():
 
     mod, params = from_pytorch(script_module, input_shapes, {})
 
-    for i in range(5):
-        inp = torch.randn(input_shapes[0][1], dtype=torch.float)
-        with torch.no_grad():
-            pt_result = raw_model(inp.clone())
+    inp = torch.randn(input_shapes[0][1], dtype=torch.float)
+    with torch.no_grad():
+        pt_result = raw_model(inp.clone())
 
-        params[input_name] = inp.numpy()
+    params[input_name] = inp.numpy()
 
-        run_and_compare(mod, params, pt_result)
+    run_and_compare(mod, params, pt_result)
 
 
 def custom_lstm_test():
-    input_name = 'X'
+    input_name = 'input'
     seq_len = 5
     batch = 2
     input_size = 3
     hidden_size = 4
     num_layers = 4
 
-    input_shapes = {}
-    input_types = {input_name: TensorType((seq_len, batch, input_size)),
-                   "states": TupleType([TensorType((batch, hidden_size)),
-                                        TensorType((batch, hidden_size))])}
+    input_shapes = [(input_name, (seq_len, batch, input_size)),
+                    ("states", ((batch, hidden_size), (batch, hidden_size)))]
 
     from custom_lstms import rnn_layer, stacked_rnn, stacked_lnlstm
 
     models = [
       rnn_layer(input_size, hidden_size).eval(),
-      stacked_rnn(input_size, hidden_size, num_layers).eval(),
-      stacked_lnlstm(input_size, hidden_size, num_layers).eval()
+      # stacked_rnn(input_size, hidden_size, num_layers).eval(),
+      # stacked_lnlstm(input_size, hidden_size, num_layers).eval()
     ]
 
     for raw_model in models:
         script_module = torch.jit.script(raw_model)
-        mod, params = from_pytorch(script_module, input_shapes, input_types)
+        mod, params = from_pytorch(script_module, input_shapes)
+        print(mod["main"])
 
         # comp = relay.backend.vm.VMCompiler()
         # opt_mod, _ = comp.optimize(mod, "llvm", params)
         # print(opt_mod["main"])
         # continue
 
-        for i in range(5):
+        for i in range(1):
             inp = torch.randn(seq_len, batch, input_size)
             states = [(torch.randn(batch, hidden_size),
                        torch.randn(batch, hidden_size))
@@ -111,11 +155,12 @@ def custom_lstm_test():
                 pt_result = raw_model(inp.clone(), states[0])
 
             params[input_name] = inp.numpy()
-            params["states"] = (st.numpy() for st in states[0])
+            states = tuple(st.numpy() for st in states[0])
+            params["states"] = states
 
             run_and_compare(mod, params, pt_result)
 
 
 # doesn't work, need to wait for fixed size tensor list
-# custom_lstm_test()
+custom_lstm_test()
 simple_rnn_test()
