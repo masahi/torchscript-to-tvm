@@ -107,7 +107,8 @@ def simple_rnn_test():
 
 
 def custom_lstm_test():
-    input_name = 'input'
+    input_name = "input"
+    states_name = "states"
     seq_len = 5
     batch = 2
     input_size = 3
@@ -115,31 +116,39 @@ def custom_lstm_test():
     num_layers = 4
 
     input_shapes = [(input_name, (seq_len, batch, input_size)),
-                    ("states", ((batch, hidden_size), (batch, hidden_size)))]
+                    (states_name, ((batch, hidden_size), (batch, hidden_size)))]
 
-    from custom_lstms import rnn_layer, stacked_rnn
+    inp = torch.randn(seq_len, batch, input_size)
+
+    states = [(torch.randn(batch, hidden_size),
+               torch.randn(batch, hidden_size))
+              for _ in range(num_layers)]
+
+    from custom_lstms import lstm_layer, lstmln_layer, stacked_rnn
 
     models = [
-      rnn_layer(input_size, hidden_size).eval(),
+      (lstm_layer(input_size, hidden_size).eval(), states[0]),
+      (lstmln_layer(input_size, hidden_size).eval(), states[0])
       # stacked_rnn(input_size, hidden_size, num_layers).eval(),
     ]
 
-    for raw_model in models:
+    for (raw_model, states) in models:
         script_module = torch.jit.script(raw_model)
         mod, params = from_pytorch(script_module, input_shapes)
         print(mod["main"])
-
-        inp = torch.randn(seq_len, batch, input_size)
-        states = [(torch.randn(batch, hidden_size),
-                   torch.randn(batch, hidden_size))
-                  for _ in range(num_layers)]
+        print(params.keys())
 
         with torch.no_grad():
-            pt_result = raw_model(inp.clone(), states[0])
+            pt_result = raw_model(inp.clone(), states)
 
         params[input_name] = inp.numpy()
-        states = tuple(st.numpy() for st in states[0])
-        params["states"] = states
+        if isinstance(states, tuple):
+            states = tuple(st.numpy() for st in states)
+        else:
+            states = [(st.numpy() for st in states[i])
+                      for i in range(num_layers)]
+
+        params[states_name] = states
 
         run_and_compare(mod, params, pt_result)
 
