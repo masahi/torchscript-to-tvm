@@ -37,41 +37,6 @@ class LSTMCell(jit.ScriptModule):
         return hy, (hy, cy)
 
 
-class LayerNormLSTMCell(jit.ScriptModule):
-    def __init__(self, input_size, hidden_size):
-        super().__init__()
-        self.input_size = input_size
-        self.hidden_size = hidden_size
-        self.weight_ih = Parameter(torch.randn(4 * hidden_size, input_size))
-        self.weight_hh = Parameter(torch.randn(4 * hidden_size, hidden_size))
-        # The layernorms provide learnable biases
-
-        ln = nn.LayerNorm
-
-        self.layernorm_i = ln(4 * hidden_size)
-        self.layernorm_h = ln(4 * hidden_size)
-        self.layernorm_c = ln(hidden_size)
-
-    @jit.script_method
-    def forward(self, input, state):
-        # type: (Tensor, Tuple[Tensor, Tensor]) -> Tuple[Tensor, Tuple[Tensor, Tensor]]
-        hx, cx = state
-        igates = self.layernorm_i(torch.mm(input, self.weight_ih.t()))
-        hgates = self.layernorm_h(torch.mm(hx, self.weight_hh.t()))
-        gates = igates + hgates
-        ingate, forgetgate, cellgate, outgate = gates.chunk(4, 1)
-
-        ingate = torch.sigmoid(ingate)
-        forgetgate = torch.sigmoid(forgetgate)
-        cellgate = torch.tanh(cellgate)
-        outgate = torch.sigmoid(outgate)
-
-        cy = self.layernorm_c((forgetgate * cx) + (ingate * cellgate))
-        hy = outgate * torch.tanh(cy)
-
-        return hy, (hy, cy)
-
-
 class LSTMLayer(jit.ScriptModule):
     def __init__(self, cell, *cell_args):
         super().__init__()
@@ -122,9 +87,3 @@ def stacked_rnn(input_size, hidden_size, num_layers):
     return StackedLSTM(num_layers, LSTMLayer,
                        first_layer_args=[LSTMCell, input_size, hidden_size],
                        other_layer_args=[LSTMCell, hidden_size, hidden_size])
-
-
-def stacked_lnlstm(input_size, hidden_size, num_layers):
-    return StackedLSTM(num_layers, LSTMLayer,
-                       first_layer_args=[LayerNormLSTMCell, input_size, hidden_size],
-                       other_layer_args=[LayerNormLSTMCell, hidden_size, hidden_size])

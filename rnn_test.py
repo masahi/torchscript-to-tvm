@@ -3,22 +3,12 @@ import torch
 import tvm
 from tvm import relay
 from tvm.relay.frontend.pytorch import from_pytorch
-from tvm.relay.prelude import Prelude
-
-mod = tvm.IRModule()
-p = Prelude(mod)
 
 
 def vmobj_to_list(o, dtype="float32"):
     if isinstance(o, tvm.nd.NDArray):
         return [o]
     elif isinstance(o, tvm.runtime.container.ADT):
-        if len(o) == 0:
-            tensor_nil = p.get_var("tensor_nil", dtype=dtype)
-            if tensor_nil.tag == o.tag:
-                return [0]
-            return []
-
         result = []
         for f in o:
             result.extend(vmobj_to_list(f, dtype))
@@ -127,12 +117,11 @@ def custom_lstm_test():
     input_shapes = [(input_name, (seq_len, batch, input_size)),
                     ("states", ((batch, hidden_size), (batch, hidden_size)))]
 
-    from custom_lstms import rnn_layer, stacked_rnn, stacked_lnlstm
+    from custom_lstms import rnn_layer, stacked_rnn
 
     models = [
       rnn_layer(input_size, hidden_size).eval(),
       # stacked_rnn(input_size, hidden_size, num_layers).eval(),
-      # stacked_lnlstm(input_size, hidden_size, num_layers).eval()
     ]
 
     for raw_model in models:
@@ -140,27 +129,20 @@ def custom_lstm_test():
         mod, params = from_pytorch(script_module, input_shapes)
         print(mod["main"])
 
-        # comp = relay.backend.vm.VMCompiler()
-        # opt_mod, _ = comp.optimize(mod, "llvm", params)
-        # print(opt_mod["main"])
-        # continue
+        inp = torch.randn(seq_len, batch, input_size)
+        states = [(torch.randn(batch, hidden_size),
+                   torch.randn(batch, hidden_size))
+                  for _ in range(num_layers)]
 
-        for i in range(1):
-            inp = torch.randn(seq_len, batch, input_size)
-            states = [(torch.randn(batch, hidden_size),
-                       torch.randn(batch, hidden_size))
-                      for _ in range(num_layers)]
+        with torch.no_grad():
+            pt_result = raw_model(inp.clone(), states[0])
 
-            with torch.no_grad():
-                pt_result = raw_model(inp.clone(), states[0])
+        params[input_name] = inp.numpy()
+        states = tuple(st.numpy() for st in states[0])
+        params["states"] = states
 
-            params[input_name] = inp.numpy()
-            states = tuple(st.numpy() for st in states[0])
-            params["states"] = states
-
-            run_and_compare(mod, params, pt_result)
+        run_and_compare(mod, params, pt_result)
 
 
-# doesn't work, need to wait for fixed size tensor list
 custom_lstm_test()
 simple_rnn_test()
