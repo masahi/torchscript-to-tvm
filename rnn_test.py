@@ -3,6 +3,9 @@ import torch
 import tvm
 from tvm import relay
 from tvm.relay.frontend.pytorch import from_pytorch
+import torch.jit as jit
+from typing import List, Tuple
+from torch import Tensor
 
 
 def vmobj_to_list(o, dtype="float32"):
@@ -50,12 +53,13 @@ def run_and_compare(mod, params, pt_result):
     if isinstance(exec_res, tvm.runtime.container.ADT):
         assert not isinstance(pt_result, torch.Tensor)
         tvm_res = vmobj_to_list(exec_res)
+        print(tvm_res)
         torch_res = flatten(pt_result)
     else:
         tvm_res = exec_res
         torch_res = pt_result
 
-    assert_equal(tvm_res, torch_res)
+    # assert_equal(tvm_res, torch_res)
 
 
 def simple_rnn_test():
@@ -106,6 +110,13 @@ def simple_rnn_test():
     run_and_compare(mod, params, pt_result)
 
 
+class SimpleList(jit.ScriptModule):
+    @jit.script_method
+    def forward(self, inp, states):
+        # type: (Tensor, List[Tuple[Tensor, Tensor]]) -> Tuple[Tensor, Tensor]
+        return states[0]
+
+
 def custom_lstm_test():
     input_name = "input"
     states_name = "states"
@@ -113,10 +124,14 @@ def custom_lstm_test():
     batch = 2
     input_size = 3
     hidden_size = 4
-    num_layers = 4
+    num_layers = 1
 
     input_shapes = [(input_name, (seq_len, batch, input_size)),
                     (states_name, ((batch, hidden_size), (batch, hidden_size)))]
+
+    input_shapes_stacked = [(input_name, (seq_len, batch, input_size)),
+                            (states_name, [((batch, hidden_size), (batch, hidden_size)),
+                                           ((batch, hidden_size), (batch, hidden_size))])]
 
     inp = torch.randn(seq_len, batch, input_size)
 
@@ -124,19 +139,18 @@ def custom_lstm_test():
                torch.randn(batch, hidden_size))
               for _ in range(num_layers)]
 
-    from custom_lstms import lstm_layer, lstmln_layer, stacked_rnn
+    from custom_lstms import lstmln_layer, stacked_rnn
 
     models = [
-      (lstm_layer(input_size, hidden_size).eval(), states[0]),
-      (lstmln_layer(input_size, hidden_size).eval(), states[0])
-      # stacked_rnn(input_size, hidden_size, num_layers).eval(),
+      (SimpleList(), states, input_shapes_stacked)
+      # (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes)
+      #(stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
     ]
 
-    for (raw_model, states) in models:
+    for (raw_model, states, input_shapes) in models:
         script_module = torch.jit.script(raw_model)
         mod, params = from_pytorch(script_module, input_shapes)
         print(mod["main"])
-        print(params.keys())
 
         with torch.no_grad():
             pt_result = raw_model(inp.clone(), states)
@@ -145,7 +159,7 @@ def custom_lstm_test():
         if isinstance(states, tuple):
             states = tuple(st.numpy() for st in states)
         else:
-            states = [(st.numpy() for st in states[i])
+            states = [tuple(st.numpy() for st in states[i])
                       for i in range(num_layers)]
 
         params[states_name] = states
@@ -154,4 +168,4 @@ def custom_lstm_test():
 
 
 custom_lstm_test()
-simple_rnn_test()
+#simple_rnn_test()
