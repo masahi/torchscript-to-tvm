@@ -4,6 +4,7 @@ import tvm
 from tvm import relay
 from tvm.relay.frontend.pytorch import from_pytorch
 import torch.jit as jit
+import torch.nn as nn
 from typing import List, Tuple
 from torch import Tensor
 
@@ -53,13 +54,12 @@ def run_and_compare(mod, params, pt_result):
     if isinstance(exec_res, tvm.runtime.container.ADT):
         assert not isinstance(pt_result, torch.Tensor)
         tvm_res = vmobj_to_list(exec_res)
-        print(tvm_res)
         torch_res = flatten(pt_result)
     else:
         tvm_res = exec_res
         torch_res = pt_result
 
-    # assert_equal(tvm_res, torch_res)
+    assert_equal(tvm_res, torch_res)
 
 
 def simple_rnn_test():
@@ -110,11 +110,23 @@ def simple_rnn_test():
     run_and_compare(mod, params, pt_result)
 
 
-class SimpleList(jit.ScriptModule):
-    @jit.script_method
+class SimpleList(nn.Module):
     def forward(self, tensor, states):
         # type: (Tensor, List[Tensor]) -> Tensor
         return states[0]
+
+
+class ListHead(nn.Module):
+    def forward(self, tensor):
+        # type: (Tensor) -> Tensor
+        lst = [tensor]
+        return lst[0]
+
+
+class ListIdentity(nn.Module):
+    def forward(self, tensor, states):
+        # type: (Tensor, List[Tensor]) -> List[Tensor]
+        return states
 
 
 def custom_lstm_test():
@@ -146,6 +158,8 @@ def custom_lstm_test():
     from custom_lstms import lstmln_layer, stacked_rnn
 
     models = [
+      (ListHead(), None, [("input", (10, 10))]),
+      (ListIdentity(), state_list, tensor_list_shape),
       (SimpleList(), state_list, tensor_list_shape)
       # (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes)
       #(stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
@@ -157,16 +171,25 @@ def custom_lstm_test():
         print(mod["main"])
 
         with torch.no_grad():
-            pt_result = raw_model(inp.clone(), states)
+            if states is None:
+                pt_result = raw_model(inp.clone())
+            else:
+                pt_result = raw_model(inp.clone(), states)
 
         params[input_name] = inp.numpy()
-        if isinstance(states, tuple):
-            states = tuple(st.numpy() for st in states)
-        else:
-            states = [tuple(st.numpy() for st in states[i])
-                      for i in range(num_layers)]
 
-        params[states_name] = states
+        if states:
+            if isinstance(states, tuple):
+                states = tuple(st.numpy() for st in states)
+            elif isinstance(states, list) and isinstance(states[0], torch.Tensor):
+                states = [tuple(st.numpy() for st in states)]
+            elif isinstance(states, list) and isinstance(states[0], list):
+                states = [tuple(st.numpy() for st in states[i])
+                          for i in range(num_layers)]
+            else:
+                assert False
+
+            params[states_name] = states
 
         run_and_compare(mod, params, pt_result)
 
