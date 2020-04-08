@@ -112,8 +112,8 @@ def simple_rnn_test():
 
 class SimpleList(jit.ScriptModule):
     @jit.script_method
-    def forward(self, inp, states):
-        # type: (Tensor, List[Tuple[Tensor, Tensor]]) -> Tuple[Tensor, Tensor]
+    def forward(self, tensor, states):
+        # type: (Tensor, List[Tensor]) -> Tensor
         return states[0]
 
 
@@ -133,6 +133,10 @@ def custom_lstm_test():
                             (states_name, [((batch, hidden_size), (batch, hidden_size)),
                                            ((batch, hidden_size), (batch, hidden_size))])]
 
+    tensor_list_shape = [(input_name, (seq_len, batch, input_size)),
+                         (states_name, [(batch, hidden_size), (batch, hidden_size)])]
+    state_list = [torch.rand(shape) for shape in tensor_list_shape[1][1]]
+
     inp = torch.randn(seq_len, batch, input_size)
 
     states = [(torch.randn(batch, hidden_size),
@@ -142,7 +146,7 @@ def custom_lstm_test():
     from custom_lstms import lstmln_layer, stacked_rnn
 
     models = [
-      (SimpleList(), states, input_shapes_stacked)
+      (SimpleList(), state_list, tensor_list_shape)
       # (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes)
       #(stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
     ]
