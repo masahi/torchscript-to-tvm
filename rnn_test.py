@@ -1,12 +1,15 @@
+from typing import List, Tuple
+
 import numpy as np
 import torch
+import torch.nn as nn
+from torch import Tensor
+
 import tvm
 from tvm import relay
 from tvm.relay.frontend.pytorch import from_pytorch
-import torch.jit as jit
-import torch.nn as nn
-from typing import List, Tuple
-from torch import Tensor
+from tvm.relay.ty import TupleType, TensorType
+from tvm.relay.prelude import Prelude
 
 
 def vmobj_to_list(o, dtype="float32"):
@@ -129,6 +132,28 @@ class ListIdentity(nn.Module):
         return states
 
 
+def convert_to_list_adt(py_lst, prelude):
+    adt_lst = prelude.nil()
+    for elem in reversed(py_lst):
+        if isinstance(elem, np.ndarray):
+            relay_val = relay.const(elem)
+        elif isinstance(elem, tuple):
+            relay_val = relay.Tuple([relay.const(e) for e in elem])
+        adt_lst = prelude.cons(relay_val, adt_lst)
+    return adt_lst
+
+
+def convert_list_to_vmobj(py_list):
+    mod = tvm.IRModule()
+    prelude = Prelude(mod)
+    adt_list = convert_to_list_adt(py_list, prelude)
+
+    mod["main"] = relay.Function([], adt_list)
+    intrp = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
+    adt_obj = intrp.evaluate(adt_list)
+    return adt_obj
+
+
 def custom_lstm_test():
     input_name = "input"
     states_name = "states"
@@ -147,9 +172,13 @@ def custom_lstm_test():
 
     tensor_list_shape = [(input_name, (seq_len, batch, input_size)),
                          (states_name, [(batch, hidden_size), (batch, hidden_size)])]
+    # tensor_list_shape = [(input_name, (batch, hidden_size)),
+    #                      (states_name, [(batch, hidden_size), (batch, hidden_size)])]
+
     state_list = [torch.rand(shape) for shape in tensor_list_shape[1][1]]
 
     inp = torch.randn(seq_len, batch, input_size)
+    # inp = torch.randn(batch, hidden_size)
 
     states = [(torch.randn(batch, hidden_size),
                torch.randn(batch, hidden_size))
@@ -158,11 +187,11 @@ def custom_lstm_test():
     from custom_lstms import lstmln_layer, stacked_rnn
 
     models = [
-      (ListHead(), None, [("input", (10, 10))]),
       (ListIdentity(), state_list, tensor_list_shape),
-      (SimpleList(), state_list, tensor_list_shape)
-      # (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes)
-      #(stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
+      (ListHead(), None, [("input", (10, 10))]),
+      (SimpleList(), state_list, tensor_list_shape),
+      (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes),
+      (stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
     ]
 
     for (raw_model, states, input_shapes) in models:
@@ -180,19 +209,22 @@ def custom_lstm_test():
 
         if states:
             if isinstance(states, tuple):
-                states = tuple(st.numpy() for st in states)
+                states_np = tuple(st.numpy() for st in states)
             elif isinstance(states, list) and isinstance(states[0], torch.Tensor):
-                states = [tuple(st.numpy() for st in states)]
-            elif isinstance(states, list) and isinstance(states[0], list):
-                states = [tuple(st.numpy() for st in states[i])
-                          for i in range(num_layers)]
+                states_np = [st.numpy() for st in states]
+            elif isinstance(states, list) and isinstance(states[0], tuple):
+                states_np = [tuple(st.numpy() for st in states[i])
+                             for i in range(num_layers)]
             else:
                 assert False
 
-            params[states_name] = states
+            if isinstance(states_np, list):
+                params[states_name] = convert_list_to_vmobj(states_np)
+            else:
+                params[states_name] = states_np
 
         run_and_compare(mod, params, pt_result)
 
 
 custom_lstm_test()
-#simple_rnn_test()
+simple_rnn_test()
