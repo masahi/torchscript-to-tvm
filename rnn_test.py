@@ -161,7 +161,7 @@ def custom_lstm_test():
     batch = 2
     input_size = 3
     hidden_size = 4
-    num_layers = 1
+    num_layers = 2
 
     input_shapes = [(input_name, (seq_len, batch, input_size)),
                     (states_name, ((batch, hidden_size), (batch, hidden_size)))]
@@ -172,26 +172,21 @@ def custom_lstm_test():
 
     tensor_list_shape = [(input_name, (seq_len, batch, input_size)),
                          (states_name, [(batch, hidden_size), (batch, hidden_size)])]
-    # tensor_list_shape = [(input_name, (batch, hidden_size)),
-    #                      (states_name, [(batch, hidden_size), (batch, hidden_size)])]
 
     state_list = [torch.rand(shape) for shape in tensor_list_shape[1][1]]
 
     inp = torch.randn(seq_len, batch, input_size)
-    # inp = torch.randn(batch, hidden_size)
 
     states = [(torch.randn(batch, hidden_size),
                torch.randn(batch, hidden_size))
               for _ in range(num_layers)]
 
-    from custom_lstms import lstmln_layer, stacked_rnn
+    from custom_lstms import lstmln_layer, stacked_rnn, bidir_lstmln_layer
 
     models = [
-      (ListIdentity(), state_list, tensor_list_shape),
-      (ListHead(), None, [("input", (10, 10))]),
-      (SimpleList(), state_list, tensor_list_shape),
       (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes),
       (stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
+      # (bidir_lstmln_layer(input_size, hidden_size).eval(), states, input_shapes_stacked)
     ]
 
     for (raw_model, states, input_shapes) in models:
