@@ -95,9 +95,9 @@ class BidirLSTMLayer(jit.ScriptModule):
             out, out_state = direction(input, state)
             outputs += [out]
             output_states += [out_state]
-        # tensor array concat assumes axis == 0, so use stack for now
+        # tensor array concat assumes axis == 0 for now
         # return torch.cat(outputs, -1), output_states
-        return torch.stack(outputs), output_states
+        return torch.cat(outputs, 0), output_states
 
 
 def init_stacked_lstm(num_layers, layer, first_layer_args, other_layer_args):

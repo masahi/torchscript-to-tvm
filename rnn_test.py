@@ -5,6 +5,7 @@ import tvm
 from tvm import relay
 from tvm.relay.frontend.pytorch import from_pytorch
 from tvm.relay.prelude import Prelude
+from tvm.runtime.container import ADT, tuple_object
 
 
 def vmobj_to_list(o, dtype="float32"):
@@ -111,26 +112,22 @@ def simple_rnn_test():
     run_and_compare(mod, params, pt_result)
 
 
-def convert_to_list_adt(py_lst, prelude):
-    adt_lst = prelude.nil()
-    for elem in reversed(py_lst):
-        if isinstance(elem, np.ndarray):
-            relay_val = relay.const(elem)
-        elif isinstance(elem, tuple):
-            relay_val = relay.Tuple([relay.const(e) for e in elem])
-        adt_lst = prelude.cons(relay_val, adt_lst)
-    return adt_lst
+def convert_list_to_vmobj(py_lst):
+    def wrap_nd_array(arr):
+        return tvm.nd.array(arr, ctx=tvm.cpu(0))
 
-
-def convert_list_to_vmobj(py_list):
     mod = tvm.IRModule()
     prelude = Prelude(mod)
-    adt_list = convert_to_list_adt(py_list, prelude)
-
-    mod["main"] = relay.Function([], adt_list)
-    intrp = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
-    adt_obj = intrp.evaluate(adt_list)
-    return adt_obj
+    adt_lst = ADT(prelude.nil.tag, [])
+    for elem in reversed(py_lst):
+        if isinstance(elem, np.ndarray):
+            vmobj = wrap_nd_array(elem)
+        elif isinstance(elem, tuple):
+            vmobj = tuple_object([wrap_nd_array(e) for e in elem])
+        elif isinstance(elem, list):
+            vmobj = convert_list_to_vmobj(elem)
+        adt_lst = ADT(prelude.cons.tag, [vmobj, adt_lst])
+    return adt_lst
 
 
 def custom_lstm_test():
@@ -140,7 +137,9 @@ def custom_lstm_test():
     batch = 2
     input_size = 3
     hidden_size = 4
-    num_layers = 2
+    num_layers = 3
+
+    inp = torch.randn(seq_len, batch, input_size)
 
     input_shapes = [(input_name, (seq_len, batch, input_size)),
                     (states_name, ((batch, hidden_size), (batch, hidden_size)))]
@@ -149,59 +148,67 @@ def custom_lstm_test():
                             (states_name, [((batch, hidden_size), (batch, hidden_size)),
                                            ((batch, hidden_size), (batch, hidden_size))])]
 
-    inp = torch.randn(seq_len, batch, input_size)
+    input_shapes_stacked_bidir = [(input_name, (seq_len, batch, input_size)),
+                                  (states_name, [((batch, hidden_size), (batch, hidden_size)),
+                                                 ((batch, hidden_size), (batch, hidden_size))])]
+
+    input_shapes_stacked_bidir= [(input_name, (seq_len, batch, input_size)),
+                                 (states_name, [[((batch, hidden_size),
+                                                  (batch, hidden_size))
+                                                 for _ in range(2)]
+                                                for _ in range(num_layers)])]
 
     states = [(torch.randn(batch, hidden_size),
                torch.randn(batch, hidden_size))
               for _ in range(num_layers)]
 
+    bidir_states = [(torch.randn(batch, hidden_size),
+                     torch.randn(batch, hidden_size))
+                    for _ in range(2)]
+
     stacked_bidir_states = [[(torch.randn(batch, hidden_size),
                              torch.randn(batch, hidden_size))
-                            for _ in range(num_layers)] for i in range(2)]
-
-    stacked_bidir_states= [[(torch.randn(batch, hidden_size),
-                             torch.randn(batch, hidden_size))
-                            for _ in range(2)]
-                           for _ in range(num_layers)]
+                             for _ in range(2)]
+                            for _ in range(num_layers)]
 
     from custom_lstms import lstm, stacked_lstm, bidir_lstm, stacked_bidir_lstm
 
     models = [
       (lstm(input_size, hidden_size).eval(), states[0], input_shapes),
       (stacked_lstm(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked),
-      (bidir_lstm(input_size, hidden_size).eval(), states, input_shapes_stacked),
+      (bidir_lstm(input_size, hidden_size).eval(), bidir_states, input_shapes_stacked),
       # (stacked_bidir_lstm(input_size, hidden_size, num_layers).eval(),
-      #  stacked_bidir_states, input_shapes_stacked)
+      #  stacked_bidir_states, input_shapes_stacked_bidir)
     ]
 
     for (raw_model, states, input_shapes) in models:
         script_module = torch.jit.script(raw_model)
         mod, params = from_pytorch(script_module, input_shapes)
-        print(mod["main"])
+        # print(mod["main"])
 
         with torch.no_grad():
-            if states is None:
-                pt_result = raw_model(inp.clone())
-            else:
-                pt_result = raw_model(inp.clone(), states)
+            pt_result = raw_model(inp.clone(), states)
 
         params[input_name] = inp.numpy()
 
-        if states:
-            if isinstance(states, tuple):
-                states_np = tuple(st.numpy() for st in states)
-            elif isinstance(states, list) and isinstance(states[0], torch.Tensor):
-                states_np = [st.numpy() for st in states]
-            elif isinstance(states, list) and isinstance(states[0], tuple):
-                states_np = [tuple(st.numpy() for st in states[i])
-                             for i in range(num_layers)]
-            else:
-                assert False
+        if isinstance(states, tuple):
+            states_np = tuple(st.numpy() for st in states)
+        elif isinstance(states, list) and isinstance(states[0], torch.Tensor):
+            states_np = [st.numpy() for st in states]
+        elif isinstance(states, list) and isinstance(states[0], tuple):
+            states_np = [tuple(st.numpy() for st in states[i])
+                         for i in range(len(states))]
+        elif isinstance(states, list) and isinstance(states[0], list):
+            states_np = [[tuple(st.numpy() for st in states[i])
+                         for i in range(len(states[layer]))]
+                         for layer in range(num_layers)]
+        else:
+            assert False
 
-            if isinstance(states_np, list):
-                params[states_name] = convert_list_to_vmobj(states_np)
-            else:
-                params[states_name] = states_np
+        if isinstance(states_np, list):
+            params[states_name] = convert_list_to_vmobj(states_np)
+        else:
+            params[states_name] = states_np
 
         run_and_compare(mod, params, pt_result)
 

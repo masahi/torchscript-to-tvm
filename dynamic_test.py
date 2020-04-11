@@ -117,7 +117,6 @@ for raw_model in models:
     input_name = "input"
     input_shapes = [(input_name, (10, 20))]
     mod, params = from_pytorch(script_module, input_shapes)
-    print(mod["main"])
 
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
     evaluator = executor.evaluate()
