@@ -95,7 +95,9 @@ class BidirLSTMLayer(jit.ScriptModule):
             out, out_state = direction(input, state)
             outputs += [out]
             output_states += [out_state]
-        return torch.cat(outputs, -1), output_states
+        # tensor array concat assumes axis == 0, so use stack for now
+        # return torch.cat(outputs, -1), output_states
+        return torch.stack(outputs), output_states
 
 
 def init_stacked_lstm(num_layers, layer, first_layer_args, other_layer_args):
@@ -162,3 +164,9 @@ def stacked_rnn(input_size, hidden_size, num_layers):
 
 def bidir_lstmln_layer(input_size, hidden_size):
     return BidirLSTMLayer(LayerNormLSTMCell, input_size, hidden_size)
+
+
+def stacked_bidir_lstmln_layer(input_size, hidden_size, num_layers):
+    return StackedBidirLSTM(num_layers, BidirLSTMLayer,
+                            first_layer_args=[LayerNormLSTMCell, input_size, hidden_size],
+                            other_layer_args=[LayerNormLSTMCell, hidden_size * 2, hidden_size])

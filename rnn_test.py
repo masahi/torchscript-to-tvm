@@ -41,6 +41,9 @@ def assert_equal(tvm_result, torch_result):
 
 def run_and_compare(mod, params, pt_result):
     executor = relay.create_executor("vm", mod=mod, ctx=tvm.cpu(0), target="llvm")
+    # executable = executor.executable
+    # code, lib = executable.save()
+    # print(lib.get_source("s"))
     evaluator = executor.evaluate()
 
     exec_res = evaluator(**params)
@@ -185,8 +188,8 @@ def custom_lstm_test():
 
     models = [
       (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes),
-      (stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked)
-      # (bidir_lstmln_layer(input_size, hidden_size).eval(), states, input_shapes_stacked)
+      (stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked),
+      (bidir_lstmln_layer(input_size, hidden_size).eval(), states, input_shapes_stacked)
     ]
 
     for (raw_model, states, input_shapes) in models:
