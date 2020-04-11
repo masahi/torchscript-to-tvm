@@ -1,14 +1,9 @@
-from typing import List, Tuple
-
 import numpy as np
 import torch
-import torch.nn as nn
-from torch import Tensor
 
 import tvm
 from tvm import relay
 from tvm.relay.frontend.pytorch import from_pytorch
-from tvm.relay.ty import TupleType, TensorType
 from tvm.relay.prelude import Prelude
 
 
@@ -116,25 +111,6 @@ def simple_rnn_test():
     run_and_compare(mod, params, pt_result)
 
 
-class SimpleList(nn.Module):
-    def forward(self, tensor, states):
-        # type: (Tensor, List[Tensor]) -> Tensor
-        return states[0]
-
-
-class ListHead(nn.Module):
-    def forward(self, tensor):
-        # type: (Tensor) -> Tensor
-        lst = [tensor]
-        return lst[0]
-
-
-class ListIdentity(nn.Module):
-    def forward(self, tensor, states):
-        # type: (Tensor, List[Tensor]) -> List[Tensor]
-        return states
-
-
 def convert_to_list_adt(py_lst, prelude):
     adt_lst = prelude.nil()
     for elem in reversed(py_lst):
@@ -173,23 +149,29 @@ def custom_lstm_test():
                             (states_name, [((batch, hidden_size), (batch, hidden_size)),
                                            ((batch, hidden_size), (batch, hidden_size))])]
 
-    tensor_list_shape = [(input_name, (seq_len, batch, input_size)),
-                         (states_name, [(batch, hidden_size), (batch, hidden_size)])]
-
-    state_list = [torch.rand(shape) for shape in tensor_list_shape[1][1]]
-
     inp = torch.randn(seq_len, batch, input_size)
 
     states = [(torch.randn(batch, hidden_size),
                torch.randn(batch, hidden_size))
               for _ in range(num_layers)]
 
-    from custom_lstms import lstmln_layer, stacked_rnn, bidir_lstmln_layer
+    stacked_bidir_states = [[(torch.randn(batch, hidden_size),
+                             torch.randn(batch, hidden_size))
+                            for _ in range(num_layers)] for i in range(2)]
+
+    stacked_bidir_states= [[(torch.randn(batch, hidden_size),
+                             torch.randn(batch, hidden_size))
+                            for _ in range(2)]
+                           for _ in range(num_layers)]
+
+    from custom_lstms import lstm, stacked_lstm, bidir_lstm, stacked_bidir_lstm
 
     models = [
-      (lstmln_layer(input_size, hidden_size).eval(), states[0], input_shapes),
-      (stacked_rnn(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked),
-      (bidir_lstmln_layer(input_size, hidden_size).eval(), states, input_shapes_stacked)
+      (lstm(input_size, hidden_size).eval(), states[0], input_shapes),
+      (stacked_lstm(input_size, hidden_size, num_layers).eval(), states, input_shapes_stacked),
+      (bidir_lstm(input_size, hidden_size).eval(), states, input_shapes_stacked),
+      # (stacked_bidir_lstm(input_size, hidden_size, num_layers).eval(),
+      #  stacked_bidir_states, input_shapes_stacked)
     ]
 
     for (raw_model, states, input_shapes) in models:
@@ -225,4 +207,4 @@ def custom_lstm_test():
 
 
 custom_lstm_test()
-simple_rnn_test()
+# simple_rnn_test()

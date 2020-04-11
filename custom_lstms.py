@@ -142,31 +142,28 @@ class StackedBidirLSTM(jit.ScriptModule):
         #                        inner list is for directions.
         output_states = jit.annotate(List[List[Tuple[Tensor, Tensor]]], [])
         output = input
-        # XXX: enumerate https://github.com/pytorch/pytorch/issues/14471
-        i = 0
-        for rnn_layer in self.layers:
+        for (i, rnn_layer) in enumerate(self.layers):
             state = states[i]
             output, out_state = rnn_layer(output, state)
             output_states += [out_state]
-            i += 1
         return output, output_states
 
 
-def lstmln_layer(input_size, hidden_size):
+def lstm(input_size, hidden_size):
     return LSTMLayer(LayerNormLSTMCell, input_size, hidden_size)
 
 
-def stacked_rnn(input_size, hidden_size, num_layers):
+def stacked_lstm(input_size, hidden_size, num_layers):
     return StackedLSTM(num_layers, LSTMLayer,
                        first_layer_args=[LayerNormLSTMCell, input_size, hidden_size],
                        other_layer_args=[LayerNormLSTMCell, hidden_size, hidden_size])
 
 
-def bidir_lstmln_layer(input_size, hidden_size):
+def bidir_lstm(input_size, hidden_size):
     return BidirLSTMLayer(LayerNormLSTMCell, input_size, hidden_size)
 
 
-def stacked_bidir_lstmln_layer(input_size, hidden_size, num_layers):
+def stacked_bidir_lstm(input_size, hidden_size, num_layers):
     return StackedBidirLSTM(num_layers, BidirLSTMLayer,
                             first_layer_args=[LayerNormLSTMCell, input_size, hidden_size],
                             other_layer_args=[LayerNormLSTMCell, hidden_size * 2, hidden_size])
