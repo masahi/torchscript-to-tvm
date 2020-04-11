@@ -166,4 +166,4 @@ def bidir_lstm(input_size, hidden_size):
 def stacked_bidir_lstm(input_size, hidden_size, num_layers):
     return StackedBidirLSTM(num_layers, BidirLSTMLayer,
                             first_layer_args=[LayerNormLSTMCell, input_size, hidden_size],
-                            other_layer_args=[LayerNormLSTMCell, hidden_size * 2, hidden_size])
+                            other_layer_args=[LayerNormLSTMCell, hidden_size, hidden_size])
