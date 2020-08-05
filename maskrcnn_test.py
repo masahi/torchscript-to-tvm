@@ -2,7 +2,6 @@ import torch
 import torchvision
 import numpy as np
 from tvm import relay
-from tvm.relay.frontend.pytorch import from_pytorch, get_graph_input_names
 
 
 def do_script(model, in_size=100):
@@ -81,10 +80,11 @@ def convert_roi_align():
     return _impl
 
 
+save_jit_model()
 script_module = torch.jit.load("mask_rcnn.pt")
 input_shapes = [("input", (1, 3, 300, 300))]
 custom_map = {'torchvision::roi_align': convert_roi_align()}
-from_pytorch(script_module, input_shapes, custom_map)
+relay.frontend.from_pytorch(script_module, input_shapes, custom_map)
 """
-NotImplementedError: The following operators are not implemented: ['aten::expand_as', 'aten::__and__', 'aten::meshgrid', 'aten::__interpolate', 'aten::scatter', 'aten::nonzero', 'aten::split_with_sizes', 'aten::log2', 'prim::ImplicitTensorToNum', 'aten::index', 'aten::_shape_as_tensor', 'aten::scalar_tensor']
+NotImplementedError: The following operators are not implemented: ['aten::__and__', 'aten::nonzero', 'aten::__interpolate', 'aten::index', 'torchvision::nms', 'aten::unbind', 'aten::scalar_tensor', 'aten::_shape_as_tensor', 'aten::scatter']
 """
