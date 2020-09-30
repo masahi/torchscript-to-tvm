@@ -83,7 +83,7 @@ def test_load_tvm():
     input_name = "inputs"
     shape_dict = {input_name: inp.shape}
     # tvm.error.OpNotImplemented: The following operators are not supported for frontend ONNX: CumSum
-    # mod, params = relay.frontend.from_onnx(onnx_model, shape_dict)
+    mod, params = relay.frontend.from_onnx(onnx_model, shape_dict)
 
     model = TraceWrapper(model)
 
