@@ -43,8 +43,8 @@ def gpt2_test():
             model, {torch.nn.Linear}, dtype=torch.qint8
         )
 
-        pt_model = quantized_model
-        # pt_model = model
+        # pt_model = quantized_model
+        pt_model = model
 
         with torch.no_grad():
             pt_outputs = pt_model(input_ids_1)
