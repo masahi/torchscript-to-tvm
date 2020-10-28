@@ -160,6 +160,7 @@ def evaluate(args, model, tokenizer, prefix=""):
                     inputs["token_type_ids"] = (
                         batch[2] if args.model_type in ["bert", "xlnet"] else None
                     )  # XLM, DistilBERT and RoBERTa don't use segment_ids
+
                 outputs = model(**inputs)
                 tmp_eval_loss, logits = outputs[:2]
 
@@ -264,6 +265,31 @@ def time_model_evaluation(model, configs, tokenizer):
     print("Evaluate total time (seconds): {0:.1f}".format(eval_duration_time))
 
 
+def perf_bench_torch(pt_model, inp, n_repeat):
+    inputs = {
+        "input_ids": inp[0],
+        "attention_mask": inp[1],
+        "labels": inp[2],
+        "token_type_ids": inp[3]
+    }
+
+    with torch.no_grad():
+        pt_model.eval()
+
+        for i in range(3):
+            pt_model(**inputs)
+
+        t1 = time.time()
+        for i in range(n_repeat):
+            pt_model(**inputs)
+        t2 = time.time()
+
+        elapsed = (t2 - t1) * 1e3 / n_repeat
+        print("Torch elapsed ms:", elapsed)
+
+        return elapsed
+
+
 # define the tokenizer
 tokenizer = BertTokenizer.from_pretrained(
     configs.output_dir, do_lower_case=configs.do_lower_case
@@ -280,14 +306,14 @@ inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
           torch.ones(batch_size, 128, dtype=torch.int64),
           torch.ones(batch_size, 128, dtype=torch.int64))
 
-script_module = torch.jit.trace(quantized_model, inputs).eval()
-
 input_shapes = [("input_ids", (inputs[0].shape, "int64")),
                 ("attention_mask", (inputs[1].shape, "int64")),
                 ("token_type_ids", (inputs[2].shape, "int64"))]
 
+script_module = torch.jit.trace(quantized_model, inputs).eval()
 mod, params = relay.frontend.from_pytorch(script_module, input_shapes)
 
+# modify below for older cpus
 target = "llvm -mcpu=cascadelake -libs=mkl"
 # target = "llvm"
 
@@ -297,18 +323,34 @@ with tvm.transform.PassContext(opt_level=3):
     lib = relay.build(mod, target=target, params=params)
     # graph, libs, params = relay.build(mod, target=target, params=params)
 
-# from tvm.contrib.debugger import debug_runtime
+# # from tvm.contrib.debugger import debug_runtime
 
-# runtime = debug_runtime.create(graph, libs, tvm.cpu(0), "dump")
-# runtime.set_input("input_ids", inputs[0].numpy())
-# runtime.set_input("attention_mask", inputs[1].numpy())
-# runtime.set_input("token_type_ids", inputs[2].numpy())
-
-# runtime.run()
+# # runtime = debug_runtime.create(graph, libs, tvm.cpu(0), "dump")
 runtime = tvm.contrib.graph_runtime.GraphModule(lib["default"](tvm.cpu(0)))
 
+runtime.set_input("input_ids", inputs[0].numpy())
+runtime.set_input("attention_mask", inputs[1].numpy())
+runtime.set_input("token_type_ids", inputs[2].numpy())
 
-def evaluate_tvm(args, tokenizer, prefix=""):
+runtime.run()
+
+n_repeat = 100
+
+print("Running TVM time evaluator")
+ftimer = runtime.module.time_evaluator("run", tvm.cpu(0), number=1, repeat=n_repeat)
+prof_res = np.array(ftimer().results) * 1000  # multiply 1000 for converting to millisecond
+print(prof_res)
+print("TVM elapsed ms mean, median and std:", np.mean(prof_res), np.median(prof_res), np.std(prof_res))
+
+print("Running PyTorch benchmark")
+inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
+          torch.ones(batch_size, 128, dtype=torch.int64),
+          torch.ones(1, dtype=torch.int64),
+          torch.ones(batch_size, 128, dtype=torch.int64))
+perf_bench_torch(quantized_model, inputs, n_repeat)
+
+
+def evaluate_tvm(args, prefix=""):
     # Loop to handle MNLI double evaluation (matched, mis-matched)
     eval_task_names = (
         ("mnli", "mnli-mm") if args.task_name == "mnli" else (args.task_name,)
@@ -383,7 +425,7 @@ def evaluate_tvm(args, tokenizer, prefix=""):
 
 def time_tvm_model_evaluation():
     eval_start_time = time.time()
-    result = evaluate_tvm(configs, tokenizer, prefix="tvm")
+    result = evaluate_tvm(configs, prefix="tvm")
     eval_end_time = time.time()
     eval_duration_time = eval_end_time - eval_start_time
     print(result)
@@ -391,3 +433,13 @@ def time_tvm_model_evaluation():
 
 
 time_tvm_model_evaluation()
+
+# PyTorch eval
+if True:
+    # # Evaluate the original FP32 BERT model
+    # print("Evaluating PyTorch full precision accuracy and performance:")
+    # time_model_evaluation(model, configs, tokenizer)
+
+    # Evaluate the INT8 BERT model after the dynamic quantization
+    print("Evaluating PyTorch quantization accuracy and performance:")
+    time_model_evaluation(quantized_model, configs, tokenizer)
