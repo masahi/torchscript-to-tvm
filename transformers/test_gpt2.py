@@ -71,7 +71,7 @@ def gpt2_test():
         input_shapes = [(input_name, (input_ids_1.shape, "int64"))]
         mod, params = relay.frontend.from_pytorch(script_module, input_shapes)
 
-        target = "llvm -mcpu=cascadelake"
+        target = "llvm"
 
         print("inferred type")
         print(relay.transform.InferType()(mod))
@@ -79,17 +79,26 @@ def gpt2_test():
         with tvm.transform.PassContext(opt_level=3):
             # opt_mod, opt_params = relay.optimize(mod, target="llvm -mcpu=cascadelake -libs=mkl", params=params)
             # print(opt_mod["main"])
-            vm_exec = relay.vm.compile(mod, target=target, params=params)
-            # lib = relay.build(mod, target=target, params=params)
+            # vm_exec = relay.vm.compile(mod, target=target, params=params)
+            lib = relay.build(mod, target=target, params=params)
 
         inp = input_ids_1.numpy()
 
-        ctx = tvm.cpu(0)
-        vm = VirtualMachine(vm_exec, ctx)
-        vm.set_input("main", **{input_name: inp})
-        tvm_res = vm.run()
-        tvm_outputs = [tvm_res[0].asnumpy()]
-        for out in tvm_res[1]:
+        # vm = VirtualMachine(vm_exec, ctx)
+        # vm.set_input("main", **{input_name: inp})
+        # tvm_res = vm.run()
+
+        runtime = tvm.contrib.graph_runtime.GraphModule(lib["default"](tvm.cpu(0)))
+
+        runtime.set_input("input_ids", inp)
+
+        runtime.run()
+
+        tvm_outputs = []
+        print("num outputs:", runtime.get_num_outputs())
+
+        for i in range(runtime.get_num_outputs()):
+            out = runtime.get_output(i)
             tvm_outputs.append(out.asnumpy())
 
         for pt_out, tvm_out in zip(torch_outputs, tvm_outputs):
