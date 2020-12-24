@@ -119,11 +119,11 @@ def bench_tvm():
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
-    target = "cuda"
+    target = "llvm -mcpu=core-avx2"
 
     # log_file = "../auto_scheduler/resnet-50-NHWC-B1.json"
     # with auto_scheduler.ApplyHistoryBest(log_file):
-    with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldScaleAxis"]):
+    with tvm.transform.PassContext(opt_level=3):
         vm_exec = relay.vm.compile(mod, target=target, params=params)
 
     ######################################################################
@@ -141,5 +141,5 @@ def bench_tvm():
 
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
