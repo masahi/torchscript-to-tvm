@@ -4,10 +4,11 @@ import onnx
 import torch
 
 import sys
-sys.path.append("../../ml/detr/")
+sys.path.append("../../../ml/detr/")
 
 from hubconf import detr_resnet50
 
+import tvm
 from tvm import relay
 import onnxruntime
 
@@ -90,10 +91,23 @@ def test_load_tvm():
     with torch.no_grad():
         trace = torch.jit.trace(model, inp)
 
-    # NotImplementedError: The following operators are not implemented: ['aten::cumsum', 'aten::masked_fill']
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    outputs = get_torch_outputs(model, inp)
+    pt_outputs = get_torch_outputs(model, inp)
+
+    # print(mod["main"])
+    target = "llvm"
+    with relay.build_config(opt_level=3):
+        json, lib, params = relay.build(mod, target=target, params=params)
+
+    ctx = tvm.context(target, 0)
+    runtime = tvm.contrib.graph_runtime.create(json, lib, ctx)
+    runtime.set_input(**params)
+    runtime.set_input("input", inp.numpy())
+    runtime.run()
+
+    tvm_results = [runtime.get_output(i).asnumpy() for i in [0, 1]]
+
 
 
 # test_model_onnx_detection()
