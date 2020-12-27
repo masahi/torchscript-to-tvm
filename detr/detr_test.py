@@ -1,4 +1,5 @@
 import io
+import numpy as np
 
 import onnx
 import torch
@@ -93,11 +94,8 @@ def test_load_tvm():
 
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    pt_outputs = get_torch_outputs(model, inp)
-
-    # print(mod["main"])
     target = "llvm"
-    with relay.build_config(opt_level=3):
+    with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldConstant", "DynamicToStatic"]):
         json, lib, params = relay.build(mod, target=target, params=params)
 
     ctx = tvm.context(target, 0)
@@ -107,7 +105,10 @@ def test_load_tvm():
     runtime.run()
 
     tvm_results = [runtime.get_output(i).asnumpy() for i in [0, 1]]
+    pt_results = get_torch_outputs(model, inp)
 
+    for pt_res, tvm_res in zip(pt_results, tvm_results):
+        print(np.mean(np.abs(pt_res - tvm_res)))
 
 
 # test_model_onnx_detection()

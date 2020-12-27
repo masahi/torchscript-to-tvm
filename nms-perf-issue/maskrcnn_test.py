@@ -1,6 +1,6 @@
 import tvm
 from tvm import relay, auto_scheduler
-from tvm.relay.frontend.pytorch_utils import NMSRewrite
+from tvm.relay.frontend.pytorch_utils import *
 from tvm.contrib.download import download
 from tvm.runtime.vm import VirtualMachine
 from tvm.relay.dataflow_pattern import *
@@ -89,7 +89,9 @@ with open("maskrcnn_mod.json", "r") as fi:
 with open("maskrcnn.params", "rb") as fi:
     params = relay.load_param_dict(fi.read())
 
-mod["main"] = rewrite(NMSRewrite(), mod["main"])
+mod = rewrite_nms_to_batched_nms(mod)
+mod = rewrite_batched_nms_with_max_out_size(mod)
+
 print(mod["main"])
 
 # with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldScaleAxis"]):
