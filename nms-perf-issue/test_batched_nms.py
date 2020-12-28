@@ -204,4 +204,29 @@ mod, params = relay.frontend.from_pytorch(trace, shape_list)
 mod["main"] = rewrite(NMSRewrite(), mod["main"])
 mod["main"] = rewrite(PostNMSTopKRewrite(), mod["main"])
 
-print(mod["main"])
+# print(mod["main"])
+
+target = "cuda"
+
+with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldScaleAxis"]):
+    vm_exec = relay.vm.compile(mod, target=target, params=params)
+
+######################################################################
+# Inference with Relay VM
+# -----------------------
+ctx = tvm.context(target, 0)
+# vm = profiler_vm.VirtualMachineProfiler(vm_exec, ctx)
+vm = VirtualMachine(vm_exec, ctx)
+vm.set_input("main", **{"boxes": boxes_np, "scores": scores_np, "idxs": idxs_np})
+tvm_res = vm.run()
+indices_tvm = tvm_res.asnumpy()
+
+boxes = boxes.to("cuda")
+scores = scores.to("cuda")
+indices_torch = torch_nms(boxes, scores, idxs).cpu().numpy()
+
+print(indices_tvm.shape, indices_torch.shape)
+print(np.sum(indices_tvm - indices_torch))
+
+# ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=50)
+# print(ftimer("main"))

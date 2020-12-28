@@ -49,3 +49,4 @@ indices_torch = torch_nms(boxes, scores).cpu().numpy()
 
 print(indices_tvm.shape, indices_torch.shape)
 print(np.sum(indices_tvm - indices_torch))
+# print(indices_tvm)

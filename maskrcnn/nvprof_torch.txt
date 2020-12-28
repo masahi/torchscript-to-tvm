@@ -1,0 +1,53 @@
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+GPU activities:   17.14%  774.56ms      1166  664.29us  44.863us  4.3093ms  maxwell_scudnn_winograd_128x128_ldg1_ldg4_tile148n_nt
+                   14.76%  667.13ms      1961  340.20us  223.49us  1.0043ms  maxwell_scudnn_128x128_relu_interior_nn
+                   11.30%  510.61ms       371  1.3763ms  518.91us  2.3019ms  maxwell_scudnn_128x128_relu_small_nn
+                   10.27%  464.08ms      5936  78.180us  1.1840us  465.31us  void at::native::unrolled_elementwise_kernel<at::native::AddFunctor<float>, at::detail::Array<ch
+ar*, int=3>, OffsetCalculator<int=2, unsigned int>, OffsetCalculator<int=1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, fl
+oat, at::native::AddFunctor<float>, char*, int=3, at::detail::Array<char*, int=3>, int=2)
+                    7.43%  336.00ms      3233  103.93us  1.4400us  460.67us  _ZN2at6native29vectorized_elementwise_kernelILi4EZNS0_21threshold_kernel_implIfEEvRNS_14TensorIt
+eratorET_S5_EUlffE_NS_6detail5ArrayIPcLi3EEEEEviT0_T1_
+                    6.75%  305.02ms      3773  80.841us  1.1840us  410.94us  void at::native::unrolled_elementwise_kernel<at::native::MulFunctor<float>, at::detail::Array<ch
+ar*, int=3>, OffsetCalculator<int=2, unsigned int>, OffsetCalculator<int=1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, fl
+oat, at::native::MulFunctor<float>, char*, int=3, at::detail::Array<char*, int=3>, int=2)
+                    5.80%  262.18ms      4664  56.213us     800ns  587.23us  void at::native::vectorized_elementwise_kernel<int=4, at::native::AddFunctor<float>, at::detail:
+:Array<char*, int=3>>(int, float, at::native::AddFunctor<float>)
+                    5.38%  243.31ms       106  2.2953ms  344.16us  4.9137ms  sgemm_128x128x8_NT_vec
+                    4.78%  216.08ms       371  582.42us  14.112us  2.3047ms  void RoIAlignForward<float>(int, float const *, float, int, int, int, int, int, int, bool, float
+ const *, float*)
+                    2.41%  108.88ms        53  2.0543ms  1.8807ms  2.1828ms  void cudnn::detail::dgrad_engine<float, int=128, int=6, int=8, int=3, int=3, int=5, bool=1>(int,
+ int, int, float const *, int, float const , int, cudnn::detail::dgrad_engine<float, int=128, int=6, int=8, int=3, int=3, int=5, bool=1>*, kernel_grad_params, int, int, floa
+t, int, int, int)
+                    1.89%  85.280ms       583  146.28us  28.000us  836.25us  maxwell_scudnn_128x32_relu_interior_nn
+                    1.05%  47.339ms     44732  1.0580us     288ns  582.94us  [CUDA memcpy DtoH]
+                    0.97%  43.645ms      1166  37.431us  6.7200us  137.63us  void cudnn::winograd::generateWinogradTilesKernel<int=0, float, float>(cudnn::winograd::Generate
+WinogradTilesParams<float, float>)
+                    0.94%  42.548ms       159  267.60us  129.95us  366.01us  maxwell_scudnn_128x64_relu_interior_nn
+                    0.78%  35.148ms      3816  9.2100us     832ns  226.11us  void at::native::vectorized_elementwise_kernel<int=4, at::native::FillFunctor<float>, at::detail
+::Array<char*, int=1>>(int, float, at::native::FillFunctor<float>)
+                    0.76%  34.281ms       265  129.36us  7.8720us  538.46us  void gatherTopK<float, unsigned int, int=1, bool=1>(TensorInfo<float, unsigned int>, unsigned in
+t, unsigned int, unsigned int, unsigned int, TensorInfo<float, unsigned int>, unsigned int, unsigned int, TensorInfo<long, unsigned int>, unsigned int)
+                    0.75%  33.869ms       371  91.290us  3.9360us  343.42us  _ZN2at6native24index_elementwise_kernelILi128ELi4EZNS0_16gpu_index_kernelIZNS0_21index_put_kerne
+l_implINS0_10OpaqueTypeILi4EEEEEvRNS_14TensorIteratorEN3c108ArrayRefIlEESA_EUlPcSB_lE_EEvS7_SA_SA_RKT_EUliE_EEviT1_
+                    0.74%  33.355ms        53  629.34us  618.08us  734.65us  maxwell_scudnn_128x64_relu_medium_nn
+                    0.46%  20.834ms      4717  4.4160us  1.0230us  38.144us  _ZN2at6native27unrolled_elementwise_kernelIZZZNS0_21copy_device_to_deviceERNS_14TensorIteratorEb
+ENKUlvE0_clEvENKUlvE2_clEvEUlfE_NS_6detail5ArrayIPcLi2EEE16OffsetCalculatorILi1EjESC_NS0_6memory15LoadWithoutCastENSD_16StoreWithoutCastEEEviT_T0_T1_T2_T3_T4_
+                    0.46%  20.714ms       106  195.41us  6.0480us  403.71us  void at::native::_GLOBAL__N__63_tmpxft_000015c7_00000000_11_DilatedMaxPool2d_compute_75_cpp1_ii_
+db999de0::max_pool_forward_nchw<float, float>(int, float const *, int, int, int, int, int, int, int, int, int, int, int, int, int, int, at::native::_GLOBAL__N__63_tmpxft_000
+015c7_00000000_11_DilatedMaxPool2d_compute_75_cpp1_ii_db999de0::max_pool_forward_nchw<float, float>*, long*)
+                    0.43%  19.547ms       159  122.94us  20.672us  282.91us  void at::native::_GLOBAL__N__64_tmpxft_00002796_00000000_11_UpSampleNearest2d_compute_75_cpp1_ii
+_0758b255::upsample_nearest2d_out_frame<float, float>(float const *, at::native::_GLOBAL__N__64_tmpxft_00002796_00000000_11_UpSampleNearest2d_compute_75_cpp1_ii_0758b255::up
+sample_nearest2d_out_frame<float, float>*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, float, float)
+                    0.40%  18.305ms      1804  10.147us     512ns  5.3092ms  [CUDA memcpy HtoD]
+                    0.37%  16.695ms       318  52.498us  1.8560us  209.98us  void at::native::_GLOBAL__N__52_tmpxft_00002338_00000000_11_Shape_compute_75_cpp1_ii_cedd8df2::C
+atArrayBatchedCopy<float, unsigned int, int=3>(float*, at::native::_GLOBAL__N__52_tmpxft_00002338_00000000_11_Shape_compute_75_cpp1_ii_cedd8df2::CatArrInputTensorMetadata<at
+::native::_GLOBAL__N__52_tmpxft_00002338_00000000_11_Shape_compute_75_cpp1_ii_cedd8df2::CatArrayBatchedCopy<float, unsigned int, int=3>, unsigned int, int=128>, at::native::
+_GLOBAL__N__52_tmpxft_00002338_00000000_11_Shape_compute_75_cpp1_ii_cedd8df2::OutputTensorSizeStride<at::native::_GLOBAL__N__52_tmpxft_00002338_00000000_11_Shape_compute_75_
+cpp1_ii_cedd8df2::CatArrInputTensorMetadata, unsigned int=4>, int, at::native::_GLOBAL__N__52_tmpxft_00002338_00000000_11_Shape_compute_75_cpp1_ii_cedd8df2::CatArrInputTenso
+rMetadata)
+                    0.34%  15.348ms      2067  7.4250us     768ns  105.02us  [CUDA memcpy DtoD]
+                    0.27%  12.253ms       106  115.59us  18.784us  258.53us  void nms_kernel<float>(int, float, float const *, __int64*)
+                    0.25%  11.245ms        53  212.17us  211.78us  212.99us  void scalePackedTensor_kernel<float, float>(cudnnTensor4dStruct, float*, float)
+                    0.25%  11.180ms      3127  3.5750us  1.7280us  105.09us  void at::native::_GLOBAL__N__65_tmpxft_0000270e_00000000_11_UpSampleBilinear2d_compute_75_cpp1_i
+i_3eda6805::upsample_bilinear2d_out_frame<float, float>(int, float, at::native::_GLOBAL__N__65_tmpxft_0000270e_00000000_11_UpSampleBilinear2d_compute_75_cpp1_ii_3eda6805::up
+sample_bilinear2d_out_frame<float, float>, bool, at::GenericPackedTensorAccessor<float, unsigned long=4, at::DefaultPtrTraits, long>, at::DefaultPtrTraits)

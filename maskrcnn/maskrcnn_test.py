@@ -3,6 +3,10 @@ from tvm import relay, auto_scheduler
 from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 from tvm.contrib.download import download
+from tvm.relay.frontend.pytorch_utils import (
+    rewrite_nms_to_batched_nms,
+    rewrite_batched_nms_with_max_out_size,
+)
 
 import numpy as np
 import cv2
@@ -74,7 +78,7 @@ def get_input(in_size):
 num_iters = 50
 
 model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=200))
+model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
 img = get_input(in_size)
@@ -90,6 +94,9 @@ def auto_schedule():
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
+    mod = rewrite_nms_to_batched_nms(mod)
+    mod = rewrite_batched_nms_with_max_out_size(mod)
+
     target = "cuda"
 
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
@@ -103,7 +110,7 @@ def auto_schedule():
 
     tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
     tune_option = auto_scheduler.TuningOptions(
-        num_measure_trials=20000,  # change this to 20000 to achieve the best performance
+        num_measure_trials=50000,  # change this to 20000 to achieve the best performance
         runner=measure_ctx.runner,
         measure_callbacks=[auto_scheduler.RecordToFile(log_file)],
     )
@@ -119,7 +126,11 @@ def bench_tvm():
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
-    target = "llvm -mcpu=core-avx2"
+    mod = rewrite_nms_to_batched_nms(mod)
+    mod = rewrite_batched_nms_with_max_out_size(mod)
+
+    # target = "cuda -libs=cublas"
+    target = "cuda"
 
     # log_file = "../auto_scheduler/resnet-50-NHWC-B1.json"
     # with auto_scheduler.ApplyHistoryBest(log_file):
@@ -138,7 +149,6 @@ def bench_tvm():
 
     ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
     print(ftimer("main"))
-
 
 # benchmark_torch(model, inp, num_iters)
 bench_tvm()

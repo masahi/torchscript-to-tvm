@@ -1,0 +1,4 @@
+baseline: 5.78
+with baseline batched nms rewrite: 5.23
+with baseline + memory opt + batched nms rewrite: 4.51
+with baseline + memory opt + batched nms rewrite + topk rewrite: 4.11

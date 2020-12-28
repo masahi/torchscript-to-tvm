@@ -1,0 +1,21 @@
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   41.18%  242.24ms         1  242.24ms  242.24ms  242.24ms  fused_nn_dense_add_nn_relu_kernel0
+                    4.93%  29.003ms        58  500.05us  25.407us  974.76us  fused_expand_dims_concatenate_1_kernel0
+                    4.11%  24.170ms         6  4.0283ms  4.0190ms  4.0375ms  fused_nn_conv2d_add_nn_relu_11_kernel0
+                    4.09%  24.037ms         1  24.037ms  24.037ms  24.037ms  fused_nn_conv2d_add_5_kernel0
+                    4.04%  23.776ms         1  23.776ms  23.776ms  23.776ms  fused_nn_conv2d_add_nn_relu_16_kernel0
+                    3.28%  19.316ms       482  40.074us     512ns  5.6458ms  [CUDA memcpy HtoD]
+                    3.24%  19.077ms         1  19.077ms  19.077ms  19.077ms  fused_nn_dense_add_nn_relu_1_kernel0
+                    2.50%  14.694ms         4  3.6736ms  3.6714ms  3.6796ms  fused_nn_conv2d_add_nn_relu_20_kernel0
+                    2.48%  14.570ms         1  14.570ms  14.570ms  14.570ms  fused_nn_conv2d_transpose_add_nn_relu_kernel0
+                    1.90%  11.156ms         1  11.156ms  11.156ms  11.156ms  fused_nn_conv2d_add_nn_relu_13_kernel0
+                    1.87%  10.974ms         4  2.7435ms  2.7330ms  2.7538ms  fused_scatter_3_kernel0
+                    1.61%  9.4766ms      2287  4.1430us     608ns  2.3564ms  [CUDA memcpy DtoH]
+                    1.60%  9.4270ms         1  9.4270ms  9.4270ms  9.4270ms  fused_nn_conv2d_add_nn_relu_5_kernel0
+                    1.44%  8.4806ms         3  2.8269ms  2.8225ms  2.8303ms  fused_nn_conv2d_add_nn_relu_2_kernel0
+                    1.19%  7.0239ms         1  7.0239ms  7.0239ms  7.0239ms  fused_nn_conv2d_add_nn_relu_9_kernel0
+                    1.17%  6.8612ms         2  3.4306ms  1.1408ms  5.7204ms  fused_dyn_full_1_kernel0
+                    1.05%  6.1815ms         1  6.1815ms  6.1815ms  6.1815ms  fused_nn_conv2d_add_nn_relu_17_kernel0
+                    1.04%  6.1232ms         1  6.1232ms  6.1232ms  6.1232ms  fused_nn_conv2d_add_7_kernel0
+                    1.02%  5.9953ms         6  999.22us  997.13us  1.0017ms  fused_nn_conv2d_add_add_nn_relu_2_kernel0
+                    0.93%  5.4812ms         2  2.7406ms  2.6928ms  2.7884ms  fused_nn_conv2d_add_nn_relu_15_kernel0
