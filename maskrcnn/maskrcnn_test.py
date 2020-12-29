@@ -108,7 +108,7 @@ def auto_schedule():
     log_file = "maskrcnn.log"
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=10)
 
-    tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
+    tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
     tune_option = auto_scheduler.TuningOptions(
         num_measure_trials=50000,  # change this to 20000 to achieve the best performance
         runner=measure_ctx.runner,
@@ -153,5 +153,5 @@ def bench_tvm():
     print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-bench_tvm()
-# auto_schedule()
+# bench_tvm()
+auto_schedule()

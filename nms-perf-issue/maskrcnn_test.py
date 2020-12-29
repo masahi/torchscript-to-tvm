@@ -60,8 +60,6 @@ def get_input():
     return img
 
 
-
-
 input_name = "input0"
 img = get_input()
 
@@ -92,29 +90,36 @@ with open("maskrcnn.params", "rb") as fi:
 mod = rewrite_nms_to_batched_nms(mod)
 mod = rewrite_batched_nms_with_max_out_size(mod)
 
+desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+with tvm.transform.PassContext(opt_level=3):
+    mod = seq(mod)
+
 print(mod["main"])
 
-# with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldScaleAxis"]):
-#     vm_exec = relay.vm.compile(mod, target=target, params=params)
+target = "llvm"
+
+with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldScaleAxis"]):
+    vm_exec = relay.vm.compile(mod, target=target, params=params)
 
 # ######################################################################
 # # Inference with Relay VM
 # # -----------------------
-# ctx = tvm.cpu()
-# vm = VirtualMachine(vm_exec, ctx)
-# vm.set_input("main", **{input_name: img})
-# tvm_res = vm.run()
+ctx = tvm.cpu()
+vm = VirtualMachine(vm_exec, ctx)
+vm.set_input("main", **{input_name: img})
+tvm_res = vm.run()
 
-# ######################################################################
-# # Get boxes with score larger than 0.9
-# # ------------------------------------
-# score_threshold = 0.9
-# boxes = tvm_res[0].asnumpy().tolist()
-# valid_boxes = []
-# for i, score in enumerate(tvm_res[1].asnumpy().tolist()):
-#     if score > score_threshold:
-#         valid_boxes.append(boxes[i])
-#     else:
-#         break
+######################################################################
+# Get boxes with score larger than 0.9
+# ------------------------------------
+score_threshold = 0.9
+boxes = tvm_res[0].asnumpy().tolist()
+valid_boxes = []
+for i, score in enumerate(tvm_res[1].asnumpy().tolist()):
+    if score > score_threshold:
+        valid_boxes.append(boxes[i])
+    else:
+        break
 
-# print("Get {} valid boxes".format(len(valid_boxes)))
+print("Get {} valid boxes".format(len(valid_boxes)))
