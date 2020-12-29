@@ -1,588 +1,594 @@
+scatter rank: 1
+scatter rank: 4
+scatter rank: 4
+scatter rank: 1
+scatter rank: 1
+
 #OpName                       	#InvokeCount	#Duration(us): Sum/Mean/Min/Max
-fused_split_squeeze_subtract_divide_expand_dims_image_resize_take_nn_pad_stack	1         	6.5761e+06/6.5761e+06/6.5761e+06/6.5761e+06
-fused_nn_dense_add_nn_relu    	1         	3.25308e+06/3.25308e+06/3.25308e+06/3.25308e+06
-fused_scatter                 	116       	37304.3/321.588/84.433/26872.7
-fused_expand_dims_concatenate_1	58        	35982.4/620.387/45.912/1204.12
-fused_topk                    	1         	31354.1/31354.1/31354.1/31354.1
-fused_nn_conv2d_add_nn_relu_20	4         	18040.8/4510.19/4463.34/4577.81
-fused_nn_conv2d_transpose_add_nn_relu	1         	17606.3/17606.3/17606.3/17606.3
-fused_scatter_3               	4         	13960.5/3490.12/2968.17/4430.59
-fused_scatter_1               	116       	10856.5/93.5908/88.484/113.373
-fused_nn_conv2d_add_5         	1         	10577.9/10577.9/10577.9/10577.9
-fused_nn_conv2d_add_nn_relu_16	1         	9365.44/9365.44/9365.44/9365.44
-fused_dyn_full_1              	2         	7325.28/3662.64/1396.68/5928.6
-fused_nn_conv2d_add_nn_relu_11	6         	6321.86/1053.64/1046.66/1066.64
-fused_shape_of_1              	472       	4646.54/9.84435/8.72/55.05
-fused_vision_non_max_suppression	2         	4550.92/2275.46/310.962/4239.96
-fused_nn_conv2d_add_add_nn_relu_2	6         	3980.79/663.464/658.054/670.298
-fused_dyn_strided_slice_1     	243       	3913.62/16.1054/11.207/75.911
-fused_cast_38                 	364       	3802.52/10.4465/8.817/42.536
-fused_cast_like_add_where     	274       	3163.85/11.5469/9.095/63.441
-fused_nn_conv2d_add_add_nn_relu_1	4         	3009.32/752.329/739.937/769.149
-fused_nn_conv2d_add_nn_relu_10	5         	3000.14/600.028/562.482/632.021
-fused_dyn_full                	232       	2831.09/12.203/1.653/18.064
-fused_nn_conv2d_add_7         	1         	2814.06/2814.06/2814.06/2814.06
-fused_nn_conv2d_add_3         	1         	2784.4/2784.4/2784.4/2784.4
-fused_nn_conv2d_add_nn_relu_17	1         	2666.97/2666.97/2666.97/2666.97
-fused_nn_conv2d_add_nn_relu_7 	3         	2603.44/867.813/854.919/892.146
-fused_max_5                   	232       	2557.19/11.0224/10.254/16.294
-fused_nn_conv2d_add_nn_relu_15	2         	2384.88/1192.44/1185.77/1199.12
-fused_nn_conv2d_add_nn_relu_2 	3         	2375.66/791.886/780.821/803.833
-fused_nn_conv2d_add_add_2     	1         	2363.99/2363.99/2363.99/2363.99
-fused_vision_roi_align        	1         	2351.4/2351.4/2351.4/2351.4
-fused_dyn_image_resize        	58        	2204.13/38.0023/32.195/330.024
-fused_nn_conv2d_add_2         	1         	2115.4/2115.4/2115.4/2115.4
-fused_nn_conv2d_add_add_nn_relu_3	3         	2114.26/704.753/702.558/706.898
-fused_reshape_reshape_concatenate_1	58        	2031.37/35.0237/31.031/43.132
-fused_nn_conv2d_add_add_nn_relu	3         	2019.19/673.063/666.001/685.274
-fused_nn_conv2d_add_1         	1         	1887.54/1887.54/1887.54/1887.54
-fused_nn_conv2d_add_nn_relu_6 	3         	1823.87/607.957/601.964/615.89
-fused_nn_conv2d_add_19        	1         	1808.05/1808.05/1808.05/1808.05
-fused_scatter_4               	4         	1763.27/440.817/360.578/655.979
-fused_nn_conv2d_add_nn_relu_5 	1         	1713.43/1713.43/1713.43/1713.43
-fused_nn_conv2d_add_add_1     	1         	1628.27/1628.27/1628.27/1628.27
-fused_nn_conv2d_add_nn_relu   	1         	1552.9/1552.9/1552.9/1552.9
-fused_dyn_strided_slice       	116       	1533.37/13.2187/11.737/26.738
-fused_nn_conv2d_add_nn_relu_9 	1         	1493.17/1493.17/1493.17/1493.17
-fused_nn_conv2d_add_nn_relu_3 	2         	1479.26/739.631/732.134/747.128
-fused_dyn_strided_slice_8     	5         	1473/294.6/58.086/1139.22
-fused_subtract_add_concatenate	116       	1464.92/12.6286/8.883/313.064
-fused_argwhere_1              	10        	1373.27/137.327/1.756/466.649
-fused_min_7                   	116       	1293.8/11.1534/10.516/16.245
-fused_expand_dims_26          	2         	1251.6/625.801/37.776/1213.83
-fused_nn_conv2d_add_nn_relu_13	1         	1246.11/1246.11/1246.11/1246.11
-fused_take_9                  	58        	1197.82/20.6521/20.076/27.02
-fused_expand_dims_concatenate 	116       	1165.13/10.0442/9.401/16.403
-fused_expand_dims_add_concatenate	116       	1152.8/9.93793/9.314/15.541
-fused_take_13                 	58        	1149.99/19.8274/19.121/26.944
-fused_take_expand_dims_repeat_repeat	58        	1144.25/19.7284/19.052/26.458
-fused_subtract_expand_dims    	116       	1137.04/9.80203/9.182/17.088
-fused_nn_conv2d_add_nn_relu_14	2         	1134.04/567.02/561.327/572.714
-fused_nn_conv2d_add_nn_relu_4 	1         	1095.42/1095.42/1095.42/1095.42
-fused_nn_conv2d_add_nn_relu_8 	1         	1077.28/1077.28/1077.28/1077.28
-fused_reshape_reshape_concatenate	58        	1021.03/17.604/16.819/23.571
-fused_nn_conv2d_add_nn_relu_12	1         	1000.04/1000.04/1000.04/1000.04
-fused_nn_conv2d_add_9         	1         	989.196/989.196/989.196/989.196
-fused_vision_roi_align_1      	1         	986.552/986.552/986.552/986.552
-fused_full_1                  	58        	870.443/15.0076/9.232/312.777
-fused_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_dims_mu_4615394520124750845_	1         	708.702/708.702/708.702/708.702
-fused_take_14                 	58        	701.088/12.0877/11.468/16.624
-fused_shape_of                	60        	690.753/11.5126/10.571/16.422
-fused_add_17                  	58        	636.874/10.9806/10.593/16.96
-fused_argwhere                	1         	635.876/635.876/635.876/635.876
-fused_take_7                  	58        	622.56/10.7338/10.09/24.992
-fused_nn_conv2d_add_add       	1         	621.151/621.151/621.151/621.151
-fused_subtract_expand_dims_cast_concatenate_1	58        	614.923/10.6021/9.537/24.612
-fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_1	58        	611.023/10.5349/9.894/17.468
-fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where	58        	603.844/10.4111/9.78/16.514
-fused_reshape_repeat_repeat_repeat	4         	601.879/150.47/20.774/373.015
-fused_take_8                  	58        	594.495/10.2499/9.438/22.015
-fused_expand_dims_cast_concatenate	58        	592.062/10.208/9.678/16.59
-fused_subtract_expand_dims_cast_concatenate	58        	588.173/10.1409/9.615/18.745
-fused_take_less               	59        	587.456/9.95688/9.397/15.261
-fused_take_10                 	58        	581.463/10.0252/9.495/15.553
-fused_take_expand_dims_cast   	58        	581.1/10.019/9.522/15.868
-fused_expand_dims_expand_dims_concatenate	58        	580.338/10.0058/9.387/15.026
-fused_take_11                 	58        	577.573/9.95816/9.467/15.858
-fused_take_expand_dims_cast_1 	58        	576.144/9.93352/9.434/15.314
-fused_expand_dims_cast_concatenate_1	58        	573.529/9.88843/9.318/14.332
-fused_full                    	58        	571.194/9.84817/9.249/14.356
-fused_take_12                 	58        	558.087/9.62219/9.119/13.622
-fused_reshape_squeeze         	1         	531.879/531.879/531.879/531.879
-fused_nn_dense_add_nn_relu_1  	1         	514.994/514.994/514.994/514.994
-fused_nn_conv2d_add           	1         	505.463/505.463/505.463/505.463
-fused_dyn_strided_slice_3     	28        	478.095/17.0748/11.147/51.775
-fused_nn_dense_add_1          	1         	451.461/451.461/451.461/451.461
-fused_nn_conv2d_add_11        	1         	439.22/439.22/439.22/439.22
-shape_func_argwhere_1         	10        	385.106/38.5106/0.571/358.242
-fused_nn_conv2d_add_nn_relu_18	1         	382.122/382.122/382.122/382.122
-fused_vision_roi_align_4      	1         	375.889/375.889/375.889/375.889
-fused_nn_conv2d_add_4         	1         	372.01/372.01/372.01/372.01
-fused_vision_roi_align_2      	1         	310.357/310.357/310.357/310.357
-fused_image_resize_2          	1         	300.418/300.418/300.418/300.418
-fused_nn_max_pool2d           	1         	287.073/287.073/287.073/287.073
-fused_multiply_46             	1200      	255.267/0.212722/0.136/2.26
-fused_topk_1                  	1         	240.001/240.001/240.001/240.001
-fused_scatter_2               	2         	237.227/118.613/114.595/122.632
-fused_nn_conv2d_add_6         	1         	236.952/236.952/236.952/236.952
-fused_prod_2                  	839       	223.64/0.266555/0.146/3.016
-fused_nn_conv2d_add_14        	1         	216.37/216.37/216.37/216.37
-fused_nn_conv2d_add_nn_relu_1 	1         	216.155/216.155/216.155/216.155
-fused_topk_2                  	1         	212.224/212.224/212.224/212.224
-fused_dyn_strided_slice_7     	6         	198.675/33.1125/16.405/80.002
-fused_nn_conv2d_add_nn_relu_19	1         	196.74/196.74/196.74/196.74
-fused_cast_like_add_where_1   	8         	191.283/23.9104/15.653/49.436
-shape_func_dyn_strided_slice_1	243       	156.88/0.645597/0.493/3.209
-fused_nn_dense_add            	1         	150.847/150.847/150.847/150.847
-fused_reshape_repeat_repeat_repeat_1	4         	148.857/37.2142/1.718/107.284
-fused_shape_of_2              	6         	140.039/23.3398/11.44/45.361
-fused_maximum_minimum_maximum_minimum_stack	1         	131.342/131.342/131.342/131.342
-fused_cast_40                 	4         	127.345/31.8362/16.859/64.066
-shape_func_dyn_full           	232       	120.194/0.518078/0.426/1.567
-fused_topk_3                  	1         	102.88/102.88/102.88/102.88
-fused_cast_adv_index          	8         	100.832/12.604/1.801/19.232
-fused_shape_of_4              	5         	97.5/19.5/10.973/43.23
-fused_nn_conv2d_add_8         	1         	97.104/97.104/97.104/97.104
-fused_topk_4                  	1         	94.875/94.875/94.875/94.875
-fused_adv_index_2             	1         	94.793/94.793/94.793/94.793
-fused_cast_like_add_where_2   	6         	93.537/15.5895/11.873/24.394
-fused_split_squeeze_cast      	3         	93.091/31.0303/13.307/46.302
-fused_image_resize_1          	1         	90.492/90.492/90.492/90.492
-fused_nn_conv2d_add_15        	1         	89.401/89.401/89.401/89.401
-fused_vision_roi_align_5      	1         	88.692/88.692/88.692/88.692
-fused_cast_41                 	5         	87.582/17.5164/10.839/26.867
-fused_split_squeeze           	8         	87.407/10.9259/1.858/16.845
-fused_dyn_strided_slice_5     	1         	84.501/84.501/84.501/84.501
-fused_cast_broadcast_to_like  	1         	84.487/84.487/84.487/84.487
-fused_shape_of_9              	4         	78.127/19.5318/13.95/26.439
-shape_func_dyn_strided_slice  	116       	73.453/0.633216/0.507/1.664
-fused_dyn_strided_slice_4     	1         	73.398/73.398/73.398/73.398
-fused_concatenate_8           	1         	71.97/71.97/71.97/71.97
-fused_dyn_strided_slice_6     	1         	71.863/71.863/71.863/71.863
-fused_concatenate_7           	1         	70.561/70.561/70.561/70.561
-fused_nn_softmax              	1         	67.118/67.118/67.118/67.118
-fused_take_take_subtract      	1         	66.095/66.095/66.095/66.095
-fused_greater                 	1         	65.908/65.908/65.908/65.908
-fused_shape_of_6              	1         	64.458/64.458/64.458/64.458
-fused_take_add_cast_expand_dims	1         	63.822/63.822/63.822/63.822
-fused_vision_roi_align_3      	1         	61.636/61.636/61.636/61.636
-fused_shape_of_8              	1         	60.871/60.871/60.871/60.871
-fused_shape_of_7              	1         	60.071/60.071/60.071/60.071
-fused_split                   	1         	55.602/55.602/55.602/55.602
-fused_squeeze_6               	2         	51.762/25.881/11.737/40.025
-fused_nn_conv2d_add_10        	1         	48.219/48.219/48.219/48.219
-fused_take_multiply_add       	1         	47.378/47.378/47.378/47.378
-fused_prod                    	184       	44.083/0.239582/0.162/1.775
-fused_adv_index_1             	3         	43.519/14.5063/12.229/17.202
-fused_prod_1                  	152       	41.857/0.275375/0.181/1.481
-fused_nn_conv2d_add_12        	1         	40.109/40.109/40.109/40.109
-fused_nn_pad                  	1         	39.841/39.841/39.841/39.841
-fused_take_multiply_add_1     	1         	39.191/39.191/39.191/39.191
-fused_dyn_strided_slice_9     	1         	38.906/38.906/38.906/38.906
-fused_min_8                   	2         	37.958/18.979/18.278/19.68
-fused_image_resize            	1         	37.686/37.686/37.686/37.686
-fused_reshape_adv_index       	1         	37.583/37.583/37.583/37.583
-fused_nn_conv2d_add_16        	1         	36.736/36.736/36.736/36.736
-fused_full_like_concatenate_concatenate_concatenate	2         	34.942/17.471/14.96/19.982
-fused_dyn_strided_slice_2     	2         	34.454/17.227/16.518/17.936
-fused_squeeze_7               	2         	34.251/17.1255/15.863/18.388
-fused_equal                   	2         	34.244/17.122/14.36/19.884
-fused_expand_dims_25          	2         	33.421/16.7105/14.675/18.746
-fused_equal_2                 	2         	33.057/16.5285/12.648/20.409
-fused_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divide_log_3641292538708681564_	2         	32.778/16.389/14.565/18.213
-fused_cast_39                 	2         	31.971/15.9855/13.442/18.529
-fused_subtract_add            	2         	31.621/15.8105/13.833/17.788
-fused_equal_3                 	2         	31.399/15.6995/12.436/18.963
-fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_5612394393934892536_	1         	31.027/31.027/31.027/31.027
-fused_concatenate_9           	1         	30.909/30.909/30.909/30.909
-fused_take_take_subtract_1    	1         	30.879/30.879/30.879/30.879
-shape_func_reshape_reshape_concatenate_1	58        	30.541/0.526569/0.435/1.504
-fused_take_expand_dims_cast_concatenate	2         	30.48/15.24/13.827/16.653
-fused_adv_index               	1         	30.433/30.433/30.433/30.433
-fused_equal_1                 	2         	30.144/15.072/12.77/17.374
-shape_func_reshape_reshape_concatenate	58        	29.619/0.510672/0.432/1.548
-fused_shape_of_3              	2         	29.507/14.7535/12.505/17.002
-fused_ndarray_size_equal      	2         	29.079/14.5395/12.815/16.264
-fused_squeeze_8               	2         	29.055/14.5275/13.397/15.658
-shape_func_dyn_image_resize   	58        	28.631/0.493638/0.438/0.782
-fused_shape_of_5              	2         	28.622/14.311/12.011/16.611
-fused_prod_3                  	49        	28.482/0.581265/0.207/2.914
-fused_nn_conv2d_add_17        	1         	28.423/28.423/28.423/28.423
-fused_vision_roi_align_6      	1         	27.591/27.591/27.591/27.591
-shape_func_dyn_strided_slice_3	28        	27.254/0.973357/0.525/3.445
-shape_func_take               	58        	26.78/0.461724/0.392/1.58
-shape_func_expand_dims_concatenate	58        	26.661/0.459672/0.398/0.592
-fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_763165556527453816_	1         	25.913/25.913/25.913/25.913
-fused_nn_conv2d_add_13        	1         	25.449/25.449/25.449/25.449
-fused_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equal_cas_250104735588561676_	1         	25.02/25.02/25.02/25.02
-fused_reshape_adv_index_adv_index	1         	24.753/24.753/24.753/24.753
-shape_func_take_expand_dims_repeat_repeat	58        	24.426/0.421138/0.358/0.604
-fused_nn_conv2d_add_18        	1         	24.416/24.416/24.416/24.416
-shape_func_take_2             	58        	24.397/0.420638/0.322/0.568
-shape_func_take_1             	58        	24.161/0.416569/0.336/1.516
-fused_expand_dims_cast_expand_dims_concatenate_expand_dims	1         	22.515/22.515/22.515/22.515
-fused_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_adv_in_16747569123192521575_	1         	22.145/22.145/22.145/22.145
-fused_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_cast_16305282092913549647_	1         	21.991/21.991/21.991/21.991
-fused_take_cast_expand_dims_take_cast_expand_dims_take_cast_expand_dims_concaten_10869151023261452404_	1         	21.654/21.654/21.654/21.654
-fused_sigmoid_concatenate_adv_index	1         	20.76/20.76/20.76/20.76
-fused_arange_8                	1         	19.98/19.98/19.98/19.98
-fused_adv_index_split_squeeze_adv_index	1         	19.496/19.496/19.496/19.496
-fused_adv_index_adv_index     	1         	19.304/19.304/19.304/19.304
-fused_nn_max_pool2d_1         	1         	18.646/18.646/18.646/18.646
-fused_arange_7                	1         	18.621/18.621/18.621/18.621
-fused_add_add_add_add_add_concatenate	1         	18.41/18.41/18.41/18.41
-fused_strided_slice_take_take_subtract_greater_equal_cast_take_take_subtract_gre_10448244218429255428_	1         	18.333/18.333/18.333/18.333
-fused_arange_9                	1         	18.001/18.001/18.001/18.001
-fused_take_cast               	1         	17.952/17.952/17.952/17.952
-fused_shape_of_11             	1         	17.131/17.131/17.131/17.131
-fused_shape_of_10             	1         	16.899/16.899/16.899/16.899
-fused_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_multiply__1511904406113696076_	1         	16.317/16.317/16.317/16.317
-fused_adv_index_3             	1         	15.855/15.855/15.855/15.855
-shape_func_dyn_strided_slice_7	6         	10.236/1.706/0.952/3.579
-fused_multiply_47             	14        	6.973/0.498071/0.176/1.336
-shape_func_split_squeeze_cast 	3         	5.144/1.71467/0.867/2.894
-shape_func_dyn_strided_slice_8	5         	5.139/1.0278/0.875/1.227
-shape_func_split_squeeze      	8         	4.619/0.577375/0.385/0.983
-shape_func_cast_adv_index     	8         	4.495/0.561875/0.402/1.074
-shape_func_dyn_strided_slice_4	1         	3.615/3.615/3.615/3.615
-shape_func_nn_dense_add_nn_relu_1	1         	3.604/3.604/3.604/3.604
-fused_multiply_48             	10        	3.49/0.349/0.185/1.237
-shape_func_dyn_strided_slice_5	1         	3.381/3.381/3.381/3.381
-shape_func_dyn_reshape        	1         	3.197/3.197/3.197/3.197
-shape_func_dyn_strided_slice_6	1         	3.124/3.124/3.124/3.124
-shape_func_argwhere           	1         	3.063/3.063/3.063/3.063
-shape_func_reshape_1          	1         	2.999/2.999/2.999/2.999
-shape_func_nn_conv2d_add_nn_relu	4         	2.858/0.7145/0.637/0.845
-shape_func_nn_dense_add_1     	1         	2.843/2.843/2.843/2.843
-shape_func_nn_dense_add       	1         	2.668/2.668/2.668/2.668
-shape_func_full_like_concatenate_concatenate_concatenate	2         	2.577/1.2885/0.786/1.791
-shape_func_nn_softmax         	1         	2.39/2.39/2.39/2.39
-shape_func_scatter_1          	4         	2.298/0.5745/0.453/0.711
-shape_func_cast_broadcast_to_like	1         	2.288/2.288/2.288/2.288
-shape_func_scatter            	4         	2.285/0.57125/0.482/0.756
-shape_func_reshape_repeat_repeat_repeat_1	4         	2.252/0.563/0.429/0.723
-shape_func_take_take_subtract 	1         	2.197/2.197/2.197/2.197
-shape_func_adv_index_1        	3         	2.05/0.683333/0.557/0.767
-shape_func_vision_non_max_suppression	2         	2.017/1.0085/0.956/1.061
-shape_func_concatenate        	1         	1.933/1.933/1.933/1.933
-shape_func_dyn_full_1         	2         	1.899/0.9495/0.71/1.189
-shape_func_dyn_strided_slice_2	2         	1.819/0.9095/0.838/0.981
-shape_func_take_multiply_add  	1         	1.788/1.788/1.788/1.788
-shape_func_reshape_2          	1         	1.778/1.778/1.778/1.778
-fused_vision_roi_align_7      	1         	1.737/1.737/1.737/1.737
-fused_full_2                  	1         	1.715/1.715/1.715/1.715
-shape_func_expand_dims_1      	2         	1.689/0.8445/0.65/1.039
-shape_func_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_di_15411288564710615775_	1         	1.681/1.681/1.681/1.681
-shape_func_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divid_8209301934478849404_	2         	1.635/0.8175/0.725/0.91
-shape_func_reshape            	1         	1.578/1.578/1.578/1.578
-shape_func_greater            	1         	1.567/1.567/1.567/1.567
-shape_func_reshape_repeat_repeat_repeat	4         	1.558/0.3895/0.357/0.48
-shape_func_squeeze            	2         	1.519/0.7595/0.726/0.793
-shape_func_equal_3            	2         	1.458/0.729/0.69/0.768
-shape_func_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_17625094857328918560_	1         	1.257/1.257/1.257/1.257
-shape_func_equal_1            	2         	1.246/0.623/0.557/0.689
-shape_func_dyn_reshape_1      	1         	1.205/1.205/1.205/1.205
-shape_func_vision_roi_align_4 	1         	1.203/1.203/1.203/1.203
-shape_func_subtract_add       	2         	1.203/0.6015/0.474/0.729
-shape_func_vision_roi_align_3 	1         	1.178/1.178/1.178/1.178
-shape_func_arange_2           	1         	1.155/1.155/1.155/1.155
-shape_func_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equa_8239353952889958563_	1         	1.145/1.145/1.145/1.145
-shape_func_cast               	2         	1.138/0.569/0.554/0.584
-shape_func_dyn_strided_slice_9	1         	1.117/1.117/1.117/1.117
-shape_func_equal_2            	2         	1.116/0.558/0.55/0.566
-shape_func_take_multiply_add_1	1         	1.114/1.114/1.114/1.114
-shape_func_arange_1           	1         	1.079/1.079/1.079/1.079
-shape_func_dyn_reshape_2      	1         	1.059/1.059/1.059/1.059
-shape_func_vision_roi_align_2 	1         	1.026/1.026/1.026/1.026
-shape_func_take_take_subtract_1	1         	1.025/1.025/1.025/1.025
-shape_func_expand_dims        	2         	1.006/0.503/0.422/0.584
-shape_func_equal              	2         	1.003/0.5015/0.399/0.604
-shape_func_reshape_adv_index  	1         	0.978/0.978/0.978/0.978
-shape_func_vision_roi_align_5 	1         	0.948/0.948/0.948/0.948
-shape_func_maximum_minimum_maximum_minimum_stack	1         	0.934/0.934/0.934/0.934
-shape_func_nn_conv2d_add      	1         	0.926/0.926/0.926/0.926
-shape_func_sigmoid_concatenate_adv_index	1         	0.912/0.912/0.912/0.912
-shape_func_arange             	1         	0.859/0.859/0.859/0.859
-shape_func_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_a_9835853383799399833_	1         	0.856/0.856/0.856/0.856
-shape_func_adv_index_split_squeeze_adv_index	1         	0.855/0.855/0.855/0.855
-shape_func_nn_pad             	1         	0.831/0.831/0.831/0.831
-shape_func_adv_index_adv_index	1         	0.824/0.824/0.824/0.824
-shape_func_adv_index          	1         	0.781/0.781/0.781/0.781
-shape_func_expand_dims_cast_expand_dims_concatenate_expand_dims	1         	0.776/0.776/0.776/0.776
-shape_func_nn_dense_add_nn_relu	1         	0.725/0.725/0.725/0.725
-shape_func_vision_roi_align_7 	1         	0.724/0.724/0.724/0.724
-shape_func_adv_index_2        	1         	0.696/0.696/0.696/0.696
-shape_func_nn_conv2d_transpose_add_nn_relu	1         	0.692/0.692/0.692/0.692
-shape_func_reshape_3          	1         	0.687/0.687/0.687/0.687
-shape_func_vision_roi_align   	1         	0.671/0.671/0.671/0.671
-shape_func_reshape_adv_index_adv_index	1         	0.651/0.651/0.651/0.651
-shape_func_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_mult_625062831022576575_	1         	0.631/0.631/0.631/0.631
-shape_func_full               	1         	0.594/0.594/0.594/0.594
-shape_func_reshape_squeeze    	1         	0.562/0.562/0.562/0.562
-shape_func_vision_roi_align_6 	1         	0.557/0.557/0.557/0.557
-shape_func_vision_roi_align_1 	1         	0.524/0.524/0.524/0.524
-shape_func_adv_index_3        	1         	0.471/0.471/0.471/0.471
+fused_split_squeeze_subtract_divide_expand_dims_image_resize_take_nn_pad_stack	1         	5.92373e+06/5.92373e+06/5.92373e+06/5.92373e+06
+fused_nn_dense_add_nn_relu    	1         	313527/313527/313527/313527
+fused_expand_dims_concatenate_1	58        	32522.9/560.74/43.84/1084.93
+fused_nn_conv2d_add_nn_relu_20	4         	16164.2/4041.05/4022.43/4054.74
+fused_nn_conv2d_transpose_add_nn_relu	1         	15818.5/15818.5/15818.5/15818.5
+fused_scatter_1               	4         	13861.5/3465.38/2948.29/4383.43
+fused_scatter_4               	116       	10830.7/93.3685/87.724/121.821
+fused_scatter_3               	116       	10494.3/90.4685/83.092/120.344
+fused_nn_conv2d_add_nn_relu_16	1         	8399.18/8399.18/8399.18/8399.18
+fused_nn_conv2d_add_5         	1         	8109.48/8109.48/8109.48/8109.48
+fused_dyn_full                	2         	7133.93/3566.97/1261.3/5872.64
+fused_shape_of_4              	472       	4556.02/9.65258/8.951/17.488
+fused_vision_non_max_suppression	2         	4551.66/2275.83/279.78/4271.88
+fused_nn_conv2d_add_nn_relu_11	6         	4072.3/678.716/663.209/699.118
+fused_cast_39                 	364       	3634.59/9.98513/9.031/23.89
+fused_dyn_strided_slice_2     	243       	3606.08/14.8398/11.167/34.142
+fused_dyn_full_1              	232       	2815.22/12.1346/1.724/23.423
+fused_cast_like_add_where_1   	274       	2761.7/10.0792/9.2/17.164
+fused_nn_conv2d_add_add_nn_relu_1	4         	2649.98/662.496/651.749/678.881
+fused_nn_conv2d_add_add_nn_relu_2	6         	2638.14/439.69/436.446/448.571
+fused_nn_conv2d_add_7         	1         	2602.67/2602.67/2602.67/2602.67
+fused_max_5                   	232       	2533.47/10.9201/10.055/17.454
+fused_nn_conv2d_add_nn_relu_7 	3         	2380.32/793.439/784.683/802.983
+fused_nn_conv2d_add_nn_relu_2 	3         	2348.71/782.903/780.119/784.77
+fused_vision_roi_align        	1         	2339.74/2339.74/2339.74/2339.74
+fused_nn_conv2d_add_nn_relu_17	1         	2265.9/2265.9/2265.9/2265.9
+fused_dyn_image_resize        	58        	2136.39/36.8342/30.822/336.973
+fused_nn_conv2d_add_nn_relu_15	2         	2064.43/1032.22/1029.01/1035.42
+fused_nn_conv2d_add_nn_relu_10	5         	2054.84/410.969/407.125/418.61
+fused_reshape_reshape_concatenate_1	58        	1940.92/33.4642/29.425/40.531
+fused_nn_conv2d_add_add_nn_relu	3         	1926.51/642.169/639.625/647.162
+fused_scatter_2               	4         	1664.45/416.112/331.615/626.507
+fused_nn_conv2d_add_19        	1         	1630.95/1630.95/1630.95/1630.95
+fused_dyn_strided_slice_9     	116       	1494.98/12.8878/11.426/24.383
+fused_subtract_add_concatenate	116       	1472.54/12.6943/9.033/315.237
+fused_nn_conv2d_add_add_nn_relu_3	3         	1471.12/490.373/487.32/494.44
+fused_dyn_strided_slice_7     	5         	1320.37/264.073/51.829/1025.82
+fused_min_8                   	116       	1295.93/11.1718/10.482/17.691
+fused_nn_conv2d_add_add_2     	1         	1264.07/1264.07/1264.07/1264.07
+fused_nn_conv2d_add_3         	1         	1243.45/1243.45/1243.45/1243.45
+fused_take_9                  	58        	1194.68/20.598/19.821/25.016
+fused_take_13                 	58        	1182.05/20.3802/19.51/31.493
+fused_expand_dims_concatenate 	116       	1179.25/10.166/9.546/14.429
+fused_expand_dims_add_concatenate	116       	1174.33/10.1235/9.268/22.78
+fused_nn_conv2d_add_nn_relu_6 	3         	1156.83/385.61/381.707/390.566
+fused_subtract_expand_dims    	116       	1147.72/9.89416/9.216/16.189
+fused_nn_conv2d_add_2         	1         	1134.07/1134.07/1134.07/1134.07
+fused_expand_dims_26          	2         	1131.28/565.638/36.052/1095.22
+fused_take_expand_dims_repeat_repeat	58        	1127.25/19.4353/18.951/24.602
+fused_nn_conv2d_add_nn_relu_13	1         	1121.03/1121.03/1121.03/1121.03
+fused_reshape_reshape_concatenate	58        	1017.09/17.536/16.835/22.403
+fused_argwhere_1              	10        	1009.92/100.992/1.644/126.423
+fused_nn_conv2d_add_nn_relu_12	1         	994.551/994.551/994.551/994.551
+fused_nn_conv2d_add_nn_relu_14	2         	989.477/494.738/490.952/498.525
+fused_vision_roi_align_1      	1         	985.919/985.919/985.919/985.919
+fused_nn_conv2d_add_nn_relu_4 	1         	977.026/977.026/977.026/977.026
+fused_nn_conv2d_add_nn_relu_8 	1         	971.292/971.292/971.292/971.292
+fused_nn_conv2d_add_nn_relu_9 	1         	970.958/970.958/970.958/970.958
+fused_nn_conv2d_add_add_1     	1         	929.898/929.898/929.898/929.898
+fused_nn_conv2d_add_nn_relu_5 	1         	928.323/928.323/928.323/928.323
+fused_nn_conv2d_add_1         	1         	927.925/927.925/927.925/927.925
+fused_nn_conv2d_add_nn_relu_3 	2         	917.173/458.587/454.846/462.327
+fused_full_2                  	58        	894.314/15.4192/9.599/316.925
+fused_nn_conv2d_add_nn_relu   	1         	867.613/867.613/867.613/867.613
+fused_nn_conv2d_add_9         	1         	860.435/860.435/860.435/860.435
+fused_take_14                 	58        	705.374/12.1616/11.694/16.466
+fused_shape_of_11             	60        	680.452/11.3409/10.66/17.623
+fused_add_17                  	58        	678.199/11.6931/10.737/23.801
+fused_topk                    	1         	666.473/666.473/666.473/666.473
+fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where	58        	644.996/11.1206/10.367/16.248
+fused_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_dims_mu_4615394520124750845_	1         	636.471/636.471/636.471/636.471
+fused_take_7                  	58        	622.664/10.7356/10.237/15.735
+fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_1	58        	616.692/10.6326/10.065/17.607
+fused_take_expand_dims_cast   	58        	610.166/10.5201/9.832/16.422
+fused_subtract_expand_dims_cast_concatenate_1	58        	607.545/10.4749/9.893/15.11
+fused_take_expand_dims_cast_1 	58        	605.889/10.4464/9.882/15.084
+fused_subtract_expand_dims_cast_concatenate	58        	604.668/10.4253/9.851/14.591
+fused_take_less               	59        	604.245/10.2414/9.635/15.109
+fused_expand_dims_cast_concatenate_1	58        	603.355/10.4027/9.889/16.341
+fused_expand_dims_cast_concatenate	58        	598.863/10.3252/9.841/14.773
+fused_take_10                 	58        	598.556/10.3199/9.819/18.714
+fused_expand_dims_expand_dims_concatenate	58        	597.83/10.3074/9.838/15.007
+fused_reshape_repeat_repeat_repeat	4         	596.642/149.161/20.824/369.629
+fused_take_8                  	58        	596.492/10.2843/9.658/15.64
+fused_take_12                 	58        	584.044/10.0697/9.324/15.073
+fused_full_1                  	58        	579.634/9.99369/9.532/14.39
+fused_take_11                 	58        	577.652/9.95952/9.509/14.405
+fused_nn_conv2d_add_add       	1         	568.172/568.172/568.172/568.172
+fused_reshape_squeeze         	1         	528.001/528.001/528.001/528.001
+fused_nn_conv2d_add           	1         	486.889/486.889/486.889/486.889
+fused_nn_dense_add_nn_relu_1  	1         	429.648/429.648/429.648/429.648
+fused_dyn_strided_slice_1     	28        	350.921/12.5329/11.111/22.916
+fused_nn_conv2d_add_11        	1         	349.568/349.568/349.568/349.568
+fused_vision_roi_align_4      	1         	348.398/348.398/348.398/348.398
+fused_nn_conv2d_add_4         	1         	322.885/322.885/322.885/322.885
+fused_vision_roi_align_2      	1         	306.969/306.969/306.969/306.969
+fused_nn_conv2d_add_nn_relu_18	1         	306.774/306.774/306.774/306.774
+fused_image_resize_2          	1         	303.17/303.17/303.17/303.17
+fused_nn_max_pool2d           	1         	285.665/285.665/285.665/285.665
+fused_multiply_46             	1200      	242.493/0.202077/0.14/2.456
+fused_nn_conv2d_add_6         	1         	237.926/237.926/237.926/237.926
+fused_topk_1                  	1         	234.271/234.271/234.271/234.271
+fused_nn_conv2d_add_14        	1         	217.965/217.965/217.965/217.965
+fused_scatter                 	2         	217.095/108.547/102.727/114.368
+fused_nn_dense_add_1          	1         	210.629/210.629/210.629/210.629
+fused_topk_2                  	1         	209.368/209.368/209.368/209.368
+fused_prod                    	839       	204.689/0.243968/0.144/2.662
+fused_nn_conv2d_add_nn_relu_1 	1         	199.977/199.977/199.977/199.977
+fused_nn_conv2d_add_nn_relu_19	1         	195.217/195.217/195.217/195.217
+fused_argwhere                	1         	151.957/151.957/151.957/151.957
+shape_func_dyn_strided_slice_2	243       	146.426/0.602576/0.476/0.99
+fused_reshape_repeat_repeat_repeat_1	4         	135.265/33.8163/1.677/96.307
+fused_maximum_minimum_maximum_minimum_stack	1         	117.183/117.183/117.183/117.183
+fused_topk_3                  	1         	104.905/104.905/104.905/104.905
+shape_func_dyn_full_1         	232       	104.766/0.451578/0.345/1.517
+fused_cast_adv_index          	8         	102.255/12.7819/1.699/19.081
+shape_func_argwhere_1         	10        	99.028/9.9028/0.52/85.846
+fused_topk_4                  	1         	97.299/97.299/97.299/97.299
+fused_cast_like_add_where     	8         	96.752/12.094/10.539/17.305
+fused_nn_conv2d_add_8         	1         	96.094/96.094/96.094/96.094
+fused_adv_index_2             	1         	92.606/92.606/92.606/92.606
+fused_image_resize_1          	1         	91.422/91.422/91.422/91.422
+fused_nn_conv2d_add_15        	1         	89.577/89.577/89.577/89.577
+fused_split_squeeze           	8         	85.334/10.6667/1.66/16.691
+fused_vision_roi_align_5      	1         	82.657/82.657/82.657/82.657
+fused_cast_like_add_where_2   	6         	76.736/12.7893/11.529/16.492
+fused_dyn_strided_slice_6     	6         	73.451/12.2418/10.829/16.993
+fused_nn_dense_add            	1         	73.079/73.079/73.079/73.079
+shape_func_dyn_strided_slice_9	116       	70.881/0.611043/0.508/1.675
+fused_shape_of                	6         	69.353/11.5588/9.656/16.565
+fused_shape_of_8              	4         	62.285/15.5712/10.839/19.947
+fused_vision_roi_align_3      	1         	61.487/61.487/61.487/61.487
+fused_cast_41                 	5         	61.158/12.2316/10.275/17.856
+fused_shape_of_2              	5         	60.781/12.1562/10.157/15.423
+fused_split                   	1         	60.119/60.119/60.119/60.119
+fused_squeeze_6               	2         	50.011/25.0055/11.252/38.759
+fused_nn_conv2d_add_10        	1         	50.009/50.009/50.009/50.009
+fused_cast_40                 	4         	46.867/11.7168/9.52/16.002
+fused_prod_2                  	184       	43.852/0.238326/0.176/1.229
+fused_prod_3                  	152       	43.481/0.286059/0.182/1.626
+fused_adv_index_1             	3         	41.539/13.8463/11.325/16.735
+fused_split_squeeze_cast      	3         	40.851/13.617/11.503/17.532
+fused_nn_conv2d_add_12        	1         	40.113/40.113/40.113/40.113
+fused_image_resize            	1         	39.161/39.161/39.161/39.161
+fused_dyn_strided_slice_8     	1         	38.632/38.632/38.632/38.632
+fused_nn_pad                  	1         	38.155/38.155/38.155/38.155
+fused_nn_conv2d_add_16        	1         	36.05/36.05/36.05/36.05
+shape_func_dyn_image_resize   	58        	33.865/0.583879/0.484/1.607
+fused_expand_dims_25          	2         	32.634/16.317/13.512/19.122
+fused_min_7                   	2         	32.234/16.117/13.307/18.927
+fused_equal                   	2         	32.14/16.07/12.847/19.293
+fused_full_like_concatenate_concatenate_concatenate	2         	32.083/16.0415/13.671/18.412
+fused_equal_2                 	2         	32.052/16.026/12.661/19.391
+fused_dyn_strided_slice       	2         	31.978/15.989/12.97/19.008
+fused_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divide_log_3641292538708681564_	2         	31.878/15.939/13.672/18.206
+fused_reshape_adv_index       	1         	31.677/31.677/31.677/31.677
+fused_equal_3                 	2         	31.427/15.7135/12.214/19.213
+fused_equal_1                 	2         	31.138/15.569/12.194/18.944
+fused_squeeze_7               	2         	30.647/15.3235/12.672/17.975
+fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_5612394393934892536_	1         	30.525/30.525/30.525/30.525
+fused_take_expand_dims_cast_concatenate	2         	30.176/15.088/12.557/17.619
+fused_subtract_add            	2         	29.242/14.621/12.049/17.193
+fused_nn_conv2d_add_17        	1         	29.178/29.178/29.178/29.178
+fused_vision_roi_align_6      	1         	28.925/28.925/28.925/28.925
+shape_func_reshape_reshape_concatenate_1	58        	28.609/0.493259/0.394/1.688
+fused_shape_of_3              	2         	28.494/14.247/11.835/16.659
+fused_cast_38                 	2         	28.277/14.1385/12.41/15.867
+fused_squeeze_8               	2         	27.907/13.9535/11.83/16.077
+shape_func_reshape_reshape_concatenate	58        	27.885/0.480776/0.418/0.577
+fused_ndarray_size_equal      	2         	27.179/13.5895/11.471/15.708
+fused_shape_of_1              	2         	26.868/13.434/11.518/15.35
+fused_dyn_strided_slice_4     	1         	26.679/26.679/26.679/26.679
+shape_func_take_expand_dims_repeat_repeat	58        	26.566/0.458034/0.351/1.696
+fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_763165556527453816_	1         	26.496/26.496/26.496/26.496
+shape_func_expand_dims_concatenate	58        	25.663/0.442466/0.363/1.412
+fused_dyn_strided_slice_5     	1         	25.552/25.552/25.552/25.552
+fused_nn_conv2d_add_18        	1         	25.52/25.52/25.52/25.52
+fused_nn_conv2d_add_13        	1         	25.258/25.258/25.258/25.258
+shape_func_take               	58        	25.034/0.431621/0.346/1.39
+shape_func_take_2             	58        	24.985/0.430776/0.315/1.424
+fused_dyn_strided_slice_3     	1         	24.614/24.614/24.614/24.614
+fused_reshape_adv_index_adv_index	1         	22.89/22.89/22.89/22.89
+shape_func_take_1             	58        	22.851/0.393983/0.325/1.392
+fused_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_cast_16305282092913549647_	1         	22.078/22.078/22.078/22.078
+fused_cast_broadcast_to_like  	1         	21.687/21.687/21.687/21.687
+fused_nn_softmax              	1         	21.409/21.409/21.409/21.409
+fused_sigmoid_concatenate_adv_index	1         	21.308/21.308/21.308/21.308
+fused_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_adv_in_16747569123192521575_	1         	20.6/20.6/20.6/20.6
+fused_expand_dims_cast_expand_dims_concatenate_expand_dims	1         	20.497/20.497/20.497/20.497
+fused_add_add_add_add_add_concatenate	1         	19.67/19.67/19.67/19.67
+fused_concatenate_9           	1         	19.332/19.332/19.332/19.332
+fused_nn_max_pool2d_1         	1         	19.177/19.177/19.177/19.177
+fused_arange_9                	1         	18.85/18.85/18.85/18.85
+fused_take_cast_expand_dims_take_cast_expand_dims_take_cast_expand_dims_concaten_10869151023261452404_	1         	18.63/18.63/18.63/18.63
+fused_strided_slice_take_take_subtract_greater_equal_cast_take_take_subtract_gre_10448244218429255428_	1         	18.52/18.52/18.52/18.52
+fused_take_take_subtract_1    	1         	18.456/18.456/18.456/18.456
+fused_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equal_cas_250104735588561676_	1         	18.309/18.309/18.309/18.309
+fused_arange_7                	1         	18.246/18.246/18.246/18.246
+fused_adv_index_split_squeeze_adv_index	1         	17.98/17.98/17.98/17.98
+fused_adv_index               	1         	17.937/17.937/17.937/17.937
+fused_greater                 	1         	17.903/17.903/17.903/17.903
+fused_concatenate_8           	1         	17.807/17.807/17.807/17.807
+fused_shape_of_9              	1         	17.735/17.735/17.735/17.735
+fused_take_take_subtract      	1         	17.675/17.675/17.675/17.675
+fused_take_multiply_add       	1         	17.658/17.658/17.658/17.658
+fused_take_cast               	1         	17.551/17.551/17.551/17.551
+fused_adv_index_adv_index     	1         	17.426/17.426/17.426/17.426
+fused_take_multiply_add_1     	1         	17.259/17.259/17.259/17.259
+fused_adv_index_3             	1         	17.181/17.181/17.181/17.181
+fused_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_multiply__1511904406113696076_	1         	17.074/17.074/17.074/17.074
+fused_arange_8                	1         	17.006/17.006/17.006/17.006
+fused_concatenate_7           	1         	16.998/16.998/16.998/16.998
+fused_take_add_cast_expand_dims	1         	16.369/16.369/16.369/16.369
+shape_func_dyn_strided_slice_1	28        	15.912/0.568286/0.476/0.964
+fused_shape_of_5              	1         	15.785/15.785/15.785/15.785
+fused_shape_of_7              	1         	15.711/15.711/15.711/15.711
+fused_shape_of_10             	1         	15.569/15.569/15.569/15.569
+fused_shape_of_6              	1         	15.517/15.517/15.517/15.517
+fused_prod_1                  	49        	12.866/0.262571/0.183/0.955
+shape_func_split_squeeze      	8         	6.399/0.799875/0.292/1.545
+shape_func_cast_adv_index     	8         	4.49/0.56125/0.346/1.355
+shape_func_dyn_strided_slice_7	5         	3.789/0.7578/0.627/0.913
+shape_func_dyn_strided_slice_6	6         	3.659/0.609833/0.537/0.735
+fused_multiply_47             	14        	3.533/0.252357/0.165/0.418
+shape_func_argwhere           	1         	3.413/3.413/3.413/3.413
+fused_multiply_48             	10        	2.678/0.2678/0.204/0.367
+shape_func_split_squeeze_cast 	3         	2.615/0.871667/0.528/1.412
+shape_func_scatter_1          	4         	2.358/0.5895/0.466/0.903
+shape_func_nn_conv2d_add_nn_relu	4         	2.331/0.58275/0.504/0.769
+shape_func_subtract_add       	2         	2.228/1.114/0.573/1.655
+shape_func_scatter            	4         	2.191/0.54775/0.496/0.671
+shape_func_reshape_repeat_repeat_repeat_1	4         	1.831/0.45775/0.315/0.601
+shape_func_dyn_strided_slice  	2         	1.721/0.8605/0.849/0.872
+fused_full                    	1         	1.721/1.721/1.721/1.721
+fused_vision_roi_align_7      	1         	1.7/1.7/1.7/1.7
+shape_func_vision_roi_align   	1         	1.69/1.69/1.69/1.69
+shape_func_nn_dense_add_nn_relu_1	1         	1.682/1.682/1.682/1.682
+shape_func_adv_index_1        	3         	1.599/0.533/0.478/0.617
+shape_func_dyn_full           	2         	1.543/0.7715/0.733/0.81
+shape_func_vision_non_max_suppression	2         	1.536/0.768/0.761/0.775
+shape_func_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divid_8209301934478849404_	2         	1.497/0.7485/0.712/0.785
+shape_func_squeeze            	2         	1.483/0.7415/0.704/0.779
+shape_func_reshape_repeat_repeat_repeat	4         	1.467/0.36675/0.304/0.491
+shape_func_equal              	2         	1.466/0.733/0.656/0.81
+shape_func_vision_roi_align_1 	1         	1.396/1.396/1.396/1.396
+shape_func_reshape            	1         	1.383/1.383/1.383/1.383
+shape_func_equal_1            	2         	1.279/0.6395/0.55/0.729
+shape_func_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_di_15411288564710615775_	1         	1.241/1.241/1.241/1.241
+shape_func_expand_dims_1      	2         	1.235/0.6175/0.599/0.636
+shape_func_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_17625094857328918560_	1         	1.215/1.215/1.215/1.215
+shape_func_arange_2           	1         	1.162/1.162/1.162/1.162
+shape_func_expand_dims        	2         	1.142/0.571/0.553/0.589
+shape_func_nn_conv2d_add      	1         	1.123/1.123/1.123/1.123
+shape_func_equal_2            	2         	1.103/0.5515/0.493/0.61
+shape_func_full_like_concatenate_concatenate_concatenate	2         	1.097/0.5485/0.543/0.554
+shape_func_cast               	2         	1.045/0.5225/0.461/0.584
+shape_func_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_a_9835853383799399833_	1         	1.021/1.021/1.021/1.021
+shape_func_equal_3            	2         	1.018/0.509/0.473/0.545
+shape_func_dyn_reshape_1      	1         	0.933/0.933/0.933/0.933
+shape_func_arange_1           	1         	0.93/0.93/0.93/0.93
+shape_func_nn_softmax         	1         	0.929/0.929/0.929/0.929
+shape_func_dyn_strided_slice_3	1         	0.925/0.925/0.925/0.925
+shape_func_vision_roi_align_5 	1         	0.915/0.915/0.915/0.915
+shape_func_reshape_1          	1         	0.893/0.893/0.893/0.893
+shape_func_dyn_strided_slice_5	1         	0.885/0.885/0.885/0.885
+shape_func_dyn_reshape        	1         	0.868/0.868/0.868/0.868
+shape_func_dyn_strided_slice_8	1         	0.861/0.861/0.861/0.861
+shape_func_reshape_adv_index_adv_index	1         	0.861/0.861/0.861/0.861
+shape_func_dyn_strided_slice_4	1         	0.821/0.821/0.821/0.821
+shape_func_maximum_minimum_maximum_minimum_stack	1         	0.797/0.797/0.797/0.797
+shape_func_adv_index_split_squeeze_adv_index	1         	0.793/0.793/0.793/0.793
+shape_func_nn_dense_add_1     	1         	0.766/0.766/0.766/0.766
+shape_func_nn_conv2d_transpose_add_nn_relu	1         	0.755/0.755/0.755/0.755
+shape_func_arange             	1         	0.752/0.752/0.752/0.752
+shape_func_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_mult_625062831022576575_	1         	0.75/0.75/0.75/0.75
+shape_func_nn_dense_add_nn_relu	1         	0.741/0.741/0.741/0.741
+shape_func_dyn_reshape_2      	1         	0.736/0.736/0.736/0.736
+shape_func_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equa_8239353952889958563_	1         	0.723/0.723/0.723/0.723
+shape_func_nn_dense_add       	1         	0.718/0.718/0.718/0.718
+shape_func_cast_broadcast_to_like	1         	0.718/0.718/0.718/0.718
+shape_func_reshape_adv_index  	1         	0.695/0.695/0.695/0.695
+shape_func_adv_index_adv_index	1         	0.684/0.684/0.684/0.684
+shape_func_full               	1         	0.675/0.675/0.675/0.675
+shape_func_vision_roi_align_7 	1         	0.671/0.671/0.671/0.671
+shape_func_expand_dims_cast_expand_dims_concatenate_expand_dims	1         	0.66/0.66/0.66/0.66
+shape_func_sigmoid_concatenate_adv_index	1         	0.654/0.654/0.654/0.654
+shape_func_take_multiply_add  	1         	0.642/0.642/0.642/0.642
+shape_func_take_take_subtract_1	1         	0.634/0.634/0.634/0.634
+shape_func_vision_roi_align_4 	1         	0.63/0.63/0.63/0.63
+shape_func_take_take_subtract 	1         	0.622/0.622/0.622/0.622
+shape_func_nn_pad             	1         	0.614/0.614/0.614/0.614
+shape_func_adv_index          	1         	0.599/0.599/0.599/0.599
+shape_func_adv_index_2        	1         	0.586/0.586/0.586/0.586
+shape_func_vision_roi_align_3 	1         	0.586/0.586/0.586/0.586
+shape_func_vision_roi_align_6 	1         	0.585/0.585/0.585/0.585
+shape_func_take_multiply_add_1	1         	0.545/0.545/0.545/0.545
+shape_func_reshape_3          	1         	0.543/0.543/0.543/0.543
+shape_func_reshape_2          	1         	0.534/0.534/0.534/0.534
+shape_func_vision_roi_align_2 	1         	0.532/0.532/0.532/0.532
+shape_func_concatenate        	1         	0.521/0.521/0.521/0.521
+shape_func_adv_index_3        	1         	0.49/0.49/0.49/0.49
+shape_func_reshape_squeeze    	1         	0.49/0.49/0.49/0.49
+shape_func_greater            	1         	0.443/0.443/0.443/0.443
 
-Total Duration: 1.01614e+07 us.	Total Packed Functions: 8314
+Total Duration: 6.48015e+06 us.	Total Packed Functions: 8314
 
-==1946== Profiling application: python maskrcnn_test.py
-==1946== Profiling result:
+==246001== Profiling application: python maskrcnn_test.py
+==246001== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   14.22%  35.215ms        58  607.15us  30.110us  1.1883ms  fused_expand_dims_concatenate_1_kernel0
-                    7.63%  18.900ms       483  39.130us     544ns  5.3194ms  [CUDA memcpy HtoD]
-                    7.26%  17.972ms         4  4.4931ms  4.4492ms  4.5534ms  fused_nn_conv2d_add_nn_relu_20_kernel0
-                    7.10%  17.584ms         1  17.584ms  17.584ms  17.584ms  fused_nn_conv2d_transpose_add_nn_relu_kernel0
-                    6.03%  14.937ms      2287  6.5310us     672ns  7.8338ms  [CUDA memcpy DtoH]
-                    4.73%  11.704ms         4  2.9260ms  2.9194ms  2.9297ms  fused_scatter_3_kernel0
-                    4.26%  10.558ms         1  10.558ms  10.558ms  10.558ms  fused_nn_conv2d_add_5_kernel0
-                    3.77%  9.3455ms         1  9.3455ms  9.3455ms  9.3455ms  fused_nn_conv2d_add_nn_relu_16_kernel0
-                    2.94%  7.2906ms         2  3.6453ms  1.3815ms  5.9091ms  fused_dyn_full_1_kernel0
-                    2.51%  6.2209ms         6  1.0368ms  1.0339ms  1.0391ms  fused_nn_conv2d_add_nn_relu_11_kernel0
-                    2.18%  5.4104ms         2  2.7052ms  402.90us  5.0075ms  sgemm_128x128x8_NT_vec
-                    1.73%  4.2894ms         2  2.1447ms  177.02us  4.1123ms  fused_vision_non_max_suppression_kernel2
-                    1.57%  3.8942ms         6  649.04us  644.17us  651.14us  fused_nn_conv2d_add_add_nn_relu_2_kernel0
-                    1.19%  2.9450ms         4  736.25us  727.08us  745.60us  fused_nn_conv2d_add_add_nn_relu_1_kernel0
-                    1.18%  2.9283ms         5  585.65us  549.74us  612.52us  fused_nn_conv2d_add_nn_relu_10_kernel0
-                    1.13%  2.7937ms         1  2.7937ms  2.7937ms  2.7937ms  fused_nn_conv2d_add_7_kernel0
-                    1.12%  2.7633ms         1  2.7633ms  2.7633ms  2.7633ms  fused_nn_conv2d_add_3_kernel0
-                    1.07%  2.6465ms         1  2.6465ms  2.6465ms  2.6465ms  fused_nn_conv2d_add_nn_relu_17_kernel0
-                    1.03%  2.5526ms         3  850.87us  830.97us  878.75us  fused_nn_conv2d_add_nn_relu_7_kernel0
-                    0.95%  2.3504ms         2  1.1752ms  1.1724ms  1.1779ms  fused_nn_conv2d_add_nn_relu_15_kernel0
-                    0.95%  2.3438ms         1  2.3438ms  2.3438ms  2.3438ms  fused_nn_conv2d_add_add_2_kernel0
-                    0.94%  2.3323ms         1  2.3323ms  2.3323ms  2.3323ms  fused_vision_roi_align_kernel0
-                    0.93%  2.3024ms         3  767.48us  761.63us  772.19us  fused_nn_conv2d_add_nn_relu_2_kernel0
-                    0.92%  2.2688ms       128  17.725us  15.455us  21.727us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, int, int>::Policy700, bool=0, int, int, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, int, int>::Policy700, bool=0, int, int, int>*, cub::DeviceRadixSortPolicy<int, int, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, int, int>::Policy700, bool=0, int, int, int>**, bool=0, int, int)
-                    0.88%  2.1886ms         4  547.15us  24.159us  1.4798ms  fused_scatter_3_kernel1
-                    0.85%  2.0950ms         1  2.0950ms  2.0950ms  2.0950ms  fused_nn_conv2d_add_2_kernel0
-                    0.83%  2.0676ms         3  689.21us  684.39us  693.44us  fused_nn_conv2d_add_add_nn_relu_3_kernel0
-                    0.79%  1.9466ms         3  648.88us  646.85us  650.37us  fused_nn_conv2d_add_add_nn_relu_kernel0
-                    0.75%  1.8626ms         1  1.8626ms  1.8626ms  1.8626ms  fused_nn_conv2d_add_1_kernel0
-                    0.72%  1.7864ms         1  1.7864ms  1.7864ms  1.7864ms  fused_nn_conv2d_add_19_kernel0
-                    0.72%  1.7733ms         3  591.10us  587.56us  593.29us  fused_nn_conv2d_add_nn_relu_6_kernel0
-                    0.68%  1.6878ms         1  1.6878ms  1.6878ms  1.6878ms  fused_nn_conv2d_add_nn_relu_5_kernel0
-                    0.65%  1.6039ms         1  1.6039ms  1.6039ms  1.6039ms  fused_nn_conv2d_add_add_1_kernel0
-                    0.65%  1.5987ms       116  13.781us  12.447us  15.167us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, long, int>::Policy700, bool=0, int, long, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, long, int>::Policy700, bool=0, int, long, int>*, cub::DeviceRadixSortPolicy<int, long, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, long, int>::Policy700, bool=0, int, long, int>**, bool=0, int, int)
-                    0.60%  1.4974ms         1  1.4974ms  1.4974ms  1.4974ms  fused_nn_conv2d_add_nn_relu_kernel0
-                    0.59%  1.4730ms         1  1.4730ms  1.4730ms  1.4730ms  fused_nn_conv2d_add_nn_relu_9_kernel0
-                    0.58%  1.4321ms        58  24.691us  20.191us  30.174us  fused_reshape_reshape_concatenate_1_kernel0
-                    0.58%  1.4321ms         2  716.04us  713.83us  718.24us  fused_nn_conv2d_add_nn_relu_3_kernel0
-                    0.56%  1.3798ms         5  275.97us  41.054us  1.1236ms  fused_dyn_strided_slice_8_kernel0
-                    0.54%  1.3488ms         4  337.20us  334.77us  339.83us  fused_scatter_4_kernel0
-                    0.53%  1.3060ms        58  22.516us  22.047us  23.231us  fused_dyn_image_resize_kernel0
-                    0.50%  1.2261ms         1  1.2261ms  1.2261ms  1.2261ms  fused_nn_conv2d_add_nn_relu_13_kernel0
-                    0.49%  1.2221ms         2  611.03us  23.039us  1.1990ms  fused_expand_dims_26_kernel0
-                    0.44%  1.0983ms         2  549.15us  546.99us  551.31us  fused_nn_conv2d_add_nn_relu_14_kernel0
-                    0.44%  1.0945ms       243  4.5040us  1.6000us  21.855us  fused_dyn_strided_slice_1_kernel0
-                    0.43%  1.0690ms         1  1.0690ms  1.0690ms  1.0690ms  fused_nn_conv2d_add_nn_relu_4_kernel0
-                    0.43%  1.0569ms         1  1.0569ms  1.0569ms  1.0569ms  fused_nn_conv2d_add_nn_relu_8_kernel0
-                    0.39%  978.30us         1  978.30us  978.30us  978.30us  fused_nn_conv2d_add_nn_relu_12_kernel0
-                    0.39%  969.56us         1  969.56us  969.56us  969.56us  fused_nn_conv2d_add_9_kernel0
-                    0.39%  967.10us         1  967.10us  967.10us  967.10us  fused_vision_roi_align_1_kernel0
-                    0.27%  676.90us         1  676.90us  676.90us  676.90us  fused_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_dims_mu_4615394520124750845__kernel0
-                    0.26%  634.70us        58  10.943us  10.720us  11.264us  fused_take_9_kernel0
-                    0.25%  622.66us       232  2.6830us  2.5590us  2.9760us  fused_max_5_kernel0
-                    0.24%  604.04us        58  10.414us  9.9510us  11.232us  fused_take_13_kernel0
-                    0.24%  601.80us         1  601.80us  601.80us  601.80us  fused_nn_conv2d_add_add_kernel0
-                    0.24%  591.84us        58  10.204us  10.015us  10.431us  fused_take_expand_dims_repeat_repeat_kernel0
-                    0.23%  577.86us       230  2.5120us  1.3760us  4.8950us  fused_dyn_full_kernel0
-                    0.22%  543.88us         4  135.97us  8.6720us  351.57us  fused_reshape_repeat_repeat_repeat_kernel0
-                    0.21%  511.60us         1  511.60us  511.60us  511.60us  fused_reshape_squeeze_kernel0
-                    0.20%  489.23us       472  1.0360us     896ns  1.4080us  fused_shape_of_1_kernel0
-                    0.19%  471.09us         1  471.09us  471.09us  471.09us  fused_nn_conv2d_add_kernel0
-                    0.19%  468.04us       364  1.2850us  1.1520us  1.5360us  fused_cast_38_kernel0
-                    0.18%  458.06us        58  7.8970us  7.5200us  9.9200us  fused_reshape_reshape_concatenate_kernel0
-                    0.17%  418.48us         1  418.48us  418.48us  418.48us  fused_nn_conv2d_add_11_kernel0
-                    0.16%  402.74us       374  1.0760us     927ns  1.4400us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<int*, int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<int*, int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(int*, thrust::cuda_cub::__transform::no_stencil_tag)
-                    0.15%  362.00us         1  362.00us  362.00us  362.00us  fused_nn_conv2d_add_nn_relu_18_kernel0
-                    0.15%  361.61us       274  1.3190us  1.1840us  1.7600us  fused_cast_like_add_where_kernel0
-                    0.14%  356.18us         1  356.18us  356.18us  356.18us  fused_vision_roi_align_4_kernel0
-                    0.14%  350.83us         1  350.83us  350.83us  350.83us  fused_nn_conv2d_add_4_kernel0
-                    0.14%  350.00us         4  87.500us  6.0160us  300.44us  fused_scatter_4_kernel1
-                    0.13%  321.43us       116  2.7700us  2.6560us  2.9440us  fused_min_7_kernel0
-                    0.13%  310.73us       116  2.6780us  1.7920us  3.8080us  fused_dyn_strided_slice_kernel0
-                    0.12%  290.58us         1  290.58us  290.58us  290.58us  fused_vision_roi_align_2_kernel0
-                    0.11%  281.08us         1  281.08us  281.08us  281.08us  fused_image_resize_2_kernel0
-                    0.10%  250.74us         1  250.74us  250.74us  250.74us  fused_nn_max_pool2d_kernel0
-                    0.09%  217.02us         1  217.02us  217.02us  217.02us  fused_nn_conv2d_add_6_kernel0
-                    0.08%  199.42us         1  199.42us  199.42us  199.42us  fused_nn_conv2d_add_14_kernel0
-                    0.07%  181.43us         1  181.43us  181.43us  181.43us  fused_nn_conv2d_add_nn_relu_1_kernel0
-                    0.07%  176.22us         1  176.22us  176.22us  176.22us  fused_nn_conv2d_add_nn_relu_19_kernel0
-                    0.07%  173.47us         1  173.47us  173.47us  173.47us  maxwell_sgemm_128x64_tn
-                    0.07%  164.41us       116  1.4170us  1.3110us  1.8560us  fused_expand_dims_add_concatenate_kernel0
-                    0.07%  163.10us       116  1.4060us  1.2480us  1.6000us  fused_subtract_expand_dims_kernel0
-                    0.07%  161.56us        58  2.7850us  2.6240us  3.0400us  fused_take_14_kernel0
-                    0.07%  161.53us       116  1.3920us  1.1830us  1.7600us  fused_subtract_add_concatenate_kernel0
-                    0.06%  159.45us       128  1.2450us  1.1520us  1.5360us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<int>, thrust::device_ptr<int>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<int>, thrust::device_ptr<int>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<int>, thrust::device_ptr<int>)
-                    0.06%  155.68us       121  1.2860us  1.0880us  8.7040us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<long*, long*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<long*, long*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(long*, thrust::cuda_cub::__transform::no_stencil_tag)
-                    0.06%  154.14us       116  1.3280us  1.1840us  1.6000us  fused_expand_dims_concatenate_kernel0
-                    0.06%  148.02us       116  1.2760us  1.1830us  1.4720us  fused_scatter_1_kernel0
-                    0.06%  147.52us       116  1.2710us  1.1520us  1.5680us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<long>, thrust::device_ptr<long>)
-                    0.06%  146.87us       116  1.2660us  1.1830us  1.4400us  fused_scatter_kernel0
-                    0.06%  145.56us       116  1.2540us  1.0880us  1.5040us  _ZN6thrust8cuda_cub4core13_kernel_agentINS0_14__parallel_for16ParallelForAgentINS0_11__transform17unary_transform_fINS_10device_ptrIiEES8_NS5_14no_stencil_tagEZN3tvm7contrib25thrust_stable_sort_by_keyIilEEvP8DLTensorSE_SE_SE_bEUliE_NS5_21always_true_predicateEEElEESH_lEEvT0_T1_
-                    0.06%  141.69us       118  1.2000us  1.0550us  1.4720us  _ZN6thrust8cuda_cub4core13_kernel_agentINS0_14__parallel_for16ParallelForAgentINS0_11__transform17unary_transform_fINS_10device_ptrIiEES8_NS5_14no_stencil_tagEZN3tvm7contrib25thrust_stable_sort_by_keyIiiEEvP8DLTensorSE_SE_SE_bEUliE_NS5_21always_true_predicateEEElEESH_lEEvT0_T1_
-                    0.06%  137.24us        15  9.1490us  8.5120us  10.079us  void cub::RadixSortScanBinsKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, int>(long*, int)
-                    0.05%  134.27us       116  1.1570us  1.0560us  1.3440us  fused_scatter_1_kernel1
-                    0.05%  132.02us       116  1.1380us  1.0550us  1.2800us  fused_scatter_kernel1
-                    0.05%  121.02us         1  121.02us  121.02us  121.02us  fused_split_squeeze_subtract_divide_expand_dims_image_resize_take_nn_pad_stack_kernel0
-                    0.04%  107.01us         6  17.834us  7.3600us  36.479us  void cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>*, bool=0 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**, bool=1*, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**, int, int, cub::GridEvenShare<cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**>)
-                    0.04%  106.20us         1  106.20us  106.20us  106.20us  fused_maximum_minimum_maximum_minimum_stack_kernel0
-                    0.04%  103.36us         3  34.452us  2.5280us  85.916us  fused_reshape_repeat_repeat_repeat_1_kernel0
-                    0.04%  99.863us        58  1.7210us  1.6310us  1.8880us  fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_1_kernel0
-                    0.04%  97.375us        59  1.6500us  1.3760us  2.0480us  fused_take_less_kernel0
-                    0.04%  97.339us         9  10.815us  5.2800us  21.631us  void cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>*, bool=1 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**, bool=1*, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**, int, int, cub::GridEvenShare<cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**>)
-                    0.04%  97.181us        58  1.6750us  1.5360us  1.8880us  fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_kernel0
-                    0.04%  91.263us        58  1.5730us  1.4720us  2.0790us  fused_take_7_kernel0
-                    0.03%  85.722us        60  1.4280us     992ns  1.5360us  fused_shape_of_kernel0
-                    0.03%  84.029us        58  1.4480us  1.4080us  1.6000us  fused_expand_dims_cast_concatenate_kernel0
-                    0.03%  83.613us        58  1.4410us  1.4070us  1.5360us  fused_subtract_expand_dims_cast_concatenate_kernel0
-                    0.03%  83.419us        58  1.4380us  1.4070us  1.5680us  fused_expand_dims_cast_concatenate_1_kernel0
-                    0.03%  83.323us        58  1.4360us  1.4080us  1.5040us  fused_expand_dims_expand_dims_concatenate_kernel0
-                    0.03%  82.814us        58  1.4270us  1.4070us  1.5040us  fused_take_11_kernel0
-                    0.03%  81.663us        58  1.4070us  1.3760us  1.5040us  fused_take_expand_dims_cast_kernel0
-                    0.03%  81.501us        58  1.4050us  1.3750us  1.5040us  fused_take_expand_dims_cast_1_kernel0
-                    0.03%  81.054us        58  1.3970us  1.3760us  1.5040us  fused_add_17_kernel0
-                    0.03%  80.189us         1  80.189us  80.189us  80.189us  fused_nn_conv2d_add_8_kernel0
-                    0.03%  76.825us        58  1.3240us  1.3110us  1.3760us  fused_subtract_expand_dims_cast_concatenate_1_kernel0
-                    0.03%  75.743us        58  1.3050us  1.2800us  1.4080us  fused_take_12_kernel0
-                    0.03%  75.131us        58  1.2950us  1.2790us  1.4080us  fused_take_10_kernel0
-                    0.03%  75.099us        58  1.2940us  1.2790us  1.3760us  fused_take_8_kernel0
-                    0.03%  72.029us         1  72.029us  72.029us  72.029us  fused_nn_conv2d_add_15_kernel0
-                    0.03%  70.014us         1  70.014us  70.014us  70.014us  fused_image_resize_1_kernel0
-                    0.03%  68.701us         1  68.701us  68.701us  68.701us  fused_vision_roi_align_5_kernel0
-                    0.03%  67.195us        58  1.1580us  1.1190us  1.2480us  fused_full_kernel0
-                    0.03%  67.068us        58  1.1560us  1.1200us  1.3440us  fused_full_1_kernel0
-                    0.02%  56.702us         1  56.702us  56.702us  56.702us  sgemm_32x32x32_NT_vec
-                    0.02%  55.519us        28  1.9820us  1.6320us  3.2000us  fused_dyn_strided_slice_3_kernel0
-                    0.02%  47.870us         9  5.3180us  1.9200us  31.742us  fused_argwhere_1_kernel0
-                    0.02%  44.734us         1  44.734us  44.734us  44.734us  fused_vision_roi_align_3_kernel0
-                    0.02%  43.774us         2  21.887us  20.543us  23.231us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>*, cub::DeviceRadixSortPolicy<float, int, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>**, bool=1, int, int)
-                    0.02%  42.045us         6  7.0070us  4.5430us  9.9200us  void cub::DeviceRadixSortUpsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, bool=0*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, int, int, cub::GridEvenShare<cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *>)
-                    0.02%  41.471us         1  41.471us  41.471us  41.471us  fused_nn_dense_add_nn_relu_1_kernel0
-                    0.02%  40.894us         1  40.894us  40.894us  40.894us  fused_nn_dense_add_nn_relu_kernel0
-                    0.01%  35.840us         9  3.9820us  2.5920us  6.8800us  void cub::DeviceRadixSortUpsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, bool=1*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, int, int, cub::GridEvenShare<cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *>)
-                    0.01%  30.526us         2  15.263us  13.247us  17.279us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>**, bool=1, int, int)
-                    0.01%  30.143us         1  30.143us  30.143us  30.143us  fused_nn_conv2d_add_10_kernel0
-                    0.01%  25.311us         1  25.311us  25.311us  25.311us  fused_nn_pad_kernel0
-                    0.01%  24.063us         9  2.6730us  2.3360us  2.8800us  fused_argwhere_1_kernel1
-                    0.01%  21.759us         1  21.759us  21.759us  21.759us  fused_nn_conv2d_add_12_kernel0
-                    0.01%  21.311us         1  21.311us  21.311us  21.311us  fused_dyn_strided_slice_9_kernel0
-                    0.01%  20.672us         7  2.9530us  2.6560us  3.2960us  fused_cast_adv_index_kernel0
-                    0.01%  19.551us         1  19.551us  19.551us  19.551us  fused_nn_conv2d_add_16_kernel0
-                    0.01%  17.696us         1  17.696us  17.696us  17.696us  fused_image_resize_kernel0
-                    0.01%  14.495us         1  14.495us  14.495us  14.495us  fused_nn_dense_add_1_kernel0
-                    0.01%  14.143us         1  14.143us  14.143us  14.143us  fused_reshape_adv_index_kernel0
-                    0.01%  13.759us        12  1.1460us  1.0560us  1.3120us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<int>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<int>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>(thrust::device_ptr<int>, int)
-                    0.01%  12.608us         7  1.8010us  1.3440us  2.8800us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<float>, thrust::device_ptr<float>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<float>, thrust::device_ptr<float>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<float>, thrust::device_ptr<float>)
-                    0.00%  12.320us         7  1.7600us  1.0880us  4.7360us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<float*, float*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<float*, float*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>(float*, thrust::cuda_cub::__transform::no_stencil_tag)
-                    0.00%  12.031us         1  12.031us  12.031us  12.031us  fused_nn_conv2d_add_17_kernel0
-                    0.00%  11.616us         1  11.616us  11.616us  11.616us  fused_vision_roi_align_6_kernel0
-                    0.00%  10.816us         9  1.2010us  1.1840us  1.2160us  fused_argwhere_1_kernel2
-                    0.00%  10.688us         8  1.3360us  1.2160us  1.5360us  fused_cast_like_add_where_1_kernel0
-                    0.00%  10.080us         1  10.080us  10.080us  10.080us  fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_5612394393934892536__kernel0
-                    0.00%  10.046us         5  2.0090us     960ns  4.7990us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<long>, thrust::system::detail::generic::sequence_detail::sequence_functor<long>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<long>, thrust::system::detail::generic::sequence_detail::sequence_functor<long>, long>, long>(thrust::device_ptr<long>, long)
-                    0.00%  9.4070us         1  9.4070us  9.4070us  9.4070us  fused_nn_conv2d_add_18_kernel0
-                    0.00%  9.0870us         7  1.2980us  1.1840us  1.3440us  fused_split_squeeze_kernel0
-                    0.00%  8.9920us         6  1.4980us  1.3760us  1.5360us  fused_cast_like_add_where_2_kernel0
-                    0.00%  8.3840us         1  8.3840us  8.3840us  8.3840us  fused_nn_conv2d_add_13_kernel0
-                    0.00%  8.1600us         1  8.1600us  8.1600us  8.1600us  fused_dyn_strided_slice_5_kernel0
-                    0.00%  7.9670us         1  7.9670us  7.9670us  7.9670us  fused_dyn_strided_slice_6_kernel0
-                    0.00%  7.6470us         2  3.8230us  3.2640us  4.3830us  fused_vision_non_max_suppression_kernel1
-                    0.00%  7.4880us         1  7.4880us  7.4880us  7.4880us  fused_dyn_strided_slice_4_kernel0
-                    0.00%  7.3600us         6  1.2260us  1.1200us  1.4720us  fused_dyn_strided_slice_7_kernel0
-                    0.00%  7.1680us         2  3.5840us  3.1360us  4.0320us  fused_min_8_kernel0
-                    0.00%  7.0080us         6  1.1680us  1.0240us  1.2800us  fused_shape_of_2_kernel0
-                    0.00%  6.9440us         5  1.3880us  1.2160us  1.5040us  fused_cast_41_kernel0
-                    0.00%  6.6240us         1  6.6240us  6.6240us  6.6240us  fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_763165556527453816__kernel0
-                    0.00%  6.5600us         1  6.5600us  6.5600us  6.5600us  fused_reshape_adv_index_adv_index_kernel0
-                    0.00%  6.2080us         1  6.2080us  6.2080us  6.2080us  fused_nn_softmax_kernel0
-                    0.00%  5.9840us         5  1.1960us  1.0560us  1.4080us  fused_shape_of_4_kernel0
-                    0.00%  5.9200us         2  2.9600us  2.9440us  2.9760us  fused_expand_dims_25_kernel0
-                    0.00%  5.8560us         2  2.9280us  2.9120us  2.9440us  fused_full_like_concatenate_concatenate_concatenate_kernel0
-                    0.00%  5.8240us         4  1.4560us  1.3120us  1.5680us  fused_shape_of_9_kernel0
-                    0.00%  5.5680us         1  5.5680us  5.5680us  5.5680us  fused_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_adv_in_16747569123192521575__kernel0
-                    0.00%  4.9280us         4  1.2320us  1.1520us  1.3760us  fused_cast_40_kernel0
-                    0.00%  4.9280us         3  1.6420us  1.4080us  1.7600us  fused_adv_index_1_kernel0
-                    0.00%  4.8950us         1  4.8950us  4.8950us  4.8950us  fused_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_cast_16305282092913549647__kernel0
-                    0.00%  4.3190us         1  4.3190us  4.3190us  4.3190us  fused_sigmoid_concatenate_adv_index_kernel0
-                    0.00%  4.2240us         2  2.1120us  2.0800us  2.1440us  fused_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divide_log_3641292538708681564__kernel0
-                    0.00%  3.9040us         1  3.9040us  3.9040us  3.9040us  fused_nn_dense_add_kernel0
-                    0.00%  3.9030us         3  1.3010us  1.2790us  1.3120us  fused_split_squeeze_cast_kernel0
-                    0.00%  3.7440us         1  3.7440us  3.7440us  3.7440us  fused_nn_max_pool2d_1_kernel0
+ GPU activities:   14.56%  31.765ms        58  547.67us  28.160us  1.0697ms  fused_expand_dims_concatenate_1_kernel0
+                    8.46%  18.457ms       483  38.213us     512ns  5.2853ms  [CUDA memcpy HtoD]
+                    7.38%  16.101ms         4  4.0253ms  4.0085ms  4.0364ms  fused_nn_conv2d_add_nn_relu_20_kernel0
+                    7.24%  15.799ms         1  15.799ms  15.799ms  15.799ms  fused_nn_conv2d_transpose_add_nn_relu_kernel0
+                    6.85%  14.952ms      2287  6.5370us     640ns  7.9143ms  [CUDA memcpy DtoH]
+                    5.34%  11.648ms         4  2.9121ms  2.9034ms  2.9217ms  fused_scatter_1_kernel0
+                    3.84%  8.3777ms         1  8.3777ms  8.3777ms  8.3777ms  fused_nn_conv2d_add_nn_relu_16_kernel0
+                    3.71%  8.0883ms         1  8.0883ms  8.0883ms  8.0883ms  fused_nn_conv2d_add_5_kernel0
+                    3.25%  7.1009ms         2  3.5504ms  1.2477ms  5.8531ms  fused_dyn_full_kernel0
+                    2.23%  4.8683ms         2  2.4341ms  365.28us  4.5030ms  sgemm_128x128x8_NT_vec
+                    1.97%  4.2991ms         2  2.1496ms  159.58us  4.1395ms  fused_vision_non_max_suppression_kernel2
+                    1.83%  3.9875ms         6  664.58us  649.76us  686.68us  fused_nn_conv2d_add_nn_relu_11_kernel0
+                    1.18%  2.5824ms         1  2.5824ms  2.5824ms  2.5824ms  fused_nn_conv2d_add_7_kernel0
+                    1.18%  2.5792ms         4  644.79us  638.04us  654.11us  fused_nn_conv2d_add_add_nn_relu_1_kernel0
+                    1.17%  2.5534ms         6  425.56us  424.03us  428.48us  fused_nn_conv2d_add_add_nn_relu_2_kernel0
+                    1.07%  2.3339ms         3  777.96us  771.74us  781.98us  fused_nn_conv2d_add_nn_relu_7_kernel0
+                    1.06%  2.3203ms         1  2.3203ms  2.3203ms  2.3203ms  fused_vision_roi_align_kernel0
+                    1.06%  2.3031ms         3  767.70us  764.64us  771.48us  fused_nn_conv2d_add_nn_relu_2_kernel0
+                    1.03%  2.2453ms         1  2.2453ms  2.2453ms  2.2453ms  fused_nn_conv2d_add_nn_relu_17_kernel0
+                    0.99%  2.1508ms         4  537.70us  23.552us  1.4499ms  fused_scatter_1_kernel1
+                    0.96%  2.1010ms       128  16.413us  13.792us  21.760us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, int, int>::Policy700, bool=0, int, int, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, int, int>::Policy700, bool=0, int, int, int>*, cub::DeviceRadixSortPolicy<int, int, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, int, int>::Policy700, bool=0, int, int, int>**, bool=0, int, int)
+                    0.93%  2.0295ms         2  1.0147ms  1.0140ms  1.0155ms  fused_nn_conv2d_add_nn_relu_15_kernel0
+                    0.91%  1.9817ms         5  396.33us  393.31us  398.53us  fused_nn_conv2d_add_nn_relu_10_kernel0
+                    0.86%  1.8811ms         3  627.04us  626.68us  627.52us  fused_nn_conv2d_add_add_nn_relu_kernel0
+                    0.74%  1.6115ms         1  1.6115ms  1.6115ms  1.6115ms  fused_nn_conv2d_add_19_kernel0
+                    0.67%  1.4648ms       116  12.627us  11.327us  14.048us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, long, int>::Policy700, bool=0, int, long, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, long, int>::Policy700, bool=0, int, long, int>*, cub::DeviceRadixSortPolicy<int, long, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<int, long, int>::Policy700, bool=0, int, long, int>**, bool=0, int, int)
+                    0.65%  1.4242ms         3  474.72us  473.63us  475.81us  fused_nn_conv2d_add_add_nn_relu_3_kernel0
+                    0.61%  1.3333ms        58  22.988us  18.720us  28.671us  fused_reshape_reshape_concatenate_1_kernel0
+                    0.58%  1.2616ms         4  315.39us  311.55us  322.56us  fused_scatter_2_kernel0
+                    0.57%  1.2479ms         5  249.57us  38.656us  1.0111ms  fused_dyn_strided_slice_7_kernel0
+                    0.57%  1.2443ms         1  1.2443ms  1.2443ms  1.2443ms  fused_nn_conv2d_add_add_2_kernel0
+                    0.56%  1.2228ms         1  1.2228ms  1.2228ms  1.2228ms  fused_nn_conv2d_add_3_kernel0
+                    0.56%  1.2212ms        58  21.055us  20.608us  21.760us  fused_dyn_image_resize_kernel0
+                    0.51%  1.1137ms         1  1.1137ms  1.1137ms  1.1137ms  fused_nn_conv2d_add_2_kernel0
+                    0.51%  1.1126ms         3  370.86us  369.50us  371.65us  fused_nn_conv2d_add_nn_relu_6_kernel0
+                    0.51%  1.1023ms         2  551.16us  21.568us  1.0808ms  fused_expand_dims_26_kernel0
+                    0.50%  1.0857ms         1  1.0857ms  1.0857ms  1.0857ms  fused_nn_conv2d_add_nn_relu_13_kernel0
+                    0.46%  996.86us       243  4.1020us  1.4720us  19.776us  fused_dyn_strided_slice_2_kernel0
+                    0.45%  973.37us         1  973.37us  973.37us  973.37us  fused_nn_conv2d_add_nn_relu_12_kernel0
+                    0.44%  961.88us         1  961.88us  961.88us  961.88us  fused_vision_roi_align_1_kernel0
+                    0.44%  956.54us         1  956.54us  956.54us  956.54us  fused_nn_conv2d_add_nn_relu_4_kernel0
+                    0.44%  955.61us         2  477.81us  477.57us  478.05us  fused_nn_conv2d_add_nn_relu_14_kernel0
+                    0.44%  951.26us         1  951.26us  951.26us  951.26us  fused_nn_conv2d_add_nn_relu_8_kernel0
+                    0.44%  950.91us         1  950.91us  950.91us  950.91us  fused_nn_conv2d_add_nn_relu_9_kernel0
+                    0.42%  909.69us         1  909.69us  909.69us  909.69us  fused_nn_conv2d_add_add_1_kernel0
+                    0.42%  908.99us         1  908.99us  908.99us  908.99us  fused_nn_conv2d_add_nn_relu_5_kernel0
+                    0.42%  905.75us         1  905.75us  905.75us  905.75us  fused_nn_conv2d_add_1_kernel0
+                    0.41%  886.17us         2  443.09us  442.46us  443.71us  fused_nn_conv2d_add_nn_relu_3_kernel0
+                    0.39%  840.48us         1  840.48us  840.48us  840.48us  fused_nn_conv2d_add_9_kernel0
+                    0.38%  836.57us         1  836.57us  836.57us  836.57us  fused_nn_conv2d_add_nn_relu_kernel0
+                    0.28%  615.42us         1  615.42us  615.42us  615.42us  fused_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_dims_mu_4615394520124750845__kernel0
+                    0.28%  613.79us        58  10.582us  10.400us  10.816us  fused_take_9_kernel0
+                    0.27%  594.91us        58  10.257us  9.8870us  10.912us  fused_take_13_kernel0
+                    0.26%  571.90us       232  2.4650us  2.3040us  2.8160us  fused_max_5_kernel0
+                    0.26%  570.59us        58  9.8370us  9.6960us  9.9840us  fused_take_expand_dims_repeat_repeat_kernel0
+                    0.26%  558.10us       230  2.4260us  1.2480us  4.6400us  fused_dyn_full_1_kernel0
+                    0.25%  547.52us         1  547.52us  547.52us  547.52us  fused_nn_conv2d_add_add_kernel0
+                    0.25%  539.42us         4  134.85us  8.6080us  348.99us  fused_reshape_repeat_repeat_repeat_kernel0
+                    0.23%  508.54us         1  508.54us  508.54us  508.54us  fused_reshape_squeeze_kernel0
+                    0.21%  467.87us         1  467.87us  467.87us  467.87us  fused_nn_conv2d_add_kernel0
+                    0.21%  450.91us       472     955ns     863ns  1.4080us  fused_shape_of_4_kernel0
+                    0.20%  446.68us       364  1.2270us  1.0560us  1.6960us  fused_cast_39_kernel0
+                    0.20%  445.53us        58  7.6810us  7.2000us  9.6960us  fused_reshape_reshape_concatenate_kernel0
+                    0.17%  366.33us       374     979ns     832ns  1.4720us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<int*, int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<int*, int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(int*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    0.16%  355.29us       274  1.2960us  1.0880us  1.9840us  fused_cast_like_add_where_1_kernel0
+                    0.16%  343.01us         4  85.751us  5.5360us  295.17us  fused_scatter_2_kernel1
+                    0.15%  329.18us         1  329.18us  329.18us  329.18us  fused_nn_conv2d_add_11_kernel0
+                    0.15%  329.09us         1  329.09us  329.09us  329.09us  fused_vision_roi_align_4_kernel0
+                    0.14%  302.01us         1  302.01us  302.01us  302.01us  fused_nn_conv2d_add_4_kernel0
+                    0.14%  295.36us       116  2.5460us  2.3360us  2.7840us  fused_min_8_kernel0
+                    0.13%  287.55us         1  287.55us  287.55us  287.55us  fused_vision_roi_align_2_kernel0
+                    0.13%  286.62us         1  286.62us  286.62us  286.62us  fused_nn_conv2d_add_nn_relu_18_kernel0
+                    0.13%  284.03us         1  284.03us  284.03us  284.03us  fused_image_resize_2_kernel0
+                    0.13%  280.54us       116  2.4180us  1.5680us  3.4880us  fused_dyn_strided_slice_9_kernel0
+                    0.11%  249.92us         1  249.92us  249.92us  249.92us  fused_nn_max_pool2d_kernel0
+                    0.10%  217.70us         1  217.70us  217.70us  217.70us  fused_nn_conv2d_add_6_kernel0
+                    0.09%  199.46us         1  199.46us  199.46us  199.46us  fused_nn_conv2d_add_14_kernel0
+                    0.08%  179.81us         1  179.81us  179.81us  179.81us  fused_nn_conv2d_add_nn_relu_1_kernel0
+                    0.08%  174.46us         1  174.46us  174.46us  174.46us  fused_nn_conv2d_add_nn_relu_19_kernel0
+                    0.07%  161.34us       116  1.3900us  1.2480us  1.7920us  fused_expand_dims_add_concatenate_kernel0
+                    0.07%  160.29us       116  1.3810us  1.1200us  1.7920us  fused_subtract_add_concatenate_kernel0
+                    0.07%  160.00us       116  1.3790us  1.1200us  1.7600us  fused_expand_dims_concatenate_kernel0
+                    0.07%  159.78us         1  159.78us  159.78us  159.78us  maxwell_sgemm_128x64_tn
+                    0.07%  154.24us        58  2.6590us  2.5280us  2.9440us  fused_take_14_kernel0
+                    0.07%  153.63us       116  1.3240us  1.1520us  1.6000us  fused_subtract_expand_dims_kernel0
+                    0.07%  147.93us       128  1.1550us  1.0560us  1.4400us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<int>, thrust::device_ptr<int>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<int>, thrust::device_ptr<int>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<int>, thrust::device_ptr<int>)
+                    0.07%  146.14us       116  1.2590us  1.0870us  1.5680us  fused_scatter_4_kernel0
+                    0.06%  139.65us       121  1.1540us     960ns  7.8080us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<long*, long*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<long*, long*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(long*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    0.06%  136.77us        15  9.1170us  8.5440us  10.080us  void cub::RadixSortScanBinsKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, int>(long*, int)
+                    0.06%  134.21us       116  1.1560us     992ns  1.4080us  _ZN6thrust8cuda_cub4core13_kernel_agentINS0_14__parallel_for16ParallelForAgentINS0_11__transform17unary_transform_fINS_10device_ptrIiEES8_NS5_14no_stencil_tagEZN3tvm7contrib25thrust_stable_sort_by_keyIilEEvP8DLTensorSE_SE_SE_bEUliE_NS5_21always_true_predicateEEElEESH_lEEvT0_T1_
+                    0.06%  133.09us       116  1.1470us  1.0240us  1.3440us  fused_scatter_3_kernel0
+                    0.06%  130.27us       118  1.1040us     960ns  1.4720us  _ZN6thrust8cuda_cub4core13_kernel_agentINS0_14__parallel_for16ParallelForAgentINS0_11__transform17unary_transform_fINS_10device_ptrIiEES8_NS5_14no_stencil_tagEZN3tvm7contrib25thrust_stable_sort_by_keyIiiEEvP8DLTensorSE_SE_SE_bEUliE_NS5_21always_true_predicateEEElEESH_lEEvT0_T1_
+                    0.06%  128.86us       116  1.1100us     960ns  1.4400us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<long>, thrust::device_ptr<long>)
+                    0.06%  128.00us       116  1.1030us     960ns  1.3120us  fused_scatter_4_kernel1
+                    0.06%  125.06us       116  1.0780us     928ns  1.3440us  fused_scatter_3_kernel1
+                    0.06%  120.90us         1  120.90us  120.90us  120.90us  fused_split_squeeze_subtract_divide_expand_dims_image_resize_take_nn_pad_stack_kernel0
+                    0.05%  109.12us         6  18.186us  7.6160us  36.608us  void cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>*, bool=0 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**, bool=1*, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**, int, int, cub::GridEvenShare<cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**>)
+                    0.05%  103.01us        58  1.7760us  1.6960us  1.8880us  fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_kernel0
+                    0.05%  100.93us        59  1.7100us  1.4400us  2.0480us  fused_take_less_kernel0
+                    0.05%  98.719us         1  98.719us  98.719us  98.719us  fused_maximum_minimum_maximum_minimum_stack_kernel0
+                    0.05%  98.559us         9  10.951us  5.3760us  22.080us  void cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>*, bool=1 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**, bool=1*, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**, int, int, cub::GridEvenShare<cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**>)
+                    0.04%  94.112us        58  1.6220us  1.4720us  2.1120us  fused_take_7_kernel0
+                    0.04%  92.992us         3  30.997us  2.2400us  77.440us  fused_reshape_repeat_repeat_repeat_1_kernel0
+                    0.04%  92.864us        58  1.6010us  1.5680us  1.6960us  fused_expand_dims_expand_dims_concatenate_kernel0
+                    0.04%  89.919us        60  1.4980us     864ns  1.6320us  fused_shape_of_11_kernel0
+                    0.04%  89.695us        58  1.5460us  1.4080us  1.8560us  fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_1_kernel0
+                    0.04%  87.935us        58  1.5160us  1.4720us  1.6000us  fused_subtract_expand_dims_cast_concatenate_kernel0
+                    0.04%  86.814us        58  1.4960us  1.4390us  1.5680us  fused_expand_dims_cast_concatenate_1_kernel0
+                    0.04%  86.751us        58  1.4950us  1.4710us  1.5680us  fused_expand_dims_cast_concatenate_kernel0
+                    0.04%  85.407us        58  1.4720us  1.4400us  1.5680us  fused_add_17_kernel0
+                    0.04%  85.216us        58  1.4690us  1.4400us  1.5680us  fused_take_expand_dims_cast_1_kernel0
+                    0.04%  84.671us        58  1.4590us  1.4390us  1.5680us  fused_take_expand_dims_cast_kernel0
+                    0.04%  80.320us        58  1.3840us  1.3440us  1.4720us  fused_subtract_expand_dims_cast_concatenate_1_kernel0
+                    0.04%  79.967us         1  79.967us  79.967us  79.967us  fused_nn_conv2d_add_8_kernel0
+                    0.04%  79.264us        58  1.3660us  1.3440us  1.4720us  fused_take_8_kernel0
+                    0.04%  78.942us        58  1.3610us  1.3430us  1.4710us  fused_take_10_kernel0
+                    0.04%  78.880us        58  1.3600us  1.3440us  1.4720us  fused_take_12_kernel0
+                    0.03%  75.168us        58  1.2960us  1.2800us  1.3760us  fused_take_11_kernel0
+                    0.03%  72.096us         1  72.096us  72.096us  72.096us  fused_nn_conv2d_add_15_kernel0
+                    0.03%  71.967us        58  1.2400us  1.2160us  1.3440us  fused_full_1_kernel0
+                    0.03%  71.680us        58  1.2350us  1.2160us  1.4080us  fused_full_2_kernel0
+                    0.03%  69.888us         1  69.888us  69.888us  69.888us  fused_image_resize_1_kernel0
+                    0.03%  64.127us         1  64.127us  64.127us  64.127us  fused_vision_roi_align_5_kernel0
+                    0.02%  52.480us         1  52.480us  52.480us  52.480us  sgemm_32x32x32_NT_vec
+                    0.02%  51.486us        28  1.8380us  1.4720us  3.2630us  fused_dyn_strided_slice_1_kernel0
+                    0.02%  45.856us         9  5.0950us  1.9200us  29.024us  fused_argwhere_1_kernel0
+                    0.02%  44.447us         1  44.447us  44.447us  44.447us  fused_vision_roi_align_3_kernel0
+                    0.02%  42.496us         2  21.248us  19.136us  23.360us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>*, cub::DeviceRadixSortPolicy<float, int, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>**, bool=1, int, int)
+                    0.02%  42.495us         6  7.0820us  4.4150us  9.8560us  void cub::DeviceRadixSortUpsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, bool=0*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, int, int, cub::GridEvenShare<cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *>)
+                    0.02%  41.344us         1  41.344us  41.344us  41.344us  fused_nn_dense_add_nn_relu_1_kernel0
+                    0.02%  40.959us         1  40.959us  40.959us  40.959us  fused_nn_dense_add_nn_relu_kernel0
+                    0.02%  35.968us         9  3.9960us  2.6560us  6.7200us  void cub::DeviceRadixSortUpsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, bool=1*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, int, int, cub::GridEvenShare<cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *>)
+                    0.01%  30.592us         1  30.592us  30.592us  30.592us  fused_nn_conv2d_add_10_kernel0
+                    0.01%  30.304us         2  15.152us  12.800us  17.504us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>**, bool=1, int, int)
+                    0.01%  24.960us         9  2.7730us  2.5600us  3.0080us  fused_argwhere_1_kernel1
+                    0.01%  23.840us         1  23.840us  23.840us  23.840us  fused_nn_pad_kernel0
+                    0.01%  21.600us         1  21.600us  21.600us  21.600us  fused_nn_conv2d_add_12_kernel0
+                    0.01%  21.216us         7  3.0300us  2.6880us  3.3920us  fused_cast_adv_index_kernel0
+                    0.01%  20.480us         1  20.480us  20.480us  20.480us  fused_dyn_strided_slice_8_kernel0
+                    0.01%  19.743us         1  19.743us  19.743us  19.743us  fused_nn_conv2d_add_16_kernel0
+                    0.01%  18.176us         1  18.176us  18.176us  18.176us  fused_image_resize_kernel0
+                    0.01%  14.208us         1  14.208us  14.208us  14.208us  fused_nn_dense_add_1_kernel0
+                    0.01%  13.440us         1  13.440us  13.440us  13.440us  fused_reshape_adv_index_kernel0
+                    0.01%  13.184us        12  1.0980us     960ns  1.2800us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<int>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<int>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>(thrust::device_ptr<int>, int)
+                    0.01%  12.224us         7  1.7460us  1.0880us  4.7680us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<float*, float*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<float*, float*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>(float*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    0.01%  12.096us         1  12.096us  12.096us  12.096us  fused_nn_conv2d_add_17_kernel0
+                    0.01%  11.936us         7  1.7050us  1.2800us  2.4640us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<float>, thrust::device_ptr<float>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<float>, thrust::device_ptr<float>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<float>, thrust::device_ptr<float>)
+                    0.01%  11.808us         9  1.3120us  1.2480us  1.4720us  fused_argwhere_1_kernel2
+                    0.00%  10.880us         1  10.880us  10.880us  10.880us  fused_vision_roi_align_6_kernel0
+                    0.00%  10.016us         1  10.016us  10.016us  10.016us  fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_5612394393934892536__kernel0
+                    0.00%  9.9840us         8  1.2480us  1.0880us  1.6000us  fused_cast_like_add_where_kernel0
+                    0.00%  9.6640us         5  1.9320us     960ns  4.4480us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<long>, thrust::system::detail::generic::sequence_detail::sequence_functor<long>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<long>, thrust::system::detail::generic::sequence_detail::sequence_functor<long>, long>, long>(thrust::device_ptr<long>, long)
+                    0.00%  9.5680us         1  9.5680us  9.5680us  9.5680us  fused_nn_conv2d_add_18_kernel0
+                    0.00%  8.9280us         7  1.2750us  1.1200us  1.3440us  fused_split_squeeze_kernel0
+                    0.00%  8.8640us         6  1.4770us  1.3760us  1.5360us  fused_cast_like_add_where_2_kernel0
+                    0.00%  8.2560us         1  8.2560us  8.2560us  8.2560us  fused_nn_conv2d_add_13_kernel0
+                    0.00%  7.9360us         1  7.9360us  7.9360us  7.9360us  fused_dyn_strided_slice_4_kernel0
+                    0.00%  7.5840us         2  3.7920us  3.1680us  4.4160us  fused_vision_non_max_suppression_kernel1
+                    0.00%  7.4870us         1  7.4870us  7.4870us  7.4870us  fused_dyn_strided_slice_5_kernel0
+                    0.00%  7.3600us         1  7.3600us  7.3600us  7.3600us  fused_dyn_strided_slice_3_kernel0
+                    0.00%  7.1680us         5  1.4330us  1.1200us  1.6000us  fused_cast_41_kernel0
+                    0.00%  7.1040us         6  1.1840us  1.0880us  1.5680us  fused_dyn_strided_slice_6_kernel0
+                    0.00%  6.7840us         1  6.7840us  6.7840us  6.7840us  fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_763165556527453816__kernel0
+                    0.00%  6.7840us         2  3.3920us  2.8480us  3.9360us  fused_min_7_kernel0
+                    0.00%  6.7200us         1  6.7200us  6.7200us  6.7200us  fused_reshape_adv_index_adv_index_kernel0
+                    0.00%  6.5280us         5  1.3050us  1.0240us  1.5680us  fused_shape_of_2_kernel0
+                    0.00%  6.4960us         6  1.0820us     864ns  1.4400us  fused_shape_of_kernel0
+                    0.00%  5.8880us         2  2.9440us  2.8800us  3.0080us  fused_expand_dims_25_kernel0
+                    0.00%  5.6640us         1  5.6640us  5.6640us  5.6640us  fused_nn_softmax_kernel0
+                    0.00%  5.6000us         4  1.4000us  1.1520us  1.6000us  fused_shape_of_8_kernel0
+                    0.00%  5.6000us         2  2.8000us  2.7200us  2.8800us  fused_full_like_concatenate_concatenate_concatenate_kernel0
+                    0.00%  5.1840us         1  5.1840us  5.1840us  5.1840us  fused_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_adv_in_16747569123192521575__kernel0
+                    0.00%  4.9600us         3  1.6530us  1.2800us  1.9520us  fused_adv_index_1_kernel0
+                    0.00%  4.7680us         1  4.7680us  4.7680us  4.7680us  fused_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_cast_16305282092913549647__kernel0
+                    0.00%  4.7040us         4  1.1760us  1.0560us  1.4720us  fused_cast_40_kernel0
+                    0.00%  4.4800us         1  4.4800us  4.4800us  4.4800us  fused_sigmoid_concatenate_adv_index_kernel0
+                    0.00%  4.1280us         1  4.1280us  4.1280us  4.1280us  fused_nn_dense_add_kernel0
+                    0.00%  4.0320us         1  4.0320us  4.0320us  4.0320us  fused_nn_max_pool2d_1_kernel0
+                    0.00%  3.8720us         2  1.9360us  1.7600us  2.1120us  fused_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divide_log_3641292538708681564__kernel0
+                    0.00%  3.7430us         3  1.2470us  1.1830us  1.3760us  fused_split_squeeze_cast_kernel0
                     0.00%  3.6160us         1  3.6160us  3.6160us  3.6160us  fused_expand_dims_cast_expand_dims_concatenate_expand_dims_kernel0
-                    0.00%  3.2960us         1  3.2960us  3.2960us  3.2960us  fused_argwhere_kernel0
-                    0.00%  3.1680us         2  1.5840us  1.5680us  1.6000us  fused_equal_3_kernel0
-                    0.00%  3.1680us         1  3.1680us  3.1680us  3.1680us  fused_split_kernel0
-                    0.00%  3.1360us         2  1.5680us  1.5040us  1.6320us  fused_take_expand_dims_cast_concatenate_kernel0
-                    0.00%  3.1350us         1  3.1350us  3.1350us  3.1350us  fused_cast_broadcast_to_like_kernel0
-                    0.00%  3.0400us         2  1.5200us  1.5040us  1.5360us  fused_squeeze_8_kernel0
-                    0.00%  3.0080us         2  1.5040us  1.4720us  1.5360us  fused_equal_2_kernel0
-                    0.00%  2.9760us         2  1.4880us  1.4720us  1.5040us  fused_equal_kernel0
-                    0.00%  2.9440us         2  1.4720us  1.4720us  1.4720us  fused_equal_1_kernel0
-                    0.00%  2.9440us         1  2.9440us  2.9440us  2.9440us  fused_argwhere_kernel1
-                    0.00%  2.8800us         2  1.4400us  1.4400us  1.4400us  fused_dyn_strided_slice_2_kernel0
-                    0.00%  2.8480us         1  2.8480us  2.8480us  2.8480us  fused_greater_kernel0
-                    0.00%  2.8160us         2  1.4080us  1.3760us  1.4400us  fused_vision_non_max_suppression_kernel0
-                    0.00%  2.8160us         2  1.4080us  1.3760us  1.4400us  fused_subtract_add_kernel0
-                    0.00%  2.7840us         2  1.3920us  1.3760us  1.4080us  fused_squeeze_6_kernel0
-                    0.00%  2.6560us         2  1.3280us  1.3120us  1.3440us  fused_scatter_2_kernel0
-                    0.00%  2.5920us         2  1.2960us  1.2800us  1.3120us  fused_squeeze_7_kernel0
-                    0.00%  2.5600us         2  1.2800us  1.2480us  1.3120us  fused_cast_39_kernel0
-                    0.00%  2.4320us         2  1.2160us  1.2160us  1.2160us  fused_scatter_2_kernel1
-                    0.00%  2.4310us         1  2.4310us  2.4310us  2.4310us  fused_adv_index_adv_index_kernel0
-                    0.00%  2.3360us         2  1.1680us  1.1520us  1.1840us  fused_shape_of_5_kernel0
-                    0.00%  2.3360us         2  1.1680us  1.1520us  1.1840us  fused_ndarray_size_equal_kernel0
-                    0.00%  2.3040us         2  1.1520us  1.1520us  1.1520us  fused_shape_of_3_kernel0
-                    0.00%  2.2400us         1  2.2400us  2.2400us  2.2400us  fused_adv_index_split_squeeze_adv_index_kernel0
-                    0.00%  2.1120us         1  2.1120us  2.1120us  2.1120us  fused_strided_slice_take_take_subtract_greater_equal_cast_take_take_subtract_gre_10448244218429255428__kernel0
-                    0.00%  2.1120us         1  2.1120us  2.1120us  2.1120us  fused_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equal_cas_250104735588561676__kernel0
-                    0.00%  1.9200us         1  1.9200us  1.9200us  1.9200us  fused_adv_index_2_kernel0
-                    0.00%  1.8550us         1  1.8550us  1.8550us  1.8550us  fused_add_add_add_add_add_concatenate_kernel0
-                    0.00%  1.8240us         1  1.8240us  1.8240us  1.8240us  fused_concatenate_9_kernel0
-                    0.00%  1.7600us         1  1.7600us  1.7600us  1.7600us  fused_take_cast_expand_dims_take_cast_expand_dims_take_cast_expand_dims_concaten_10869151023261452404__kernel0
-                    0.00%  1.7590us         1  1.7590us  1.7590us  1.7590us  fused_take_cast_kernel0
-                    0.00%  1.7280us         1  1.7280us  1.7280us  1.7280us  fused_take_add_cast_expand_dims_kernel0
-                    0.00%  1.7280us         1  1.7280us  1.7280us  1.7280us  fused_topk_kernel0
-                    0.00%  1.6640us         1  1.6640us  1.6640us  1.6640us  fused_concatenate_7_kernel0
+                    0.00%  3.4560us         2  1.7280us  1.6640us  1.7920us  fused_take_expand_dims_cast_concatenate_kernel0
+                    0.00%  3.4240us         1  3.4240us  3.4240us  3.4240us  fused_argwhere_kernel0
+                    0.00%  3.3600us         2  1.6800us  1.5680us  1.7920us  fused_squeeze_6_kernel0
+                    0.00%  3.2960us         1  3.2960us  3.2960us  3.2960us  fused_split_kernel0
+                    0.00%  3.2640us         2  1.6320us  1.5680us  1.6960us  fused_equal_3_kernel0
+                    0.00%  3.2320us         2  1.6160us  1.6000us  1.6320us  fused_equal_2_kernel0
+                    0.00%  3.2320us         2  1.6160us  1.5360us  1.6960us  fused_equal_kernel0
+                    0.00%  3.0400us         2  1.5200us  1.4720us  1.5680us  fused_squeeze_8_kernel0
+                    0.00%  2.9760us         1  2.9760us  2.9760us  2.9760us  fused_argwhere_kernel1
+                    0.00%  2.9120us         2  1.4560us  1.3760us  1.5360us  fused_squeeze_7_kernel0
+                    0.00%  2.8800us         1  2.8800us  2.8800us  2.8800us  fused_cast_broadcast_to_like_kernel0
+                    0.00%  2.8800us         1  2.8800us  2.8800us  2.8800us  fused_greater_kernel0
+                    0.00%  2.8480us         2  1.4240us  1.3760us  1.4720us  fused_equal_1_kernel0
+                    0.00%  2.7840us         2  1.3920us  1.3440us  1.4400us  fused_shape_of_3_kernel0
+                    0.00%  2.7840us         2  1.3920us  1.3760us  1.4080us  fused_cast_38_kernel0
+                    0.00%  2.7520us         2  1.3760us  1.2480us  1.5040us  fused_vision_non_max_suppression_kernel0
+                    0.00%  2.7520us         2  1.3760us  1.3120us  1.4400us  fused_dyn_strided_slice_kernel0
+                    0.00%  2.7520us         2  1.3760us  1.3440us  1.4080us  fused_scatter_kernel0
+                    0.00%  2.5920us         2  1.2960us  1.2800us  1.3120us  fused_ndarray_size_equal_kernel0
+                    0.00%  2.5920us         2  1.2960us  1.2480us  1.3440us  fused_scatter_kernel1
+                    0.00%  2.5280us         2  1.2640us  1.2160us  1.3120us  fused_shape_of_1_kernel0
+                    0.00%  2.4640us         2  1.2320us  1.1840us  1.2800us  fused_subtract_add_kernel0
+                    0.00%  2.3040us         1  2.3040us  2.3040us  2.3040us  fused_adv_index_adv_index_kernel0
+                    0.00%  2.2080us         1  2.2080us  2.2080us  2.2080us  fused_adv_index_split_squeeze_adv_index_kernel0
+                    0.00%  1.9520us         1  1.9520us  1.9520us  1.9520us  fused_strided_slice_take_take_subtract_greater_equal_cast_take_take_subtract_gre_10448244218429255428__kernel0
+                    0.00%  1.9200us         1  1.9200us  1.9200us  1.9200us  fused_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equal_cas_250104735588561676__kernel0
+                    0.00%  1.9200us         1  1.9200us  1.9200us  1.9200us  fused_add_add_add_add_add_concatenate_kernel0
+                    0.00%  1.8880us         1  1.8880us  1.8880us  1.8880us  fused_take_cast_kernel0
+                    0.00%  1.8560us         1  1.8560us  1.8560us  1.8560us  fused_adv_index_2_kernel0
+                    0.00%  1.8240us         1  1.8240us  1.8240us  1.8240us  fused_take_cast_expand_dims_take_cast_expand_dims_take_cast_expand_dims_concaten_10869151023261452404__kernel0
+                    0.00%  1.8240us         1  1.8240us  1.8240us  1.8240us  fused_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_multiply__1511904406113696076__kernel0
+                    0.00%  1.7920us         1  1.7920us  1.7920us  1.7920us  fused_concatenate_9_kernel0
+                    0.00%  1.7600us         1  1.7600us  1.7600us  1.7600us  fused_adv_index_kernel0
+                    0.00%  1.7600us         1  1.7600us  1.7600us  1.7600us  fused_topk_kernel0
+                    0.00%  1.7280us         1  1.7280us  1.7280us  1.7280us  fused_concatenate_7_kernel0
                     0.00%  1.6640us         1  1.6640us  1.6640us  1.6640us  fused_topk_kernel1
-                    0.00%  1.6320us         1  1.6320us  1.6320us  1.6320us  fused_adv_index_kernel0
-                    0.00%  1.6000us         1  1.6000us  1.6000us  1.6000us  fused_concatenate_8_kernel0
-                    0.00%  1.5990us         1  1.5990us  1.5990us  1.5990us  fused_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_multiply__1511904406113696076__kernel0
-                    0.00%  1.5040us         1  1.5040us  1.5040us  1.5040us  fused_adv_index_3_kernel0
-                    0.00%  1.4400us         1  1.4400us  1.4400us  1.4400us  fused_shape_of_10_kernel0
-                    0.00%  1.4080us         1  1.4080us  1.4080us  1.4080us  fused_take_take_subtract_1_kernel0
+                    0.00%  1.5680us         1  1.5680us  1.5680us  1.5680us  fused_adv_index_3_kernel0
+                    0.00%  1.5360us         1  1.5360us  1.5360us  1.5360us  fused_take_add_cast_expand_dims_kernel0
+                    0.00%  1.5360us         1  1.5360us  1.5360us  1.5360us  fused_split_kernel1
+                    0.00%  1.4720us         1  1.4720us  1.4720us  1.4720us  fused_arange_7_kernel0
+                    0.00%  1.4720us         1  1.4720us  1.4720us  1.4720us  fused_concatenate_8_kernel0
+                    0.00%  1.4720us         1  1.4720us  1.4720us  1.4720us  fused_shape_of_9_kernel0
+                    0.00%  1.4720us         1  1.4720us  1.4720us  1.4720us  fused_topk_2_kernel1
+                    0.00%  1.4400us         1  1.4400us  1.4400us  1.4400us  fused_take_take_subtract_1_kernel0
+                    0.00%  1.4400us         1  1.4400us  1.4400us  1.4400us  fused_topk_1_kernel1
+                    0.00%  1.4400us         1  1.4400us  1.4400us  1.4400us  fused_topk_3_kernel1
+                    0.00%  1.4400us         1  1.4400us  1.4400us  1.4400us  fused_split_kernel4
                     0.00%  1.4080us         1  1.4080us  1.4080us  1.4080us  fused_take_take_subtract_kernel0
-                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_split_kernel1
-                    0.00%  1.3440us         1  1.3440us  1.3440us  1.3440us  fused_topk_1_kernel1
-                    0.00%  1.3440us         1  1.3440us  1.3440us  1.3440us  fused_topk_3_kernel1
-                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_arange_7_kernel0
-                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_arange_9_kernel0
-                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_take_multiply_add_1_kernel0
+                    0.00%  1.4080us         1  1.4080us  1.4080us  1.4080us  fused_split_kernel2
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_arange_9_kernel0
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_topk_1_kernel0
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_topk_3_kernel0
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_split_kernel3
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_shape_of_10_kernel0
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_topk_2_kernel0
+                    0.00%  1.3440us         1  1.3440us  1.3440us  1.3440us  fused_take_multiply_add_1_kernel0
                     0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_take_multiply_add_kernel0
-                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_topk_2_kernel1
-                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_shape_of_8_kernel0
-                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_arange_8_kernel0
-                    0.00%  1.2790us         1  1.2790us  1.2790us  1.2790us  fused_shape_of_6_kernel0
-                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_topk_1_kernel0
-                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_split_kernel2
-                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_split_kernel4
-                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_topk_2_kernel0
-                    0.00%  1.2470us         1  1.2470us  1.2470us  1.2470us  fused_topk_3_kernel0
-                    0.00%  1.2160us         1  1.2160us  1.2160us  1.2160us  fused_split_kernel3
-                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_shape_of_11_kernel0
-                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_argwhere_kernel2
-                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_shape_of_7_kernel0
+                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_argwhere_kernel2
+                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_topk_4_kernel0
+                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_shape_of_6_kernel0
+                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_arange_8_kernel0
                     0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_topk_4_kernel1
-                    0.00%  1.1520us         1  1.1520us  1.1520us  1.1520us  fused_topk_4_kernel0
-                    0.00%     576ns         1     576ns     576ns     576ns  [CUDA memset]
-      API calls:   63.43%  6.57590s         1  6.57590s  6.57590s  6.57590s  cuModuleLoadData
-                   30.52%  3.16418s       746  4.2415ms  2.1540us  1.75341s  cudaFree
-                    2.38%  247.09ms      5388  45.858us     252ns  189.65ms  cudaMalloc
-                    2.11%  219.02ms      9274  23.616us     846ns  17.583ms  cudaStreamSynchronize
-                    0.99%  102.56ms      2770  37.025us  3.7270us  8.5742ms  cudaMemcpy
-                    0.24%  25.350ms      4904  5.1690us  3.1950us  307.21us  cuLaunchKernel
-                    0.09%  9.7881ms     22294     439ns     278ns  304.05us  cudaSetDevice
-                    0.07%  6.8547ms      1301  5.2680us  3.5710us  125.83us  cudaLaunchKernel
-                    0.05%  5.7020ms         1  5.7020ms  5.7020ms  5.7020ms  cuModuleUnload
-                    0.04%  4.3051ms      1008  4.2700us  1.0160us  127.44us  cudaDeviceSynchronize
-                    0.03%  2.7507ms      7422     370ns     234ns  295.34us  cudaGetDevice
-                    0.01%  1.3205ms     11198     117ns     102ns  1.8630us  cudaGetLastError
-                    0.01%  961.05us         3  320.35us  134.70us  654.66us  cuDeviceTotalMem
-                    0.01%  798.75us       297  2.6890us     120ns  183.17us  cuDeviceGetAttribute
-                    0.00%  392.08us      1037     378ns     270ns  12.613us  cudaDeviceGetAttribute
-                    0.00%  367.27us      2594     141ns     103ns  1.7710us  cudaPeekAtLastError
-                    0.00%  205.59us       221     930ns     400ns  4.2660us  cuModuleGetFunction
-                    0.00%  127.70us         3  42.566us  18.787us  89.606us  cuDeviceGetName
-                    0.00%  43.156us        18  2.3970us  1.7900us  7.2490us  cudaEventCreateWithFlags
-                    0.00%  25.577us         1  25.577us  25.577us  25.577us  cudaMemsetAsync
-                    0.00%  25.114us        36     697ns     450ns  3.0590us  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-                    0.00%  10.237us         2  5.1180us  2.1900us  8.0470us  cuInit
-                    0.00%  10.109us        18     561ns     364ns  2.8940us  cudaEventDestroy
-                    0.00%  8.5760us         1  8.5760us  8.5760us  8.5760us  cudaEventQuery
-                    0.00%  6.8420us         1  6.8420us  6.8420us  6.8420us  cudaEventRecord
-                    0.00%  4.0590us         1  4.0590us  4.0590us  4.0590us  cudaFuncGetAttributes
-                    0.00%  3.9880us         2  1.9940us     840ns  3.1480us  cuDriverGetVersion
-                    0.00%  2.3810us         5     476ns     152ns  1.0320us  cuDeviceGetCount
-                    0.00%  2.1720us         4     543ns     119ns  1.4510us  cuDeviceGet
-                    0.00%  2.0260us         1  2.0260us  2.0260us  2.0260us  cuDeviceGetPCIBusId
-                    0.00%  1.5540us         3     518ns     220ns  1.0920us  cuDeviceGetUuid
-                    0.00%     159ns         1     159ns     159ns     159ns  cudaGetDeviceCount
+                    0.00%  1.0880us         1  1.0880us  1.0880us  1.0880us  fused_shape_of_7_kernel0
+                    0.00%  1.0560us         1  1.0560us  1.0560us  1.0560us  fused_shape_of_5_kernel0
+                    0.00%     544ns         1     544ns     544ns     544ns  [CUDA memset]
+      API calls:   87.08%  5.92355s         1  5.92355s  5.92355s  5.92355s  cuModuleLoadData
+                    4.66%  316.91ms       746  424.81us     893ns  162.50ms  cudaFree
+                    3.36%  228.43ms      5388  42.396us     243ns  177.89ms  cudaMalloc
+                    2.80%  190.16ms      9274  20.504us     882ns  15.799ms  cudaStreamSynchronize
+                    1.27%  86.567ms      2770  31.251us  3.8290us  8.6607ms  cudaMemcpy
+                    0.36%  24.511ms      4904  4.9980us  3.2230us  311.14us  cuLaunchKernel
+                    0.14%  9.8022ms     22294     439ns     301ns  307.79us  cudaSetDevice
+                    0.10%  6.7064ms      1301  5.1540us  3.6000us  58.898us  cudaLaunchKernel
+                    0.09%  5.8424ms         1  5.8424ms  5.8424ms  5.8424ms  cuModuleUnload
+                    0.06%  3.8230ms      1008  3.7920us  1.0070us  136.88us  cudaDeviceSynchronize
+                    0.04%  2.7721ms      7422     373ns     248ns  304.22us  cudaGetDevice
+                    0.02%  1.3177ms     11198     117ns     102ns  4.5300us  cudaGetLastError
+                    0.01%  473.87us         3  157.96us  134.06us  172.08us  cuDeviceTotalMem
+                    0.01%  455.19us       297  1.5320us     131ns  152.09us  cuDeviceGetAttribute
+                    0.01%  441.16us      1037     425ns     268ns  14.627us  cudaDeviceGetAttribute
+                    0.01%  368.26us      2594     141ns     105ns  2.5180us  cudaPeekAtLastError
+                    0.00%  151.55us       221     685ns     375ns  2.3280us  cuModuleGetFunction
+                    0.00%  67.367us         3  22.455us  16.045us  30.443us  cuDeviceGetName
+                    0.00%  23.370us        36     649ns     469ns  2.2580us  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+                    0.00%  10.319us        18     573ns     354ns  2.9550us  cudaEventDestroy
+                    0.00%  9.5970us        18     533ns     398ns  1.9100us  cudaEventCreateWithFlags
+                    0.00%  7.7130us         1  7.7130us  7.7130us  7.7130us  cudaFuncGetAttributes
+                    0.00%  5.7630us         1  5.7630us  5.7630us  5.7630us  cudaMemsetAsync
+                    0.00%  4.3690us         2  2.1840us  2.0340us  2.3350us  cuInit
+                    0.00%  1.8250us         1  1.8250us  1.8250us  1.8250us  cudaEventQuery
+                    0.00%  1.6220us         1  1.6220us  1.6220us  1.6220us  cudaEventRecord
+                    0.00%  1.5530us         1  1.5530us  1.5530us  1.5530us  cuDeviceGetPCIBusId
+                    0.00%  1.3410us         5     268ns     170ns     493ns  cuDeviceGetCount
+                    0.00%  1.2310us         4     307ns     173ns     424ns  cuDeviceGet
+                    0.00%     861ns         2     430ns     398ns     463ns  cuDriverGetVersion
+                    0.00%     804ns         3     268ns     237ns     294ns  cuDeviceGetUuid
+                    0.00%     245ns         1     245ns     245ns     245ns  cudaGetDeviceCount
