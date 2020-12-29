@@ -129,13 +129,15 @@ def bench_tvm():
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
 
-    # target = "cuda -libs=cublas"
-    target = "cuda"
+    target = "cuda -libs=cublas"
+    # target = "cuda"
 
-    # log_file = "../auto_scheduler/resnet-50-NHWC-B1.json"
-    # with auto_scheduler.ApplyHistoryBest(log_file):
-    with tvm.transform.PassContext(opt_level=3):
-        vm_exec = relay.vm.compile(mod, target=target, params=params)
+    with auto_scheduler.ApplyHistoryBest("maskrcnn.log"):
+        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+           vm_exec = relay.vm.compile(mod, target=target, params=params)
+
+    # with tvm.transform.PassContext(opt_level=3):
+    #    vm_exec = relay.vm.compile(mod, target=target, params=params)
 
     ######################################################################
     # Inference with Relay VM
