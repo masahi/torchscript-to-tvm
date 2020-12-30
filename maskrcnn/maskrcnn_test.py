@@ -78,6 +78,7 @@ def get_input(in_size):
 num_iters = 50
 
 model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -153,5 +154,5 @@ def bench_tvm():
     print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
