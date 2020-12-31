@@ -90,6 +90,10 @@ with torch.no_grad():
     script_module = do_trace(model, inp)
 
 
+def test_onnx():
+    torch.onnx.export(model, inp, "maskrcnn.onnx", opset_version=11)
+
+
 def auto_schedule():
     input_name = "input0"
     shape_list = [(input_name, input_shape)]
@@ -126,6 +130,8 @@ def bench_tvm():
     input_name = "input0"
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
+    print(mod)
+    return
 
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
@@ -136,9 +142,6 @@ def bench_tvm():
     with auto_scheduler.ApplyHistoryBest("maskrcnn.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
            vm_exec = relay.vm.compile(mod, target=target, params=params)
-
-    # with tvm.transform.PassContext(opt_level=3):
-    #    vm_exec = relay.vm.compile(mod, target=target, params=params)
 
     ######################################################################
     # Inference with Relay VM
@@ -156,3 +159,4 @@ def bench_tvm():
 # benchmark_torch(model, inp, num_iters)
 bench_tvm()
 # auto_schedule()
+# test_onnx()
