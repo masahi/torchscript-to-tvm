@@ -46,18 +46,21 @@ def benchmark_torch(model, inp, num_iters):
     model.to("cuda")
     inp = inp.to("cuda")
 
-    for i in range(3):
-        model(inp)
-    torch.cuda.synchronize()
+    # torch.backends.cudnn.benchmark = True
 
-    import time
-    t1 = time.time()
-    for i in range(num_iters):
-        model(inp)
-    torch.cuda.synchronize()
-    t2 = time.time()
+    with torch.no_grad():
+        for i in range(3):
+            model(inp)
+        torch.cuda.synchronize()
 
-    print("torch elapsed", (t2 - t1) / num_iters)
+        import time
+        t1 = time.time()
+        for i in range(num_iters):
+            model(inp)
+        torch.cuda.synchronize()
+        t2 = time.time()
+
+        print("torch elapsed", (t2 - t1) / num_iters)
 
 
 def get_input(in_size):
@@ -77,8 +80,8 @@ def get_input(in_size):
 
 num_iters = 50
 
-model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -134,8 +137,7 @@ def bench_tvm():
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
 
-    target = "cuda -libs=cublas"
-    # target = "cuda"
+    target = "cuda -libs=cublas,cudnn"
 
     with auto_scheduler.ApplyHistoryBest("maskrcnn.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
@@ -154,7 +156,7 @@ def bench_tvm():
     ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
     print(ftimer("main"))
 
-# benchmark_torch(model, inp, num_iters)
-bench_tvm()
+benchmark_torch(model, inp, num_iters)
+# bench_tvm()
 # auto_schedule()
 # test_onnx()
