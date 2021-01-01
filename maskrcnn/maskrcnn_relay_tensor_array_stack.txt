@@ -2613,9 +2613,11 @@ def @main(%input0: Tensor[(1, 3, 300, 300), float32], %model.backbone.body.conv1
         %2427 = scatter(%2424, %2425, %2426, meta[relay.attrs.ScatterAttrs][13]);
         %2428 = cast(%2427, dtype="int64");
         %2429 = dyn.strided_slice(%2417, %2423, %2428, meta[relay.Constant][176], begin=None, end=None, strides=None);
+
         %2430 = Nil;
         %2431 = Cons(%2429, %2430);
         %2432 = @concat(%res.6, %2431);
+
         %while_loop(%2246, %2432, %v7394, %v7286)
       } else {
         (%i.1, %res.6, %v7394, %v7286)

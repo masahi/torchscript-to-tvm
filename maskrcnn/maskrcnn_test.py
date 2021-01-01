@@ -130,8 +130,6 @@ def bench_tvm():
     input_name = "input0"
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
-    print(mod)
-    return
 
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
