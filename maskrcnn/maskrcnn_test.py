@@ -80,8 +80,8 @@ def get_input(in_size):
 
 num_iters = 50
 
-# model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
+model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -137,9 +137,9 @@ def bench_tvm():
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
 
-    target = "cuda -libs=cublas,cudnn"
+    target = "cuda -libs=cublas"
 
-    with auto_scheduler.ApplyHistoryBest("maskrcnn.log"):
+    with auto_scheduler.ApplyHistoryBest("logs/maskrcnn.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
            vm_exec = relay.vm.compile(mod, target=target, params=params)
 
@@ -156,7 +156,7 @@ def bench_tvm():
     ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
     print(ftimer("main"))
 
-benchmark_torch(model, inp, num_iters)
+# benchmark_torch(model, inp, num_iters)
 # bench_tvm()
-# auto_schedule()
+auto_schedule()
 # test_onnx()

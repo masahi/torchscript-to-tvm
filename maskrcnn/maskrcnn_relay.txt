@@ -1299,6 +1299,7 @@ fn (%input0: Tensor[(1, 3, 300, 300), float32], %model.backbone.body.conv1.weigh
   %1292 = concatenate(%1291);
   %1293 = (%1290, %1292);
   %1294 = concatenate(%1293, axis=1);
+
   %1295 = equal(%1241, 0);
   %1296 = argwhere(%1295);
   %1297 = split(%1296, indices_or_sections=1, axis=1);
@@ -1381,6 +1382,7 @@ fn (%input0: Tensor[(1, 3, 300, 300), float32], %model.backbone.body.conv1.weigh
   %1374 = adv_index(%1373);
   %1375 = vision.roi_align(%1364, %1374, meta[relay.attrs.ROIAlignAttrs][3]);
   %1376 = scatter(%1352, %1363, %1375, meta[relay.attrs.ScatterAttrs][4]);
+
   %1377 = reshape(%1376, newshape=[0, -1, 1, 1]);
   %1378 = squeeze(%1377, axis=[2, 3]);
   %1379 = transpose(%model.roi_heads.box_head.fc6.weight, axes=[1, 0]);
