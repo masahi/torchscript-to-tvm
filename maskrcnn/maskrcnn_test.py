@@ -6,6 +6,7 @@ from tvm.contrib.download import download
 from tvm.relay.frontend.pytorch_utils import (
     rewrite_nms_to_batched_nms,
     rewrite_batched_nms_with_max_out_size,
+    rewrite_scatter_to_gather
 )
 
 import numpy as np
@@ -80,8 +81,8 @@ def get_input(in_size):
 
 num_iters = 50
 
-model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -104,8 +105,10 @@ def auto_schedule():
 
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
+    mod = rewrite_scatter_to_gather(mod, 4)
 
-    target = "cuda"
+    # target = "cuda"
+    target = "nvptx -libs=cublas"
 
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
 
@@ -136,7 +139,10 @@ def bench_tvm():
 
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
+    mod = rewrite_scatter_to_gather(mod, 4)
 
+    # target = "nvptx -libs=cublas,cudnn"
+    # target = "cuda -libs=cublas,cudnn"
     target = "cuda -libs=cublas"
 
     with auto_scheduler.ApplyHistoryBest("logs/maskrcnn.log"):
@@ -157,6 +163,6 @@ def bench_tvm():
     print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-bench_tvm()
-# auto_schedule()
+# bench_tvm()
+auto_schedule()
 # test_onnx()

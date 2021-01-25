@@ -1,0 +1,354 @@
+==60792== Profiling application: python maskrcnn_test.py
+==60792== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   26.89%  695.13ms      2625  264.81us  38.720us  6.8710ms  void gemv2N_kernel<int, int, float2, float2, float2, int=128, int=8, int=4, int=4, int=1, bool=0, cublasGemvParams<cublasGemvTensorStridedBatched<float2 const >, cublasGemvTensorStridedBatched<float2>, float2>>(float2 const )
+                    9.19%  237.60ms       102  2.3294ms  1.9200us  10.818ms  void transpose_readWrite_alignment_kernel<float2, float2, int=1, bool=0, int=6, int=4, int=4>(cublasTransposeParams<float2>, float2 const *, float2*, float2 const *)
+                    6.69%  172.88ms        21  8.2326ms  2.1517ms  28.794ms  maxwell_sgemm_128x128_nn
+                    6.11%  158.01ms        50  3.1603ms  4.4160us  10.331ms  void gemv2T_kernel_val<int, int, float2, float2, float2, int=128, int=16, int=2, int=2, bool=0, bool=0, cublasGemvParams<cublasGemvTensorStridedBatched<float2 const >, cublasGemvTensorStridedBatched<float2>, float2>>(float2 const , float2, float2)
+                    4.84%  125.11ms        72  1.7376ms  364.90us  10.629ms  void implicit_convolve_sgemm<float, float, int=128, int=6, int=7, int=3, int=3, int=5, int=1, bool=0, bool=1, bool=1>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, bool, int, int)
+                    3.38%  87.333ms        20  4.3667ms  179.78us  10.624ms  void DSE::vector_fft<int=0, int=1, int=256, int=16, int=16, int=1, float, float, float2>(float2*, float2, int, int3, float2*)
+                    3.07%  79.283ms        42  1.8877ms  16.576us  7.2164ms  void fft2d_r2c_32x32<float, bool=0, unsigned int=1, bool=1>(float2*, float const *, int, int, int, int, int, int, int, int, int, cudnn::reduced_divisor, bool, int2, int, int)
+                    2.57%  66.523ms        52  1.2793ms  312.90us  8.3951ms  void explicit_convolve_sgemm<float, int, int=128, int=6, int=7, int=3, int=3, int=5, int=0, bool=0>(int, int, int, float const *, int, float const *, int, float*, kernel_conv_params, __int64, int, __int64, int, float, float, int, float const *, float const *)
+                    2.31%  59.842ms        34  1.7601ms  48.192us  7.7132ms  void cudnn::winograd_nonfused::winogradForwardData4x4<float, float>(cudnn::winograd_nonfused::WinogradDataParams<float, float>)
+                    2.20%  56.939ms        34  1.6747ms  55.264us  7.1476ms  void cudnn::winograd_nonfused::winogradForwardOutput4x4<float, float>(cudnn::winograd_nonfused::WinogradOutputParams<float, float>)
+                    1.99%  51.491ms       260  198.04us  21.920us  789.44us  maxwell_gcgemm_32x32_nt
+                    1.90%  49.178ms        16  3.0736ms  97.664us  10.730ms  void DSE::vector_fft<int=0, int=1, int=128, int=8, int=8, int=1, float, float, float2>(float2*, float2, int, int3, float2*)
+                    1.87%  48.421ms        26  1.8623ms  45.536us  5.2327ms  void fft2d_r2c_64x64<float, bool=1>(float2*, float const *, int, int, int, int, int, int, int, int)
+                    1.80%  46.416ms        62  748.65us  21.024us  2.1389ms  void implicit_convolve_sgemm<float, float, int=128, int=5, int=5, int=3, int=3, int=3, int=1, bool=0, bool=1, bool=1>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, bool, int, int)
+                    1.80%  46.412ms        20  2.3206ms  165.38us  5.9829ms  void DSE::regular_fft_pad<int=0, int=1, int=256, int=16, int=16, int=1, float, float, float2>(float2*, float*, int, int3, float*, int, float*, float*, int, int, int, int, int, bool)
+                    1.69%  43.583ms        15  2.9056ms  23.712us  10.589ms  void fft2d_r2c_32x32<float, bool=0, unsigned int=1, bool=0>(float2*, float const *, int, int, int, int, int, int, int, int, int, cudnn::reduced_divisor, bool, int2, int, int)
+                    1.47%  37.957ms        28  1.3556ms  641.76us  2.6763ms  void implicit_convolve_sgemm<float, float, int=512, int=6, int=8, int=3, int=3, int=5, int=1, bool=0, bool=1, bool=1>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, bool, int, int)
+                    1.25%  32.430ms        19  1.7069ms  422.56us  6.1167ms  maxwell_scudnn_128x128_relu_small_nn_v1
+                    1.19%  30.790ms       115  267.74us  58.400us  2.2458ms  void cudnn::cnn::im2col4d_kernel<float, long>(cudnn::cnn::im2col4d_params, cudnnConvolutionStruct, cudnnTensor4dStruct, float const *, cudnnTensor4dStruct*)
+                    1.12%  28.914ms        58  498.52us  27.008us  973.25us  fused_expand_dims_concatenate_1_kernel0
+                    1.10%  28.387ms        13  2.1836ms  198.59us  4.6884ms  maxwell_sgemm_128x64_nn
+                    1.10%  28.373ms        78  363.76us  21.216us  1.1523ms  void implicit_convolve_sgemm<float, float, int=1024, int=5, int=5, int=3, int=3, int=3, int=1, bool=0, bool=1, bool=1>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, bool, int, int)
+                    0.93%  24.020ms        16  1.5012ms  95.040us  5.1132ms  void DSE::regular_fft_pad<int=0, int=1, int=128, int=16, int=32, int=1, float, float, float2>(float2*, float*, int, int3, float*, int, float*, float*, int, int, int, int, int, bool)
+                    0.92%  23.791ms      2636  9.0250us  3.6480us  78.048us  void fft2d_r2c_32x32<float, bool=0, unsigned int=0, bool=0>(float2*, float const *, int, int, int, int, int, int, int, int, int, cudnn::reduced_divisor, bool, int2, int, int)
+                    0.89%  23.022ms         6  3.8370ms  3.7760ms  3.8736ms  maxwell_scudnn_winograd_128x128_ldg1_ldg4_relu_tile148m_nt_v1
+                    0.74%  19.053ms       260  73.281us  17.056us  173.15us  void fft1d_r2c_32<float, float, float2, bool=0, bool=0>(float2*, float const *, int, int3, int3, int2, int2)
+                    0.71%  18.462ms       480  38.462us     512ns  5.3234ms  [CUDA memcpy HtoD]
+                    0.68%  17.616ms        74  238.06us  15.808us  1.2428ms  void fft1d_r2c_32<float, float, float2, bool=1, bool=0>(float2*, float const *, int, int3, int3, int2, int2)
+                    0.63%  16.387ms        23  712.46us  29.696us  1.9250ms  void explicit_convolve_sgemm<float, int, int=1024, int=5, int=5, int=3, int=3, int=3, int=0, bool=0>(int, int, int, float const *, int, float const *, int, float*, kernel_conv_params, __int64, int, __int64, int, float, float, int, float const *, float const *)
+                    0.60%  15.593ms      2060  7.5690us  4.8640us  41.280us  void fft2d_c2r_32x32<float, bool=1, bool=0, unsigned int=0, bool=0, bool=0>(float*, float2 const *, int, int, int, int, int, int, int, int, int, float, float, cudnn::reduced_divisor, bool, float*, float*, int2, int, int)
+                    0.57%  14.647ms         1  14.647ms  14.647ms  14.647ms  fused_nn_conv2d_transpose_add_nn_relu_kernel0
+                    0.54%  14.002ms        26  538.53us  354.98us  883.87us  void implicit_convolve_sgemm<float, float, int=1024, int=6, int=7, int=3, int=3, int=5, int=1, bool=0, bool=1, bool=1>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, bool, int, int)
+                    0.50%  12.942ms       260  49.778us  2.8160us  118.53us  void fft1d_c2r_32<float2, float, float, bool=0, bool=1, bool=0, bool=0>(float*, float2 const *, int, int3, int3, int2, int, float, float, float*, float*)
+                    0.46%  11.818ms        13  909.05us  295.36us  2.0923ms  maxwell_scudnn_128x32_relu_small_nn_v1
+                    0.45%  11.520ms        22  523.65us  305.12us  1.1539ms  maxwell_scudnn_winograd_128x128_ldg1_ldg4_relu_tile148n_nt_v1
+                    0.40%  10.397ms        33  315.05us  22.720us  1.9639ms  void precomputed_convolve_sgemm<float, int=1024, int=5, int=5, int=4, int=3, int=3, int=1, bool=0>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, int*)
+                    0.39%  10.004ms       576  17.368us  6.4320us  36.512us  void fft2d_c2r_32x32<float, bool=0, bool=0, unsigned int=0, bool=0, bool=0>(float*, float2 const *, int, int, int, int, int, int, int, int, int, float, float, cudnn::reduced_divisor, bool, float*, float*, int2, int, int)
+                    0.32%  8.2711ms         8  1.0339ms  175.42us  2.6124ms  void cudnn::cnn::conv2d_grouped_direct_kernel<float, float, float, float, float, float, bool=1, bool=0, int=0, int=0, int=0>(cudnnTensorStruct, float const *, cudnnFilterStruct, float const *, cudnnConvolutionStruct, cudnn::cnn::conv2d_grouped_direct_kernel<float, float, float, float, float, float, bool=1, bool=0, int=0, int=0, int=0>, float*, float, float*, cudnn::reduced_divisor, float, float, float, float, int, cudnnConvolutionStruct const *, float const *, cudnnActivationStruct)
+                    0.29%  7.5567ms        23  328.55us  231.26us  554.62us  maxwell_scudnn_128x128_relu_interior_nn_v1
+                    0.29%  7.4206ms        20  371.03us  280.35us  590.78us  maxwell_scudnn_128x32_relu_interior_nn_v1
+                    0.28%  7.1764ms        28  256.30us  46.176us  484.29us  maxwell_scudnn_winograd_128x128_ldg1_ldg4_mobile_relu_tile148t_nt_v0
+                    0.28%  7.1433ms         4  1.7858ms  1.7195ms  1.8531ms  maxwell_scudnn_128x128_relu_large_nn_v1
+                    0.25%  6.4248ms        24  267.70us  19.808us  618.91us  void explicit_convolve_sgemm<float, int, int=128, int=5, int=5, int=3, int=3, int=3, int=0, bool=0>(int, int, int, float const *, int, float const *, int, float*, kernel_conv_params, __int64, int, __int64, int, float, float, int, float const *, float const *)
+                    0.24%  6.0866ms        18  338.15us  120.86us  431.71us  maxwell_scudnn_128x64_relu_medium_nn_v1
+                    0.18%  4.5971ms        13  353.63us  291.52us  623.55us  void explicit_convolve_sgemm<float, int, int=1024, int=6, int=7, int=3, int=3, int=5, int=0, bool=0>(int, int, int, float const *, int, float const *, int, float*, kernel_conv_params, __int64, int, __int64, int, float, float, int, float const *, float const *)
+                    0.17%  4.4959ms        16  280.99us  221.02us  541.12us  maxwell_scudnn_128x64_relu_interior_nn_v1
+                    0.17%  4.4867ms         2  2.2433ms  333.73us  4.1529ms  sgemm_128x128x8_NT_vec
+                    0.15%  3.8483ms        32  120.26us  2.1760us  686.02us  void flip_filter<float, float>(float*, float const *, int, int, int, int)
+                    0.14%  3.6201ms         2  1.8100ms  148.67us  3.4714ms  fused_vision_non_max_suppression_kernel2
+                    0.14%  3.6119ms         7  515.99us  293.86us  1.0920ms  maxwell_scudnn_128x32_relu_large_nn_v1
+                    0.13%  3.2865ms         6  547.74us  494.40us  602.66us  maxwell_scudnn_128x128_relu_medium_nn_v1
+                    0.10%  2.4816ms         3  827.19us  824.16us  832.61us  void explicit_convolve_sgemm<float, int, int=512, int=6, int=8, int=3, int=3, int=5, int=0, bool=0>(int, int, int, float const *, int, float const *, int, float*, kernel_conv_params, __int64, int, __int64, int, float, float, int, float const *, float const *)
+                    0.09%  2.3663ms        34  69.597us  6.4640us  277.63us  void cudnn::winograd_nonfused::winogradForwardFilter4x4<float, float>(cudnn::winograd_nonfused::WinogradFilterParams<float, float>)
+                    0.08%  2.1802ms         4  545.05us  157.76us  933.98us  void precomputed_convolve_sgemm<float, int=128, int=5, int=5, int=3, int=3, int=3, int=1, bool=0>(int, int, int, float const *, int, float*, float const *, kernel_conv_params, __int64, int, float, float, int, float const *, float const *, int*)
+                    0.08%  2.1728ms         1  2.1728ms  2.1728ms  2.1728ms  fused_vision_roi_align_kernel0
+                    0.08%  2.1102ms         3  703.40us  698.88us  707.01us  maxwell_scudnn_128x32_relu_medium_nn_v1
+                    0.08%  1.9730ms         4  493.26us  465.54us  557.89us  maxwell_scudnn_128x64_relu_large_nn_v1
+                    0.07%  1.7764ms         3  592.13us  591.84us  592.38us  fused_nn_conv2d_add_add_nn_relu_kernel0
+                    0.05%  1.4208ms      1878     756ns     608ns  9.2480us  [CUDA memcpy DtoH]
+                    0.05%  1.4055ms        10  140.55us  20.512us  224.90us  void DSE::regular_fft_clip<int=1, int=2, int=256, int=16, int=16, int=1, float, float, float2>(float*, float2*, int, int3, float2*, int, float2*, float2*, int, int, int, int, int, float, float, bool, int, float, float)
+                    0.05%  1.3851ms        34  40.738us  6.2080us  162.18us  void cudnn::winograd::generateWinogradTilesKernel<int=1, float, float>(cudnn::winograd::GenerateWinogradTilesParams<float, float>)
+                    0.05%  1.2697ms        58  21.890us  18.240us  27.200us  fused_reshape_reshape_concatenate_1_kernel0
+                    0.05%  1.1980ms        58  20.654us  18.944us  21.312us  fused_dyn_image_resize_kernel0
+                    0.05%  1.1900ms         4  297.50us  296.93us  297.92us  fused_nn_conv2d_add_add_nn_relu_1_kernel0
+                    0.04%  1.1589ms         5  231.78us  38.848us  939.58us  fused_dyn_strided_slice_8_kernel0
+                    0.04%  1.1450ms         1  1.1450ms  1.1450ms  1.1450ms  fused_dyn_full_1_kernel0
+                    0.04%  1.1086ms        10  110.86us  7.6160us  171.68us  void DSE::vector_fft<int=1, int=2, int=256, int=16, int=16, int=1, float, float, float2>(float2*, float2, int, int3, float2*)
+                    0.04%  999.87us         2  499.94us  20.448us  979.42us  fused_expand_dims_26_kernel0
+                    0.04%  977.18us        12  81.431us  3.6800us  409.89us  void fft2d_r2c_16x16<float>(float2*, float const *, int, int, int, int, int, int, int, int)
+                    0.04%  945.34us       243  3.8900us  1.3760us  19.904us  fused_dyn_strided_slice_1_kernel0
+                    0.03%  896.64us         6  149.44us  149.15us  149.82us  fused_nn_conv2d_add_add_nn_relu_2_kernel0
+                    0.03%  874.40us         1  874.40us  874.40us  874.40us  fused_vision_roi_align_1_kernel0
+                    0.03%  763.93us        22  34.724us  26.880us  39.328us  void cudnn::winograd::generateWinogradTilesKernel<int=0, float, float>(cudnn::winograd::GenerateWinogradTilesParams<float, float>)
+                    0.03%  723.87us       133  5.4420us  1.8560us  30.656us  cask_cudnn::computeOffsetsKernel(cask_cudnn::ComputeOffsetsParams)
+                    0.02%  604.64us        13  46.510us  20.416us  58.560us  void fft2d_c2r_64x64<float, bool=0, bool=1>(float*, float2*, int, int, int, int, int, int, int, int, int, int, float, float, int, float*, float*)
+                    0.02%  594.75us         1  594.75us  594.75us  594.75us  fused_nn_conv2d_add_add_2_kernel0
+                    0.02%  588.41us        58  10.145us  9.8870us  10.432us  fused_take_9_kernel0
+                    0.02%  562.02us         1  562.02us  562.02us  562.02us  fused_cast_take_reshape_squeeze_kernel0
+                    0.02%  557.76us        58  9.6160us  9.0880us  10.464us  fused_take_13_kernel0
+                    0.02%  551.87us         1  551.87us  551.87us  551.87us  fused_divide_expand_dims_multiply_expand_dims_add_divide_clip_exp_expand_dims_mu_4615394520124750845__kernel0
+                    0.02%  538.08us        58  9.2770us  9.0560us  9.6000us  fused_take_expand_dims_repeat_repeat_kernel0
+                    0.02%  536.61us       232  2.3120us  2.1440us  2.6560us  fused_max_5_kernel0
+                    0.02%  536.10us         8  67.011us  20.192us  117.09us  void DSE::regular_fft_clip<int=1, int=2, int=128, int=16, int=32, int=1, float, float, float2>(float*, float2*, int, int3, float2*, int, float2*, float2*, int, int, int, int, int, float, float, bool, int, float, float)
+                    0.02%  502.88us         1  502.88us  502.88us  502.88us  fused_concatenate_7_kernel0
+                    0.02%  497.98us       230  2.1650us  1.1840us  4.0960us  fused_dyn_full_kernel0
+                    0.02%  463.36us         4  115.84us  115.01us  116.74us  fused_nn_conv2d_add_nn_relu_20_kernel0
+                    0.02%  457.57us         4  114.39us  113.31us  115.71us  fused_scatter_3_kernel0
+                    0.02%  421.44us       472     892ns     768ns  1.4080us  fused_shape_of_1_kernel0
+                    0.02%  411.62us       364  1.1300us     992ns  1.5040us  fused_cast_38_kernel0
+                    0.02%  409.50us         1  409.50us  409.50us  409.50us  fused_nn_conv2d_add_nn_relu_kernel0
+                    0.02%  409.50us        58  7.0600us  6.6240us  8.5440us  fused_reshape_reshape_concatenate_kernel0
+                    0.02%  408.51us         1  408.51us  408.51us  408.51us  fused_nn_conv2d_add_kernel0
+                    0.02%  405.57us         1  405.57us  405.57us  405.57us  fused_nn_conv2d_add_5_kernel0
+                    0.02%  404.86us         1  404.86us  404.86us  404.86us  fused_nn_conv2d_add_nn_relu_16_kernel0
+                    0.01%  383.97us         8  47.996us  4.7360us  90.848us  void DSE::vector_fft<int=1, int=2, int=128, int=8, int=8, int=1, float, float, float2>(float2*, float2, int, int3, float2*)
+                    0.01%  345.34us         4  86.336us  5.2800us  298.11us  fused_scatter_3_kernel1
+                    0.01%  318.91us       274  1.1630us  1.0240us  1.6960us  fused_cast_like_add_where_kernel0
+                    0.01%  308.77us         1  308.77us  308.77us  308.77us  fused_vision_roi_align_4_kernel0
+                    0.01%  303.87us         3  101.29us  101.12us  101.47us  fused_nn_conv2d_add_nn_relu_2_kernel0
+                    0.01%  278.91us         1  278.91us  278.91us  278.91us  fused_image_resize_2_kernel0
+                    0.01%  277.38us       116  2.3910us  1.4080us  3.4240us  fused_dyn_strided_slice_kernel0
+                    0.01%  275.97us       116  2.3790us  2.1760us  2.6560us  fused_min_7_kernel0
+                    0.01%  251.94us         1  251.94us  251.94us  251.94us  fused_nn_max_pool2d_kernel0
+                    0.01%  242.85us         1  242.85us  242.85us  242.85us  fused_vision_roi_align_2_kernel0
+                    0.01%  221.73us         3  73.909us  73.504us  74.335us  fused_nn_conv2d_add_add_nn_relu_3_kernel0
+                    0.01%  204.29us         2  102.14us  101.76us  102.53us  fused_nn_conv2d_add_nn_relu_3_kernel0
+                    0.01%  203.94us         1  203.94us  203.94us  203.94us  fused_nn_conv2d_add_nn_relu_4_kernel0
+                    0.01%  202.78us         1  202.78us  202.78us  202.78us  fused_nn_conv2d_add_1_kernel0
+                    0.01%  165.50us         1  165.50us  165.50us  165.50us  fused_nn_conv2d_add_19_kernel0
+                    0.01%  153.28us         3  51.093us  50.848us  51.232us  fused_nn_conv2d_add_nn_relu_6_kernel0
+                    0.01%  148.99us         3  49.664us  49.568us  49.760us  fused_nn_conv2d_add_nn_relu_7_kernel0
+                    0.01%  148.13us        58  2.5530us  2.2720us  2.7510us  fused_take_14_kernel0
+                    0.01%  147.65us       116  1.2720us  1.1200us  1.5040us  fused_scatter_1_kernel1
+                    0.01%  147.46us         1  147.46us  147.46us  147.46us  fused_nn_conv2d_add_add_1_kernel0
+                    0.01%  146.94us         1  146.94us  146.94us  146.94us  maxwell_sgemm_128x64_tn
+                    0.01%  146.37us       116  1.2610us  1.0240us  1.5680us  fused_expand_dims_add_concatenate_kernel0
+                    0.01%  144.70us       116  1.2470us  1.0560us  1.5680us  fused_expand_dims_concatenate_kernel0
+                    0.01%  144.51us       116  1.2450us  1.0240us  1.5680us  fused_subtract_add_concatenate_kernel0
+                    0.01%  141.18us       116  1.2170us  1.0240us  1.5040us  fused_scatter_kernel1
+                    0.01%  140.54us       116  1.2110us     992ns  1.5040us  fused_subtract_expand_dims_kernel0
+                    0.01%  140.03us         6  23.338us  23.104us  23.808us  fused_nn_conv2d_add_nn_relu_11_kernel0
+                    0.01%  134.18us       116  1.1560us     992ns  1.4080us  fused_scatter_1_kernel0
+                    0.01%  131.94us       116  1.1370us     960ns  1.3760us  fused_scatter_kernel0
+                    0.00%  116.54us        15  7.7690us  7.2000us  8.8320us  void cub::RadixSortScanBinsKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, int>(long*, int)
+                    0.00%  113.63us         5  22.726us  22.560us  22.816us  fused_nn_conv2d_add_nn_relu_10_kernel0
+                    0.00%  104.06us         1  104.06us  104.06us  104.06us  fused_split_squeeze_subtract_divide_expand_dims_image_resize_take_nn_pad_stack_kernel0
+                    0.00%  103.04us         1  103.04us  103.04us  103.04us  fused_nn_conv2d_add_nn_relu_1_kernel0
+                    0.00%  100.99us         1  100.99us  100.99us  100.99us  fused_nn_conv2d_add_2_kernel0
+                    0.00%  100.93us         1  100.93us  100.93us  100.93us  fused_nn_conv2d_add_nn_relu_8_kernel0
+                    0.00%  99.392us         1  99.392us  99.392us  99.392us  fused_nn_conv2d_add_nn_relu_17_kernel0
+                    0.00%  98.720us         1  98.720us  98.720us  98.720us  fused_nn_conv2d_add_7_kernel0
+                    0.00%  96.288us         6  16.048us  6.2400us  33.632us  void cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>*, bool=0 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**, bool=1*, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**, int, int, cub::GridEvenShare<cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, long, int>**>)
+                    0.00%  95.584us        58  1.6480us  1.6000us  1.7920us  fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_1_kernel0
+                    0.00%  94.752us        59  1.6050us  1.3760us  1.8880us  fused_take_less_kernel0
+                    0.00%  93.600us        58  1.6130us  1.4720us  1.7600us  fused_subtract_expand_dims_cast_concatenate_cast_like_less_cast_like_add_where_kernel0
+                    0.00%  90.400us        60  1.5060us     832ns  1.6960us  fused_shape_of_kernel0
+                    0.00%  88.928us        58  1.5330us  1.4080us  1.8240us  fused_take_7_kernel0
+                    0.00%  87.936us         1  87.936us  87.936us  87.936us  fused_maximum_minimum_maximum_minimum_stack_kernel0
+                    0.00%  87.584us        58  1.5100us  1.4720us  1.6000us  fused_take_expand_dims_cast_kernel0
+                    0.00%  85.152us         3  28.384us  2.2400us  70.784us  fused_reshape_repeat_repeat_repeat_kernel0
+                    0.00%  82.560us        58  1.4230us  1.4080us  1.5040us  fused_subtract_expand_dims_cast_concatenate_1_kernel0
+                    0.00%  82.144us        58  1.4160us  1.3760us  1.5040us  fused_expand_dims_cast_concatenate_1_kernel0
+                    0.00%  82.144us        58  1.4160us  1.3760us  1.5040us  fused_expand_dims_cast_concatenate_kernel0
+                    0.00%  82.016us        58  1.4140us  1.2800us  1.5040us  fused_expand_dims_expand_dims_concatenate_kernel0
+                    0.00%  81.376us         9  9.0410us  4.5120us  19.904us  void cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>*, bool=1 const *, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**, bool=1*, cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**, int, int, cub::GridEvenShare<cub::DeviceRadixSortDownsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, long, int>**>)
+                    0.00%  80.672us        58  1.3900us  1.3760us  1.5040us  fused_take_expand_dims_cast_1_kernel0
+                    0.00%  80.608us        58  1.3890us  1.3440us  1.4720us  fused_take_10_kernel0
+                    0.00%  80.416us        58  1.3860us  1.3440us  1.5040us  fused_take_8_kernel0
+                    0.00%  78.560us        37  2.1230us  1.7600us  4.2560us  void cudnn::cnn::kern_precompute_indices<bool=0>(int*, int, int, int, int, int, int)
+                    0.00%  76.352us        58  1.3160us  1.2800us  1.4720us  fused_subtract_expand_dims_cast_concatenate_kernel0
+                    0.00%  74.815us        58  1.2890us  1.2480us  1.3760us  fused_full_kernel0
+                    0.00%  74.464us        58  1.2830us  1.2480us  1.3760us  fused_take_12_kernel0
+                    0.00%  74.400us        58  1.2820us  1.2480us  1.4080us  fused_take_11_kernel0
+                    0.00%  73.408us        58  1.2650us  1.2480us  1.3440us  fused_add_17_kernel0
+                    0.00%  70.655us         1  70.655us  70.655us  70.655us  fused_image_resize_1_kernel0
+                    0.00%  68.576us        58  1.1820us  1.1520us  1.2800us  fused_full_1_kernel0
+                    0.00%  61.984us         6  10.330us  9.9520us  10.880us  void fft2d_c2r_16x16<float, bool=0>(float*, float2*, int, int, int, int, int, int, int, int, int, int, float, float, int, float*, float*)
+                    0.00%  61.024us         1  61.024us  61.024us  61.024us  fused_vision_roi_align_5_kernel0
+                    0.00%  49.952us         1  49.952us  49.952us  49.952us  fused_nn_conv2d_add_nn_relu_5_kernel0
+                    0.00%  49.824us        10  4.9820us  3.0080us  8.0640us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__scan::ScanAgent<thrust::device_ptr<int>, thrust::device_ptr<int>, thrust::plus<int>, int, int, thrust::detail::integral_constant<bool, bool=0>>, thrust::device_ptr<int>, thrust::device_ptr<int>, thrust::plus<int>, int, cub::ScanTileState<int, bool=1>, thrust::cuda_cub::__scan::AddInitToExclusiveScan<int, thrust::plus<int>>>(thrust::device_ptr<int>, thrust::device_ptr<int>, int, thrust::plus<int>, int, int)
+                    0.00%  49.536us         1  49.536us  49.536us  49.536us  sgemm_32x32x32_NT_vec
+                    0.00%  48.544us         1  48.544us  48.544us  48.544us  fused_nn_conv2d_add_nn_relu_12_kernel0
+                    0.00%  48.288us         1  48.288us  48.288us  48.288us  fused_nn_conv2d_add_3_kernel0
+                    0.00%  47.648us        28  1.7010us  1.3760us  3.0400us  fused_dyn_strided_slice_3_kernel0
+                    0.00%  41.152us         1  41.152us  41.152us  41.152us  fused_nn_dense_add_nn_relu_kernel0
+                    0.00%  40.960us         1  40.960us  40.960us  40.960us  fused_nn_dense_add_nn_relu_1_kernel0
+                    0.00%  38.560us         2  19.280us  18.144us  20.416us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>*, cub::DeviceRadixSortPolicy<float, int, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, int, int>::Policy700, bool=1, float, int, int>**, bool=1, int, int)
+                    0.00%  37.280us         1  37.280us  37.280us  37.280us  fused_vision_roi_align_3_kernel0
+                    0.00%  36.704us         6  6.1170us  4.0000us  8.9280us  void cub::DeviceRadixSortUpsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=0, bool=1, float, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, bool=0*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, int, int, cub::GridEvenShare<cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *>)
+                    0.00%  34.048us         1  34.048us  34.048us  34.048us  fused_nn_conv2d_add_add_kernel0
+                    0.00%  31.200us         9  3.4660us  2.2720us  5.9200us  void cub::DeviceRadixSortUpsweepKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, bool=1, float, int>(cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, bool=1*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, int, int, cub::GridEvenShare<cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *>)
+                    0.00%  29.728us         2  14.864us  14.816us  14.912us  void fft2d_c2r_32x32<float, bool=0, bool=0, unsigned int=1, bool=0, bool=0>(float*, float2 const *, int, int, int, int, int, int, int, int, int, float, float, cudnn::reduced_divisor, bool, float*, float*, int2, int, int)
+                    0.00%  26.432us         2  13.216us  11.296us  15.136us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>*, cub::DeviceRadixSortPolicy<float, long, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<float, long, int>::Policy700, bool=1, float, long, int>**, bool=1, int, int)
+                    0.00%  23.392us         1  23.392us  23.392us  23.392us  fused_nn_conv2d_add_9_kernel0
+                    0.00%  22.720us         1  22.720us  22.720us  22.720us  fused_nn_conv2d_add_nn_relu_9_kernel0
+                    0.00%  22.528us         1  22.528us  22.528us  22.528us  fused_nn_pad_kernel0
+                    0.00%  21.696us         2  10.848us  10.720us  10.976us  fused_nn_conv2d_add_nn_relu_14_kernel0
+                    0.00%  21.632us         1  21.632us  21.632us  21.632us  void cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<long, int, int>::Policy700, bool=0, long, int, int>(int const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<long, int, int>::Policy700, bool=0, long, int, int>*, cub::DeviceRadixSortPolicy<long, int, int>::Policy700 const *, cub::DeviceRadixSortSingleTileKernel<cub::DeviceRadixSortPolicy<long, int, int>::Policy700, bool=0, long, int, int>**, bool=0, int, int)
+                    0.00%  20.384us         1  20.384us  20.384us  20.384us  void cudnn::ops::softmax_fw_kernel_resident<int=2, float, float, int=256, int=1, int=0, int=0, int=32, int=0>(cudnnTensorStruct, float const *, cudnn::ops::softmax_fw_kernel_resident<int=2, float, float, int=256, int=1, int=0, int=0, int=32, int=0>, float*, int, float, float*, int, int)
+                    0.00%  19.648us         2  9.8240us  9.7920us  9.8560us  fused_nn_conv2d_add_nn_relu_15_kernel0
+                    0.00%  19.488us         1  19.488us  19.488us  19.488us  fused_dyn_strided_slice_9_kernel0
+                    0.00%  16.704us         1  16.704us  16.704us  16.704us  fused_image_resize_kernel0
+                    0.00%  16.640us         7  2.3770us  1.4720us  2.9440us  fused_cast_adv_index_kernel0
+                    0.00%  16.544us         1  16.544us  16.544us  16.544us  fused_nn_conv2d_add_6_kernel0
+                    0.00%  16.320us         9  1.8130us  1.2480us  3.4240us  fused_argwhere_1_kernel1
+                    0.00%  14.080us         1  14.080us  14.080us  14.080us  fused_nn_dense_add_1_kernel0
+                    0.00%  13.504us         9  1.5000us     928ns  3.8080us  fused_argwhere_1_kernel0
+                    0.00%  12.928us         1  12.928us  12.928us  12.928us  fused_reshape_adv_index_kernel0
+                    0.00%  12.864us         6  2.1440us     960ns  7.3280us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<long*, long*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<long*, long*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(long*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    0.00%  12.768us         9  1.4180us     992ns  2.6560us  fused_argwhere_1_kernel3
+                    0.00%  11.872us         9  1.3190us     992ns  2.6560us  fused_argwhere_1_kernel2
+                    0.00%  11.776us         7  1.6820us     960ns  4.8960us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<float*, float*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<float*, float*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>(float*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    0.00%  10.912us         7  1.5580us  1.2480us  2.3040us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<float>, thrust::device_ptr<float>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<float>, thrust::device_ptr<float>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<float>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<float>, thrust::device_ptr<float>)
+                    0.00%  10.144us         1  10.144us  10.144us  10.144us  fused_vision_roi_align_6_kernel0
+                    0.00%  9.6000us         1  9.6000us  9.6000us  9.6000us  fused_nn_conv2d_add_nn_relu_13_kernel0
+                    0.00%  9.5360us        10     953ns     832ns  1.0560us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__scan::InitAgent<cub::ScanTileState<int, bool=1>, int>, cub::ScanTileState<int, bool=1>, int>(bool=1, cub::ScanTileState<int, bool=1>)
+                    0.00%  9.4720us         8  1.1840us  1.0240us  1.4720us  fused_cast_like_add_where_1_kernel0
+                    0.00%  9.3760us         1  9.3760us  9.3760us  9.3760us  fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_5612394393934892536__kernel0
+                    0.00%  9.1200us         6  1.5200us  1.2800us  1.6000us  fused_cast_like_add_where_2_kernel0
+                    0.00%  8.6720us         5  1.7340us     800ns  4.2240us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<long>, thrust::system::detail::generic::sequence_detail::sequence_functor<long>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<long>, thrust::system::detail::generic::sequence_detail::sequence_functor<long>, long>, long>(thrust::device_ptr<long>, long)
+                    0.00%  8.6720us         7  1.2380us     960ns  1.3120us  fused_split_squeeze_kernel0
+                    0.00%  7.9040us         1  7.9040us  7.9040us  7.9040us  fused_dyn_strided_slice_5_kernel0
+                    0.00%  7.6160us         1  7.6160us  7.6160us  7.6160us  fused_dyn_strided_slice_6_kernel0
+                    0.00%  7.4880us         1  7.4880us  7.4880us  7.4880us  fused_dyn_strided_slice_4_kernel0
+                    0.00%  7.1040us         5  1.4200us  1.3760us  1.5040us  fused_cast_41_kernel0
+                    0.00%  6.8800us         2  3.4400us  3.0080us  3.8720us  fused_vision_non_max_suppression_kernel1
+                    0.00%  6.8800us         6  1.1460us  1.0240us  1.4080us  fused_dyn_strided_slice_7_kernel0
+                    0.00%  6.1120us         2  3.0560us  2.6560us  3.4560us  fused_min_8_kernel0
+                    0.00%  6.0480us         1  6.0480us  6.0480us  6.0480us  fused_reshape_adv_index_adv_index_kernel0
+                    0.00%  6.0160us         6  1.0020us     832ns  1.1840us  fused_shape_of_2_kernel0
+                    0.00%  5.9200us         1  5.9200us  5.9200us  5.9200us  fused_reshape_transpose_reshape_reshape_transpose_reshape_reshape_transpose_resh_763165556527453816__kernel0
+                    0.00%  5.8560us         5  1.1710us     960ns  1.3760us  fused_shape_of_4_kernel0
+                    0.00%  5.8240us         1  5.8240us  5.8240us  5.8240us  fused_nn_conv2d_add_nn_relu_18_kernel0
+                    0.00%  5.5680us         2  2.7840us  2.7520us  2.8160us  fused_full_like_concatenate_concatenate_concatenate_kernel0
+                    0.00%  5.4720us         1  5.4720us  5.4720us  5.4720us  fused_nn_conv2d_add_11_kernel0
+                    0.00%  5.4080us         2  2.7040us  2.6880us  2.7200us  fused_expand_dims_25_kernel0
+                    0.00%  5.2160us         4  1.3040us  1.1840us  1.4720us  fused_shape_of_8_kernel0
+                    0.00%  4.9920us         1  4.9920us  4.9920us  4.9920us  fused_full_full_full_full_full_concatenate_reshape_cast_broadcast_to_like_adv_in_16747569123192521575__kernel0
+                    0.00%  4.8000us         1  4.8000us  4.8000us  4.8000us  fused_nn_conv2d_add_4_kernel0
+                    0.00%  4.5120us         1  4.5120us  4.5120us  4.5120us  fused_take_take_add_multiply_take_take_subtract_multiply_take_add_cast_cast_cast_16305282092913549647__kernel0
+                    0.00%  4.4800us         3  1.4930us  1.2480us  1.6320us  fused_adv_index_1_kernel0
+                    0.00%  4.4480us         4  1.1120us     992ns  1.3760us  fused_cast_40_kernel0
+                    0.00%  4.3840us         1  4.3840us  4.3840us  4.3840us  fused_sigmoid_concatenate_adv_index_kernel0
+                    0.00%  4.2240us         1  4.2240us  4.2240us  4.2240us  fused_nn_conv2d_add_14_kernel0
+                    0.00%  4.0640us         2  2.0320us  1.9520us  2.1120us  fused_take_take_subtract_take_take_subtract_multiply_concatenate_sqrt_divide_log_3641292538708681564__kernel0
+                    0.00%  4.0640us         1  4.0640us  4.0640us  4.0640us  fused_nn_dense_add_kernel0
+                    0.00%  3.8720us         1  3.8720us  3.8720us  3.8720us  fused_nn_max_pool2d_1_kernel0
+                    0.00%  3.8080us         3  1.2690us  1.2480us  1.2800us  fused_split_squeeze_cast_kernel0
+                    0.00%  3.7440us         3  1.2480us  1.1840us  1.3120us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<int*, int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<int*, int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(int*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    0.00%  3.6160us         5     723ns     512ns  1.1200us  [CUDA memset]
+                    0.00%  3.4560us         1  3.4560us  3.4560us  3.4560us  fused_nn_conv2d_add_8_kernel0
+                    0.00%  3.3280us         1  3.3280us  3.3280us  3.3280us  fused_expand_dims_cast_expand_dims_concatenate_expand_dims_kernel0
+                    0.00%  3.2640us         3  1.0880us  1.0880us  1.0880us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<int>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::device_ptr<int>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>(thrust::device_ptr<int>, int)
+                    0.00%  3.1040us         2  1.5520us  1.5360us  1.5680us  fused_equal_2_kernel0
+                    0.00%  3.1040us         2  1.5520us  1.5360us  1.5680us  fused_equal_1_kernel0
+                    0.00%  3.1040us         2  1.5520us  1.4080us  1.6960us  fused_equal_3_kernel0
+                    0.00%  3.0400us         2  1.5200us  1.5040us  1.5360us  fused_scatter_2_kernel1
+                    0.00%  2.9120us         2  1.4560us  1.4080us  1.5040us  fused_dyn_strided_slice_2_kernel0
+                    0.00%  2.8480us         2  1.4240us  1.3760us  1.4720us  fused_squeeze_8_kernel0
+                    0.00%  2.8160us         1  2.8160us  2.8160us  2.8160us  fused_cast_broadcast_to_like_kernel0
+                    0.00%  2.8160us         2  1.4080us  1.3760us  1.4400us  fused_squeeze_6_kernel0
+                    0.00%  2.8160us         1  2.8160us  2.8160us  2.8160us  fused_split_kernel0
+                    0.00%  2.7520us         2  1.3760us  1.2160us  1.5360us  fused_equal_kernel0
+                    0.00%  2.6560us         2  1.3280us  1.2800us  1.3760us  fused_vision_non_max_suppression_kernel0
+                    0.00%  2.6240us         2  1.3120us  1.3120us  1.3120us  fused_scatter_2_kernel0
+                    0.00%  2.5920us         2  1.2960us  1.2800us  1.3120us  fused_subtract_add_kernel0
+                    0.00%  2.5600us         2  1.2800us  1.2160us  1.3440us  fused_cast_39_kernel0
+                    0.00%  2.5600us         2  1.2800us  1.2800us  1.2800us  fused_squeeze_7_kernel0
+                    0.00%  2.5280us         1  2.5280us  2.5280us  2.5280us  fused_greater_kernel0
+                    0.00%  2.4320us         2  1.2160us  1.1840us  1.2480us  fused_ndarray_size_equal_kernel0
+                    0.00%  2.3040us         2  1.1520us  1.1520us  1.1520us  fused_shape_of_3_kernel0
+                    0.00%  2.2720us         1  2.2720us  2.2720us  2.2720us  fused_nn_conv2d_add_nn_relu_19_kernel0
+                    0.00%  2.1760us         1  2.1760us  2.1760us  2.1760us  fused_adv_index_adv_index_kernel0
+                    0.00%  2.0800us         1  2.0800us  2.0800us  2.0800us  fused_cast_cast_cast_cast_concatenate_kernel0
+                    0.00%  2.0800us         1  2.0800us  2.0800us  2.0800us  fused_take_take_subtract_greater_equal_cast_take_take_subtract_greater_equal_cas_250104735588561676__kernel0
+                    0.00%  1.9200us         1  1.9200us  1.9200us  1.9200us  fused_adv_index_split_squeeze_adv_index_kernel0
+                    0.00%  1.8560us         1  1.8560us  1.8560us  1.8560us  fused_strided_slice_take_take_subtract_greater_equal_cast_take_take_subtract_gre_10448244218429255428__kernel0
+                    0.00%  1.7920us         1  1.7920us  1.7920us  1.7920us  fused_take_expand_dims_cast_concatenate_kernel0
+                    0.00%  1.7920us         1  1.7920us  1.7920us  1.7920us  fused_concatenate_10_kernel0
+                    0.00%  1.7280us         1  1.7280us  1.7280us  1.7280us  fused_take_cast_expand_dims_take_cast_expand_dims_take_cast_expand_dims_concaten_10869151023261452404__kernel0
+                    0.00%  1.7280us         1  1.7280us  1.7280us  1.7280us  fused_take_add_cast_expand_dims_kernel0
+                    0.00%  1.6960us         1  1.6960us  1.6960us  1.6960us  fused_take_cast_kernel0
+                    0.00%  1.6320us         1  1.6320us  1.6320us  1.6320us  fused_adv_index_2_kernel0
+                    0.00%  1.6320us         1  1.6320us  1.6320us  1.6320us  fused_nn_conv2d_add_10_kernel0
+                    0.00%  1.6320us         1  1.6320us  1.6320us  1.6320us  fused_concatenate_8_kernel0
+                    0.00%  1.6320us         1  1.6320us  1.6320us  1.6320us  fused_topk_kernel1
+                    0.00%  1.6320us         1  1.6320us  1.6320us  1.6320us  fused_add_add_add_add_add_concatenate_kernel0
+                    0.00%  1.6000us         1  1.6000us  1.6000us  1.6000us  fused_topk_kernel0
+                    0.00%  1.5680us         1  1.5680us  1.5680us  1.5680us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<long>, thrust::device_ptr<long>)
+                    0.00%  1.5680us         1  1.5680us  1.5680us  1.5680us  fused_adv_index_3_kernel0
+                    0.00%  1.5680us         1  1.5680us  1.5680us  1.5680us  fused_nn_conv2d_add_15_kernel0
+                    0.00%  1.5360us         1  1.5360us  1.5360us  1.5360us  fused_adv_index_kernel0
+                    0.00%  1.5360us         1  1.5360us  1.5360us  1.5360us  fused_shape_of_10_kernel0
+                    0.00%  1.5360us         1  1.5360us  1.5360us  1.5360us  fused_split_squeeze_multiply_squeeze_multiply_squeeze_multiply_squeeze_multiply__1511904406113696076__kernel0
+                    0.00%  1.5040us         1  1.5040us  1.5040us  1.5040us  fused_nn_conv2d_add_17_kernel0
+                    0.00%  1.4720us         1  1.4720us  1.4720us  1.4720us  fused_nn_conv2d_add_13_kernel0
+                    0.00%  1.4080us         1  1.4080us  1.4080us  1.4080us  fused_nn_conv2d_add_16_kernel0
+                    0.00%  1.4080us         1  1.4080us  1.4080us  1.4080us  fused_take_take_subtract_kernel0
+                    0.00%  1.4080us         1  1.4080us  1.4080us  1.4080us  fused_argwhere_kernel3
+                    0.00%  1.3760us         1  1.3760us  1.3760us  1.3760us  fused_concatenate_9_kernel0
+                    0.00%  1.3440us         1  1.3440us  1.3440us  1.3440us  fused_take_take_subtract_1_kernel0
+                    0.00%  1.3440us         1  1.3440us  1.3440us  1.3440us  fused_nn_conv2d_add_12_kernel0
+                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_arange_9_kernel0
+                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_nn_conv2d_add_18_kernel0
+                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_take_multiply_add_kernel0
+                    0.00%  1.3120us         1  1.3120us  1.3120us  1.3120us  fused_split_kernel1
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_arange_7_kernel0
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_take_multiply_add_1_kernel0
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_shape_of_6_kernel0
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_arange_8_kernel0
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_split_kernel4
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_shape_of_7_kernel0
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_shape_of_9_kernel0
+                    0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  fused_topk_4_kernel1
+                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_topk_1_kernel1
+                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_topk_3_kernel1
+                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_argwhere_kernel1
+                    0.00%  1.2480us         1  1.2480us  1.2480us  1.2480us  fused_topk_2_kernel1
+                    0.00%  1.2160us         1  1.2160us  1.2160us  1.2160us  fused_argwhere_kernel0
+                    0.00%  1.2160us         1  1.2160us  1.2160us  1.2160us  fused_split_kernel2
+                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_shape_of_11_kernel0
+                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_topk_1_kernel0
+                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_topk_3_kernel0
+                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_split_kernel3
+                    0.00%  1.1840us         1  1.1840us  1.1840us  1.1840us  fused_topk_2_kernel0
+                    0.00%  1.1520us         1  1.1520us  1.1520us  1.1520us  fused_argwhere_kernel2
+                    0.00%  1.1520us         1  1.1520us  1.1520us  1.1520us  fused_shape_of_5_kernel0
+                    0.00%  1.1200us         1  1.1200us  1.1200us  1.1200us  fused_topk_4_kernel0
+      API calls:   46.94%  4.53587s         1  4.53587s  4.53587s  4.53587s  cuModuleLoadData
+                   25.53%  2.46651s       722  3.4162ms  14.352us  68.146ms  cudaEventSynchronize
+                   10.28%  993.66ms      1119  887.99us     308ns  146.07ms  cudaFree
+                    9.84%  950.40ms      5749  165.32us     196ns  195.05ms  cudaMalloc
+                    4.72%  455.80ms         8  56.975ms  1.4410us  455.77ms  cudaStreamCreateWithFlags
+                    1.41%  136.50ms      2358  57.887us  2.8930us  14.561ms  cudaMemcpy
+                    0.58%  56.002ms     10358  5.4060us  2.6970us  100.32us  cudaLaunchKernel
+                    0.22%  21.301ms      2807  7.5880us     380ns  14.672ms  cudaEventRecord
+                    0.19%  18.828ms      4900  3.8420us  2.5530us  304.30us  cuLaunchKernel
+                    0.06%  5.5236ms         1  5.5236ms  5.5236ms  5.5236ms  cuModuleUnload
+                    0.05%  4.8726ms     12595     386ns     283ns  14.448us  cudaSetDevice
+                    0.04%  4.1424ms      4954     836ns     440ns  16.176us  cudaStreamWaitEvent
+                    0.03%  2.4206ms       722  3.3520us  1.1370us  15.620us  cudaEventElapsedTime
+                    0.02%  2.0999ms     11083     189ns      97ns  14.201us  cudaGetLastError
+                    0.02%  1.9500ms      5050     386ns     232ns  308.60us  cudaGetDevice
+                    0.02%  1.5319ms      2711     565ns     410ns  14.682us  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+                    0.01%  822.64us        50  16.452us     948ns  455.45us  cudaDeviceSynchronize
+                    0.01%  766.01us         5  153.20us  132.83us  171.95us  cuDeviceTotalMem
+                    0.01%  706.63us       493  1.4330us     108ns  155.80us  cuDeviceGetAttribute
+                    0.01%  533.92us         1  533.92us  533.92us  533.92us  cudaHostAlloc
+                    0.00%  399.71us       292  1.3680us     349ns  6.7000us  cudaEventCreateWithFlags
+                    0.00%  346.01us       408     848ns     305ns  5.7670us  cudaEventDestroy
+                    0.00%  335.71us         1  335.71us  335.71us  335.71us  cudaFreeHost
+                    0.00%  284.06us       116  2.4480us  1.3210us  16.230us  cudaEventCreate
+                    0.00%  244.69us         1  244.69us  244.69us  244.69us  cudaGetDeviceProperties
+                    0.00%  160.99us         4  40.246us  1.3970us  156.26us  cudaStreamCreateWithPriority
+                    0.00%  128.67us         5  25.734us  18.552us  34.580us  cuDeviceGetName
+                    0.00%  121.59us       221     550ns     281ns  1.9800us  cuModuleGetFunction
+                    0.00%  59.813us       135     443ns     255ns  3.1810us  cudaDeviceGetAttribute
+                    0.00%  58.451us        12  4.8700us  1.8760us  21.900us  cudaStreamDestroy
+                    0.00%  28.507us       204     139ns     101ns  1.1620us  cudaPeekAtLastError
+                    0.00%  22.090us         5  4.4180us  2.1150us  9.6370us  cudaMemsetAsync
+                    0.00%  12.101us         4  3.0250us  2.1490us  5.0460us  cuInit
+                    0.00%  4.7990us         1  4.7990us  4.7990us  4.7990us  cuDeviceGetPCIBusId
+                    0.00%  4.0660us         1  4.0660us  4.0660us  4.0660us  cudaFuncGetAttributes
+                    0.00%  3.9510us         2  1.9750us     150ns  3.8010us  cudaGetDeviceCount
+                    0.00%  2.8030us         4     700ns     243ns  1.4410us  cuDriverGetVersion
+                    0.00%  1.9790us         1  1.9790us  1.9790us  1.9790us  cudaEventQuery
+                    0.00%  1.8380us         6     306ns     121ns     507ns  cuDeviceGet
+                    0.00%  1.7920us         7     256ns     144ns     691ns  cuDeviceGetCount
+                    0.00%  1.2510us         5     250ns     227ns     300ns  cuDeviceGetUuid
+                    0.00%  1.2290us         1  1.2290us  1.2290us  1.2290us  cudaHostGetDevicePointer
+                    0.00%     887ns         1     887ns     887ns     887ns  cudaDeviceGetStreamPriorityRange
