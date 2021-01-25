@@ -157,6 +157,6 @@ def bench_tvm():
     print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
 # test_onnx()

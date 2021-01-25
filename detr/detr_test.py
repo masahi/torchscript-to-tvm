@@ -72,15 +72,15 @@ def test_load_tvm():
 
     onnx_path = "detr.onnx"
 
-    export_onnx(
-        model,
-        onnx_path,
-        inp,
-        input_names=["inputs"],
-        output_names=["pred_logits", "pred_boxes"]
-    )
+    # export_onnx(
+    #     model,
+    #     onnx_path,
+    #     inp,
+    #     input_names=["inputs"],
+    #     output_names=["pred_logits", "pred_boxes"]
+    # )
 
-    onnx_model = onnx.load(onnx_path)
+    # onnx_model = onnx.load(onnx_path)
 
     input_name = "inputs"
     shape_dict = {input_name: inp.shape}
@@ -94,7 +94,7 @@ def test_load_tvm():
 
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    target = "llvm"
+    target = "cuda"
     with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldConstant", "DynamicToStatic"]):
         json, lib, params = relay.build(mod, target=target, params=params)
 
