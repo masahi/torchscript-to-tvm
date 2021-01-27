@@ -108,7 +108,7 @@ def auto_schedule():
     mod = rewrite_scatter_to_gather(mod, 4)
 
     # target = "cuda"
-    target = "nvptx -libs=cublas"
+    target = "nvptx"
 
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
 
@@ -117,7 +117,7 @@ def auto_schedule():
         print(task.compute_dag)
 
     log_file = "maskrcnn.log"
-    measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=10)
+    measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
 
     tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
     tune_option = auto_scheduler.TuningOptions(
@@ -141,11 +141,11 @@ def bench_tvm():
     mod = rewrite_batched_nms_with_max_out_size(mod)
     mod = rewrite_scatter_to_gather(mod, 4)
 
-    # target = "nvptx -libs=cublas,cudnn"
+    target = "nvptx -libs=cublas"
     # target = "cuda -libs=cublas,cudnn"
-    target = "cuda -libs=cublas"
+    # target = "cuda -libs=cublas"
 
-    with auto_scheduler.ApplyHistoryBest("logs/maskrcnn.log"):
+    with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
            vm_exec = relay.vm.compile(mod, target=target, params=params)
 
@@ -163,6 +163,6 @@ def bench_tvm():
     print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
 # test_onnx()
