@@ -81,8 +81,8 @@ def get_input(in_size):
 
 num_iters = 50
 
-# model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
+model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -103,6 +103,14 @@ def auto_schedule():
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
+    with open("maskrcnn_mod2.txt", "w") as fo:
+        fo.write(str(mod["main"]))
+
+    # with open("maskrcnn_mod.json", "r") as fi:
+    #     mod = tvm.ir.load_json(fi.read())
+    # with open("maskrcnn.params", "rb") as fi:
+    #     params = relay.load_param_dict(fi.read())
+
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
     mod = rewrite_scatter_to_gather(mod, 4)
@@ -116,10 +124,11 @@ def auto_schedule():
         print("========== Task %d  (workload key: %s) ==========" % (idx, task.workload_key))
         print(task.compute_dag)
 
-    log_file = "maskrcnn.log"
+    log_file = "maskrcnn_nvptx.log"
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
 
-    tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
+    tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
+    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
     tune_option = auto_scheduler.TuningOptions(
         num_measure_trials=50000,  # change this to 20000 to achieve the best performance
         runner=measure_ctx.runner,
@@ -163,6 +172,6 @@ def bench_tvm():
     print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-bench_tvm()
-# auto_schedule()
+# bench_tvm()
+auto_schedule()
 # test_onnx()
