@@ -75,7 +75,7 @@ with open("detr.params", "rb") as fi:
 
 
 def auto_schedule():
-    target = "cuda"
+    target = "rocm"
 
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
 
@@ -98,11 +98,14 @@ def auto_schedule():
 
 
 def bench_tvm():
-    target = "cuda"
+    target = "rocm"
 
-    with auto_scheduler.ApplyHistoryBest("detr.log"):
+    with auto_scheduler.ApplyHistoryBest("logs/detr_rocm.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-           vm_exec = relay.vm.compile(mod, target=target, params=params)
+            vm_exec = relay.vm.compile(mod, target=target, params=params)
+
+    # with tvm.transform.PassContext(opt_level=3):
+    #    vm_exec = relay.vm.compile(mod, target=target, params=params)
 
     ######################################################################
     # Inference with Relay VM
@@ -118,6 +121,6 @@ def bench_tvm():
     print(ftimer("main"))
 
 
-benchmark_torch(model, inp, num_iters)
-# bench_tvm()
+# benchmark_torch(model, inp, num_iters)
+bench_tvm()
 # auto_schedule()

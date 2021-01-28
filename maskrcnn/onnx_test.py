@@ -1,7 +1,6 @@
 import tvm
 import onnx
 from tvm import relay, auto_scheduler
-from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 from tvm.contrib.download import download
 
