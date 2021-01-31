@@ -2,3 +2,10 @@ baseline: 5.78
 with baseline batched nms rewrite: 5.23
 with baseline + memory opt + batched nms rewrite: 4.51
 with baseline + memory opt + batched nms rewrite + topk rewrite: 4.11
+with baseline + memory opt + batched nms rewrite + topk rewrite + early exit: 3.66
+
+nvptx
+ GPU activities:   77.95%  3.5856ms         1  3.5856ms  3.5856ms  3.5856ms  fused_vision_non_max_suppression_kernel2
+
+nvptx + early exit
+ GPU activities:   75.07%  3.1445ms         1  3.1445ms  3.1445ms  3.1445ms  fused_vision_non_max_suppression_kernel2

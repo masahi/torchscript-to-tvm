@@ -1,5 +1,3 @@
-import torch
-import torchvision
 import numpy as np
 import tvm
 from tvm import relay
@@ -7,6 +5,8 @@ from tvm.relay import op
 from tvm.runtime.vm import VirtualMachine
 from tvm.relay.dataflow_pattern import *
 
+import torch
+import torchvision
 
 def torch_nms(boxes, scores, idxs, max_out_size=1000):
     indices = torchvision.ops.batched_nms(boxes, scores, idxs, 0.7)
