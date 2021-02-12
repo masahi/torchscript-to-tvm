@@ -81,8 +81,8 @@ def get_input(in_size):
 
 num_iters = 50
 
-model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -150,28 +150,34 @@ def bench_tvm():
     mod = rewrite_batched_nms_with_max_out_size(mod)
     mod = rewrite_scatter_to_gather(mod, 4)
 
-    target = "nvptx -libs=cublas"
+    target = "llvm"
+
+    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
     # target = "cuda -libs=cublas,cudnn"
     # target = "cuda -libs=cublas"
 
-    with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx.log"):
-        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-           vm_exec = relay.vm.compile(mod, target=target, params=params)
+    # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx.log"):
+    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+    #        vm_exec = relay.vm.compile(mod, target=target, params=params)
+    with tvm.transform.PassContext(opt_level=3):
+        mod = seq(mod)
+        vm_exec = relay.vm.compile(mod, target=target, params=params)
 
-    ######################################################################
-    # Inference with Relay VM
-    # -----------------------
+    # ######################################################################
+    # # Inference with Relay VM
+    # # -----------------------
     ctx = tvm.context(target, 0)
     # vm = profiler_vm.VirtualMachineProfiler(vm_exec, ctx)
     vm = VirtualMachine(vm_exec, ctx)
     vm.set_input("main", **{input_name: img})
     vm.run()
-    # print("\n{}".format(vm.get_stat()))
+    # # print("\n{}".format(vm.get_stat()))
 
-    ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
-    print(ftimer("main"))
+    # ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
+    # print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
 # test_onnx()
