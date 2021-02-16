@@ -7146,11 +7146,15 @@ graph(%self.1 : __torch__.TraceWrapper,
   %7180 : None = prim::Constant(), scope: __module.model/__module.model.roi_heads
   %labels : Long(58:1, requires_grad=0, device=cpu) = aten::to(%labels.7, %7174, %7175, %7176, %7177, %7178, %7179, %7180), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
   %7182 : Tensor?[] = prim::ListConstruct(%index, %labels), scope: __module.model/__module.model.roi_heads
+
   %7183 : Float(58:784, 28:28, 28:1, requires_grad=0, device=cpu) = aten::index(%mask_prob, %7182), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
+
   %7184 : int = prim::Constant[value=0](), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
   %7185 : int = prim::Constant[value=0](), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
   %7186 : int = prim::Constant[value=9223372036854775807](), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
   %7187 : int = prim::Constant[value=1](), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
+
+# batch slice
   %7188 : Float(58:784, 28:28, 28:1, requires_grad=0, device=cpu) = aten::slice(%7183, %7184, %7185, %7186, %7187), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
   %7189 : int = prim::Constant[value=1](), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
   %7190 : Float(58:784, 1:784, 28:28, 28:1, requires_grad=0, device=cpu) = aten::unsqueeze(%7188, %7189), scope: __module.model/__module.model.roi_heads # /home/masa/anaconda3/envs/torch-1.7/lib/python3.7/site-packages/torchvision/models/detection/roi_heads.py:80:0
