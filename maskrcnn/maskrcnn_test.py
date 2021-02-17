@@ -81,8 +81,8 @@ def get_input(in_size):
 
 num_iters = 50
 
-# model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
-model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
+model_func = torchvision.models.detection.maskrcnn_resnet50_fpn
+# model_func = torchvision.models.detection.fasterrcnn_resnet50_fpn
 model = TraceWrapper(model_func(pretrained=True, rpn_pre_nms_top_n_test=1000))
 
 model.eval()
@@ -164,18 +164,19 @@ def bench_tvm():
     # target = "cuda -libs=cublas,cudnn"
     # target = "cuda -libs=cublas"
 
-    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
-    seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
-
-    with auto_scheduler.ApplyHistoryBest("maskrcnn_nvptx_nhwc.log"):
-        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-            mod = seq(mod)
-            vm_exec = relay.vm.compile(mod, target=target, params=params)
-
-    # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx.log"):
-    # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn.log"):
-    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-    #        vm_exec = relay.vm.compile(mod, target=target, params=params)
+    if False:
+        with auto_scheduler.ApplyHistoryBest("maskrcnn_nvptx_nhwc.log"):
+            with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+                desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+                seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+                mod = seq(mod)
+                vm_exec = relay.vm.compile(mod, target=target, params=params)
+    else:
+        with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx.log"):
+        # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_cuda.log"):
+            with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+        # with tvm.transform.PassContext(opt_level=3):
+                vm_exec = relay.vm.compile(mod, target=target, params=params)
 
     # ######################################################################
     # # Inference with Relay VM

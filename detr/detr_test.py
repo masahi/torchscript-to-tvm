@@ -50,7 +50,6 @@ def benchmark_torch(model, inp, num_iters):
 
         print("torch elapsed", (t2 - t1) / num_iters)
 
-
 num_iters = 50
 
 model = TraceWrapper(detr_resnet50(pretrained=False).eval())
@@ -58,24 +57,25 @@ model = TraceWrapper(detr_resnet50(pretrained=False).eval())
 model.eval()
 inp = torch.rand(1, 3, 750, 800)
 
-# with torch.no_grad():
-#     trace = torch.jit.trace(model, inp)
+with torch.no_grad():
+    trace = torch.jit.trace(model, inp)
 
-# mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-# with open("detr_mod.json", "w") as fo:
-#     fo.write(tvm.ir.save_json(mod))
-# with open("detr.params", "wb") as fo:
-#     fo.write(relay.save_param_dict(params))
-
-with open("detr_mod.json", "r") as fi:
-    mod = tvm.ir.load_json(fi.read())
-with open("detr.params", "rb") as fi:
-    params = relay.load_param_dict(fi.read())
+with open("detr_mod.json", "w") as fo:
+    fo.write(tvm.ir.save_json(mod))
+with open("detr.params", "wb") as fo:
+    fo.write(relay.save_param_dict(params))
 
 
 def auto_schedule():
     target = "cuda"
+
+    with open("detr_mod.json", "r") as fi:
+        mod = tvm.ir.load_json(fi.read())
+    with open("detr.params", "rb") as fi:
+        params = relay.load_param_dict(fi.read())
+
 
     desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
     seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
