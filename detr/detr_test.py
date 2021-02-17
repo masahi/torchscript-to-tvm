@@ -75,7 +75,13 @@ with open("detr.params", "rb") as fi:
 
 
 def auto_schedule():
-    target = "rocm"
+    target = "cuda"
+
+    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+
+    with tvm.transform.PassContext(opt_level=3):
+        mod = seq(mod)
 
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
 
@@ -122,5 +128,5 @@ def bench_tvm():
 
 
 # benchmark_torch(model, inp, num_iters)
-bench_tvm()
-# auto_schedule()
+# bench_tvm()
+auto_schedule()

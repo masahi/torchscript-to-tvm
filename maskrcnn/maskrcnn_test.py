@@ -101,19 +101,24 @@ def test_onnx():
 def auto_schedule():
     input_name = "input0"
     shape_list = [(input_name, input_shape)]
-    mod, params = relay.frontend.from_pytorch(script_module, shape_list)
+    # mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
-    with open("maskrcnn_mod2.txt", "w") as fo:
-        fo.write(str(mod["main"]))
+    # with open("maskrcnn_mod2.txt", "w") as fo:
+    #     fo.write(str(mod["main"]))
 
-    # with open("maskrcnn_mod.json", "r") as fi:
-    #     mod = tvm.ir.load_json(fi.read())
-    # with open("maskrcnn.params", "rb") as fi:
-    #     params = relay.load_param_dict(fi.read())
+    with open("maskrcnn_mod.json", "r") as fi:
+        mod = tvm.ir.load_json(fi.read())
+    with open("maskrcnn.params", "rb") as fi:
+        params = relay.load_param_dict(fi.read())
 
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
     mod = rewrite_scatter_to_gather(mod, 4)
+
+    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+    with tvm.transform.PassContext(opt_level=3):
+        mod = seq(mod)
 
     # target = "cuda"
     target = "nvptx"
@@ -124,13 +129,13 @@ def auto_schedule():
         print("========== Task %d  (workload key: %s) ==========" % (idx, task.workload_key))
         print(task.compute_dag)
 
-    log_file = "maskrcnn_nvptx.log"
+    log_file = "maskrcnn_nvptx_nhwc.log"
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
 
-    tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
-    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
+    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
+    tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
     tune_option = auto_scheduler.TuningOptions(
-        num_measure_trials=50000,  # change this to 20000 to achieve the best performance
+        num_measure_trials=100000,  # change this to 20000 to achieve the best performance
         runner=measure_ctx.runner,
         measure_callbacks=[auto_scheduler.RecordToFile(log_file)],
     )
@@ -146,23 +151,31 @@ def bench_tvm():
     shape_list = [(input_name, input_shape)]
     mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
+    # with open("maskrcnn_mod.json", "r") as fi:
+    #     mod = tvm.ir.load_json(fi.read())
+    # with open("maskrcnn.params", "rb") as fi:
+    #     params = relay.load_param_dict(fi.read())
+
     mod = rewrite_nms_to_batched_nms(mod)
     mod = rewrite_batched_nms_with_max_out_size(mod)
     mod = rewrite_scatter_to_gather(mod, 4)
 
-    target = "llvm"
-
-    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
-    seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+    target = "nvptx -libs=cublas"
     # target = "cuda -libs=cublas,cudnn"
     # target = "cuda -libs=cublas"
 
+    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+
+    with auto_scheduler.ApplyHistoryBest("maskrcnn_nvptx_nhwc.log"):
+        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+            mod = seq(mod)
+            vm_exec = relay.vm.compile(mod, target=target, params=params)
+
     # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx.log"):
+    # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn.log"):
     #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
     #        vm_exec = relay.vm.compile(mod, target=target, params=params)
-    with tvm.transform.PassContext(opt_level=3):
-        mod = seq(mod)
-        vm_exec = relay.vm.compile(mod, target=target, params=params)
 
     # ######################################################################
     # # Inference with Relay VM
@@ -174,8 +187,8 @@ def bench_tvm():
     vm.run()
     # # print("\n{}".format(vm.get_stat()))
 
-    # ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
-    # print(ftimer("main"))
+    ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
+    print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
 bench_tvm()
