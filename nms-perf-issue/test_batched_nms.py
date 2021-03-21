@@ -23,8 +23,7 @@ def batched_nms_pattern(boxes, scores, idxs, iou_threshold, num_boxes, indices):
     add = is_op("add")(mx, one)
     mul = is_op("multiply")(cast, add)
 
-    dyn_strided_slice = is_op("strided_slice")(mul)
-    expand_dims = is_op("expand_dims")(dyn_strided_slice)
+    expand_dims = is_op("expand_dims")(mul)
     add = is_op("add")(boxes, expand_dims)
 
     score_expand_dims = is_op("expand_dims")(scores)
@@ -171,7 +170,6 @@ class PostNMSTopKRewrite(DFPatternCallback):
         )
 
     def callback(self, pre, post, node_map):
-        print("matched")
         post_nms_topk = post.attrs.end[0].value
         return rewrite_batch_nms_with_max_out_size(
             node_map[self.cond][0],
@@ -206,7 +204,7 @@ mod["main"] = rewrite(PostNMSTopKRewrite(), mod["main"])
 
 # print(mod["main"])
 
-target = "cuda"
+target = "vulkan"
 
 with tvm.transform.PassContext(opt_level=3, disabled_pass=["FoldScaleAxis"]):
     vm_exec = relay.vm.compile(mod, target=target, params=params)
@@ -221,8 +219,8 @@ vm.set_input("main", **{"boxes": boxes_np, "scores": scores_np, "idxs": idxs_np}
 tvm_res = vm.run()
 indices_tvm = tvm_res.asnumpy()
 
-boxes = boxes.to("cuda")
-scores = scores.to("cuda")
+# boxes = boxes.to("cuda")
+# scores = scores.to("cuda")
 indices_torch = torch_nms(boxes, scores, idxs).cpu().numpy()
 
 print(indices_tvm.shape, indices_torch.shape)
