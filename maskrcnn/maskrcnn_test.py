@@ -131,7 +131,7 @@ def auto_schedule():
         print("========== Task %d  (workload key: %s) ==========" % (idx, task.workload_key))
         print(task.compute_dag)
 
-    log_file = "maskrcnn_vulkan_nhwc.log"
+    log_file = "logs/maskrcnn_vulkan_nhwc.log"
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
 
     tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
