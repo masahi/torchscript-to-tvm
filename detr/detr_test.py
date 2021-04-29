@@ -4,7 +4,7 @@ from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 
 import sys
-sys.path.append("../../../ml/detr/")
+sys.path.append("../../../deep/detr/")
 
 from hubconf import detr_resnet50
 
@@ -76,7 +76,7 @@ mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
 
 def auto_schedule():
-    target = "vulkan"
+    target = "opencl"
 
     # with open("detr_mod.json", "r") as fi:
     #     mod = tvm.ir.load_json(fi.read())
@@ -105,16 +105,19 @@ def auto_schedule():
 
 
 def bench_tvm():
-    target = "vulkan"
+    target = "opencl"
 
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    with auto_scheduler.ApplyHistoryBest("logs/detr_amdvlk.log"):
+    with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nchw.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
             json, lib, params = relay.build(mod, target=target, params=params)
 
-    ctx = tvm.context(target, 0)
-    runtime = tvm.contrib.graph_runtime.create(json, lib, ctx)
+    # with tvm.transform.PassContext(opt_level=3):
+    #     json, lib, params = relay.build(mod, target=target, params=params)
+
+    ctx = tvm.device(target, 0)
+    runtime = tvm.contrib.graph_executor.create(json, lib, ctx)
     runtime.set_input(**params)
     runtime.set_input("input", inp.numpy())
     runtime.run()
@@ -125,7 +128,10 @@ def bench_tvm():
     for pt_res, tvm_res in zip(pt_results, tvm_results):
         print(np.mean(np.abs(pt_res - tvm_res)))
 
+    ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=20)
+    prof_res = np.array(ftimer().results) * 1000
+    print(prof_res)
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
