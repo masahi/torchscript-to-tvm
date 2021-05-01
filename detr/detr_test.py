@@ -78,12 +78,23 @@ mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 def auto_schedule():
     target = "opencl"
 
-    # with open("detr_mod.json", "r") as fi:
-    #     mod = tvm.ir.load_json(fi.read())
-    # with open("detr.params", "rb") as fi:
-    #     params = relay.load_param_dict(fi.read())
+    # mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+    # with open("detr_mod.json", "w") as fo:
+    #     fo.write(tvm.ir.save_json(mod))
+    # with open("detr.params", "wb") as fo:
+    #     fo.write(relay.save_param_dict(params))
+
+    with open("detr_mod.json", "r") as fi:
+        mod = tvm.ir.load_json(fi.read())
+    with open("detr.params", "rb") as fi:
+        params = relay.load_param_dict(fi.read())
+
+    with tvm.transform.PassContext(opt_level=3):
+        desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+        seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+        mod = seq(mod)
+
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
 
     for idx, task in enumerate(tasks):
@@ -109,12 +120,16 @@ def bench_tvm():
 
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nchw.log"):
-        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-            json, lib, params = relay.build(mod, target=target, params=params)
+    # with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nchw.log"):
+    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+    #         json, lib, params = relay.build(mod, target=target, params=params)
 
-    # with tvm.transform.PassContext(opt_level=3):
-    #     json, lib, params = relay.build(mod, target=target, params=params)
+    with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nhwc.log"):
+        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+            desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+            seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+            mod = seq(mod)
+            json, lib, params = relay.build(mod, target=target, params=params)
 
     ctx = tvm.device(target, 0)
     runtime = tvm.contrib.graph_executor.create(json, lib, ctx)
