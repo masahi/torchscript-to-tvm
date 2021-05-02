@@ -4,7 +4,7 @@ from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 
 import sys
-sys.path.append("../../../deep/detr/")
+sys.path.append("../../../ml/detr/")
 
 from hubconf import detr_resnet50
 
@@ -116,7 +116,7 @@ def auto_schedule():
 
 
 def bench_tvm():
-    target = "opencl"
+    target = "cuda"
 
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
@@ -124,7 +124,7 @@ def bench_tvm():
     #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
     #         json, lib, params = relay.build(mod, target=target, params=params)
 
-    with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nhwc.log"):
+    with auto_scheduler.ApplyHistoryBest("logs/detr_cuda_nhwc.log"):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
             desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
             seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
