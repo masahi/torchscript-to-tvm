@@ -135,7 +135,10 @@ def bench_tvm():
     runtime = tvm.contrib.graph_executor.create(json, lib, ctx)
     runtime.set_input(**params)
     runtime.set_input("input", inp.numpy())
+    import time
+    t1 = time.time()
     runtime.run()
+    print("run finished in", time.time() - t1)
 
     tvm_results = [runtime.get_output(i).asnumpy() for i in [0, 1]]
     pt_results = get_torch_outputs(model, inp)
@@ -146,6 +149,36 @@ def bench_tvm():
     ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=20)
     prof_res = np.array(ftimer().results) * 1000
     print(prof_res)
+    print(np.mean(prof_res))
+
+
+def bench_tvm_vm():
+    target = "opencl"
+
+    mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+
+    # with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nchw.log"):
+    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+    #         json, lib, params = relay.build(mod, target=target, params=params)
+
+    with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nhwc.log"):
+        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+            desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+            seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+            mod = seq(mod)
+            vm_exec = relay.vm.compile(mod, target=target, params=params)
+            print("compile finished")
+
+    ctx = tvm.device(target, 0)
+
+    vm = VirtualMachine(vm_exec, ctx)
+    vm.set_input("main", **{"input": inp.numpy()})
+    vm.run()
+
+    ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=20)
+    res = ftimer("main")
+    print(res)
+
 
 # benchmark_torch(model, inp, num_iters)
 bench_tvm()

@@ -164,7 +164,7 @@ def bench_tvm():
 
     target = "nvptx -libs=cublas"
     # target = "rocm -libs=thrust"
-    target = "vulkan"
+    target = "opencl"
     # target = "cuda -libs=cublas,cudnn"
     # target = "cuda -libs=cublas"
 
@@ -186,10 +186,11 @@ def bench_tvm():
             # mod = seq(mod)
             vm_exec = relay.vm.compile(mod, target=target, params=params)
 
+    print("compile finished")
     # ######################################################################
     # # Inference with Relay VM
     # # -----------------------
-    ctx = tvm.context(target, 0)
+    ctx = tvm.device(target, 0)
     vm = profiler_vm.VirtualMachineProfiler(vm_exec, ctx)
     # vm = VirtualMachine(vm_exec, ctx)
     vm.set_input("main", **{input_name: img})
@@ -200,6 +201,6 @@ def bench_tvm():
     # print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
-# bench_tvm()
-auto_schedule()
+bench_tvm()
+# auto_schedule()
 # test_onnx()
