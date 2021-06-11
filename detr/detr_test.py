@@ -3,11 +3,6 @@ from tvm import relay, auto_scheduler
 from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 
-import sys
-sys.path.append("../../../ml/detr/")
-
-from hubconf import detr_resnet50
-
 import numpy as np
 import cv2
 
@@ -59,36 +54,30 @@ def get_torch_outputs(model, inp):
 
 
 num_iters = 50
-
-model = TraceWrapper(detr_resnet50(pretrained=True).eval())
+detr = torch.hub.load('facebookresearch/detr', 'detr_resnet50', pretrained=True)
+model = TraceWrapper(detr.eval())
 model.eval()
 inp = torch.rand(1, 3, 750, 800)
-
-# model = torchvision.models.resnet50(pretrained=True)
-# model.eval()
-# inp = torch.rand(1, 3, 224, 224)
 
 with torch.no_grad():
     trace = torch.jit.trace(model, inp)
     torch_res = model(inp)
 
-mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+target = "vulkan -supports_int8=1 -supports_int64=1 -supports_8bit_buffer=1 -supports_storage_buffer_storage_class=1"
 
 
 def auto_schedule():
-    target = "opencl"
-
-    # mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+    mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
     # with open("detr_mod.json", "w") as fo:
     #     fo.write(tvm.ir.save_json(mod))
     # with open("detr.params", "wb") as fo:
     #     fo.write(relay.save_param_dict(params))
 
-    with open("detr_mod.json", "r") as fi:
-        mod = tvm.ir.load_json(fi.read())
-    with open("detr.params", "rb") as fi:
-        params = relay.load_param_dict(fi.read())
+    # with open("detr_mod.json", "r") as fi:
+    #     mod = tvm.ir.load_json(fi.read())
+    # with open("detr.params", "rb") as fi:
+    #     params = relay.load_param_dict(fi.read())
 
     with tvm.transform.PassContext(opt_level=3):
         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
@@ -116,29 +105,26 @@ def auto_schedule():
 
 
 def bench_tvm():
-    target = "cuda"
-
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    # with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nchw.log"):
-    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-    #         json, lib, params = relay.build(mod, target=target, params=params)
+    with tvm.transform.PassContext(opt_level=3):
+        desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+        seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+        mod = seq(mod)
+        json, lib, params = relay.build(mod, target=target, params=params)
 
-    with auto_scheduler.ApplyHistoryBest("logs/detr_cuda_nhwc.log"):
-        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-            desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
-            seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
-            mod = seq(mod)
-            json, lib, params = relay.build(mod, target=target, params=params)
+    # with auto_scheduler.ApplyHistoryBest("detr.log"):
+    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+    #         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    #         seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+    #         mod = seq(mod)
+    #         json, lib, params = relay.build(mod, target=target, params=params)
 
     ctx = tvm.device(target, 0)
     runtime = tvm.contrib.graph_executor.create(json, lib, ctx)
     runtime.set_input(**params)
     runtime.set_input("input", inp.numpy())
-    import time
-    t1 = time.time()
     runtime.run()
-    print("run finished in", time.time() - t1)
 
     tvm_results = [runtime.get_output(i).asnumpy() for i in [0, 1]]
     pt_results = get_torch_outputs(model, inp)
@@ -146,38 +132,10 @@ def bench_tvm():
     for pt_res, tvm_res in zip(pt_results, tvm_results):
         print(np.mean(np.abs(pt_res - tvm_res)))
 
-    ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=20)
-    prof_res = np.array(ftimer().results) * 1000
-    print(prof_res)
-    print(np.mean(prof_res))
-
-
-def bench_tvm_vm():
-    target = "opencl"
-
-    mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
-
-    # with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nchw.log"):
-    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-    #         json, lib, params = relay.build(mod, target=target, params=params)
-
-    with auto_scheduler.ApplyHistoryBest("logs/detr_gen11_nhwc.log"):
-        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-            desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
-            seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
-            mod = seq(mod)
-            vm_exec = relay.vm.compile(mod, target=target, params=params)
-            print("compile finished")
-
-    ctx = tvm.device(target, 0)
-
-    vm = VirtualMachine(vm_exec, ctx)
-    vm.set_input("main", **{"input": inp.numpy()})
-    vm.run()
-
-    ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=20)
-    res = ftimer("main")
-    print(res)
+    # ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=20)
+    # prof_res = np.array(ftimer().results) * 1000
+    # print(prof_res)
+    # print(np.mean(prof_res))
 
 
 # benchmark_torch(model, inp, num_iters)
