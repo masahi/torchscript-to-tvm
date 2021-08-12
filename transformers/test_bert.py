@@ -310,12 +310,32 @@ input_shapes = [("input_ids", (inputs[0].shape, "int64")),
                 ("attention_mask", (inputs[1].shape, "int64")),
                 ("token_type_ids", (inputs[2].shape, "int64"))]
 
-script_module = torch.jit.trace(quantized_model, inputs).eval()
+with torch.no_grad():
+    out = model(*inputs)
+
+
+class TraceWrapper(torch.nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
+
+    def forward(self, *inp):
+        out = self.model(*inp)
+        return out["logits"]
+
+
+script_module = torch.jit.trace(TraceWrapper(model), inputs).eval()
 mod, params = relay.frontend.from_pytorch(script_module, input_shapes)
 
+from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+mod = ToMixedPrecision("float16")(mod)
+
 # modify below for older cpus
-target = "llvm -mcpu=cascadelake -libs=mkl"
-# target = "llvm"
+# target = "llvm -mcpu=cascadelake -libs=mkl"
+target = "llvm -mcpu=core-avx2"
+
+opt_mod, _ = relay.optimize(mod, target=target, params=params)
+print(opt_mod)
 
 with tvm.transform.PassContext(opt_level=3):
     # opt_mod, opt_params = relay.optimize(mod, target="llvm -mcpu=cascadelake -libs=mkl", params=params)
@@ -326,7 +346,7 @@ with tvm.transform.PassContext(opt_level=3):
 # # from tvm.contrib.debugger import debug_runtime
 
 # # runtime = debug_runtime.create(graph, libs, tvm.cpu(0), "dump")
-runtime = tvm.contrib.graph_runtime.GraphModule(lib["default"](tvm.cpu(0)))
+runtime = tvm.contrib.graph_executor.GraphModule(lib["default"](tvm.cpu(0)))
 
 runtime.set_input("input_ids", inputs[0].numpy())
 runtime.set_input("attention_mask", inputs[1].numpy())
@@ -334,20 +354,20 @@ runtime.set_input("token_type_ids", inputs[2].numpy())
 
 runtime.run()
 
-n_repeat = 100
+# n_repeat = 100
 
-print("Running TVM time evaluator")
-ftimer = runtime.module.time_evaluator("run", tvm.cpu(0), number=1, repeat=n_repeat)
-prof_res = np.array(ftimer().results) * 1000  # multiply 1000 for converting to millisecond
-print(prof_res)
-print("TVM elapsed ms mean, median and std:", np.mean(prof_res), np.median(prof_res), np.std(prof_res))
+# print("Running TVM time evaluator")
+# ftimer = runtime.module.time_evaluator("run", tvm.cpu(0), number=1, repeat=n_repeat)
+# prof_res = np.array(ftimer().results) * 1000  # multiply 1000 for converting to millisecond
+# print(prof_res)
+# print("TVM elapsed ms mean, median and std:", np.mean(prof_res), np.median(prof_res), np.std(prof_res))
 
-print("Running PyTorch benchmark")
-inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
-          torch.ones(batch_size, 128, dtype=torch.int64),
-          torch.ones(1, dtype=torch.int64),
-          torch.ones(batch_size, 128, dtype=torch.int64))
-perf_bench_torch(quantized_model, inputs, n_repeat)
+# print("Running PyTorch benchmark")
+# inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
+#           torch.ones(batch_size, 128, dtype=torch.int64),
+#           torch.ones(1, dtype=torch.int64),
+#           torch.ones(batch_size, 128, dtype=torch.int64))
+# perf_bench_torch(quantized_model, inputs, n_repeat)
 
 
 def evaluate_tvm(args, prefix=""):
@@ -435,7 +455,7 @@ def time_tvm_model_evaluation():
 time_tvm_model_evaluation()
 
 # PyTorch eval
-if True:
+if False:
     # # Evaluate the original FP32 BERT model
     # print("Evaluating PyTorch full precision accuracy and performance:")
     # time_model_evaluation(model, configs, tokenizer)
