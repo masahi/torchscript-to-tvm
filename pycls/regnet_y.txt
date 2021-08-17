@@ -1,0 +1,602 @@
+type tensor_float64_t {
+  tensor_nil_float64,
+  tensor0_float64(float64),
+  tensor1_float64(Tensor[(?), float64]),
+  tensor2_float64(Tensor[(?, ?), float64]),
+  tensor3_float64(Tensor[(?, ?, ?), float64]),
+  tensor4_float64(Tensor[(?, ?, ?, ?), float64]),
+  tensor5_float64(Tensor[(?, ?, ?, ?, ?), float64]),
+  tensor6_float64(Tensor[(?, ?, ?, ?, ?, ?), float64]),
+}
+
+type tensor_int64_t {
+  tensor_nil_int64,
+  tensor0_int64(int64),
+  tensor1_int64(Tensor[(?), int64]),
+  tensor2_int64(Tensor[(?, ?), int64]),
+  tensor3_int64(Tensor[(?, ?, ?), int64]),
+  tensor4_int64(Tensor[(?, ?, ?, ?), int64]),
+  tensor5_int64(Tensor[(?, ?, ?, ?, ?), int64]),
+  tensor6_int64(Tensor[(?, ?, ?, ?, ?, ?), int64]),
+}
+
+type List[A] {
+  Cons(A, List[A]),
+  Nil,
+}
+
+type Tree[A] {
+  Rose(A, List[Tree[A]]),
+}
+
+type tensor_int16_t {
+  tensor_nil_int16,
+  tensor0_int16(int16),
+  tensor1_int16(Tensor[(?), int16]),
+  tensor2_int16(Tensor[(?, ?), int16]),
+  tensor3_int16(Tensor[(?, ?, ?), int16]),
+  tensor4_int16(Tensor[(?, ?, ?, ?), int16]),
+  tensor5_int16(Tensor[(?, ?, ?, ?, ?), int16]),
+  tensor6_int16(Tensor[(?, ?, ?, ?, ?, ?), int16]),
+}
+
+type tensor_uint8_t {
+  tensor_nil_uint8,
+  tensor0_uint8(uint8),
+  tensor1_uint8(Tensor[(?), uint8]),
+  tensor2_uint8(Tensor[(?, ?), uint8]),
+  tensor3_uint8(Tensor[(?, ?, ?), uint8]),
+  tensor4_uint8(Tensor[(?, ?, ?, ?), uint8]),
+  tensor5_uint8(Tensor[(?, ?, ?, ?, ?), uint8]),
+  tensor6_uint8(Tensor[(?, ?, ?, ?, ?, ?), uint8]),
+}
+
+type tensor_float32_t {
+  tensor_nil_float32,
+  tensor0_float32(float32),
+  tensor1_float32(Tensor[(?), float32]),
+  tensor2_float32(Tensor[(?, ?), float32]),
+  tensor3_float32(Tensor[(?, ?, ?), float32]),
+  tensor4_float32(Tensor[(?, ?, ?, ?), float32]),
+  tensor5_float32(Tensor[(?, ?, ?, ?, ?), float32]),
+  tensor6_float32(Tensor[(?, ?, ?, ?, ?, ?), float32]),
+}
+
+type tensor_int8_t {
+  tensor_nil_int8,
+  tensor0_int8(int8),
+  tensor1_int8(Tensor[(?), int8]),
+  tensor2_int8(Tensor[(?, ?), int8]),
+  tensor3_int8(Tensor[(?, ?, ?), int8]),
+  tensor4_int8(Tensor[(?, ?, ?, ?), int8]),
+  tensor5_int8(Tensor[(?, ?, ?, ?, ?), int8]),
+  tensor6_int8(Tensor[(?, ?, ?, ?, ?, ?), int8]),
+}
+
+type Option[A] {
+  Some(A),
+  None,
+}
+
+type tensor_int32_t {
+  tensor_nil_int32,
+  tensor0_int32(int32),
+  tensor1_int32(Tensor[(?), int32]),
+  tensor2_int32(Tensor[(?, ?), int32]),
+  tensor3_int32(Tensor[(?, ?, ?), int32]),
+  tensor4_int32(Tensor[(?, ?, ?, ?), int32]),
+  tensor5_int32(Tensor[(?, ?, ?, ?, ?), int32]),
+  tensor6_int32(Tensor[(?, ?, ?, ?, ?, ?), int32]),
+}
+
+type tensor_float16_t {
+  tensor_nil_float16,
+  tensor0_float16(float16),
+  tensor1_float16(Tensor[(?), float16]),
+  tensor2_float16(Tensor[(?, ?), float16]),
+  tensor3_float16(Tensor[(?, ?, ?), float16]),
+  tensor4_float16(Tensor[(?, ?, ?, ?), float16]),
+  tensor5_float16(Tensor[(?, ?, ?, ?, ?), float16]),
+  tensor6_float16(Tensor[(?, ?, ?, ?, ?, ?), float16]),
+}
+
+type tensor_uint16_t {
+  tensor_nil_uint16,
+  tensor0_uint16(uint16),
+  tensor1_uint16(Tensor[(?), uint16]),
+  tensor2_uint16(Tensor[(?, ?), uint16]),
+  tensor3_uint16(Tensor[(?, ?, ?), uint16]),
+  tensor4_uint16(Tensor[(?, ?, ?, ?), uint16]),
+  tensor5_uint16(Tensor[(?, ?, ?, ?, ?), uint16]),
+  tensor6_uint16(Tensor[(?, ?, ?, ?, ?, ?), uint16]),
+}
+
+def @main(%input0: Tensor[(1, 3, 224, 224), float32], %stem.conv.weight: Tensor[(32, 3, 3, 3), float32], %stem.bn.weight: Tensor[(32), float32], %stem.bn.bias: Tensor[(32), float32], %stem.bn.running_mean: Tensor[(32), float32], %stem.bn.running_var: Tensor[(32), float32], %s1.b1.proj.weight: Tensor[(128, 32, 1, 1), float32], %s1.b1.bn.weight: Tensor[(128), float32], %s1.b1.bn.bias: Tensor[(128), float32], %s1.b1.bn.running_mean: Tensor[(128), float32], %s1.b1.bn.running_var: Tensor[(128), float32], %s1.b1.f.a.weight: Tensor[(128, 32, 1, 1), float32], %s1.b1.f.a_bn.weight: Tensor[(128), float32], %s1.b1.f.a_bn.bias: Tensor[(128), float32], %s1.b1.f.a_bn.running_mean: Tensor[(128), float32], %s1.b1.f.a_bn.running_var: Tensor[(128), float32], %s1.b1.f.b.weight: Tensor[(128, 64, 3, 3), float32], %s1.b1.f.b_bn.weight: Tensor[(128), float32], %s1.b1.f.b_bn.bias: Tensor[(128), float32], %s1.b1.f.b_bn.running_mean: Tensor[(128), float32], %s1.b1.f.b_bn.running_var: Tensor[(128), float32], %s1.b1.f.se.f_ex.0.weight: Tensor[(8, 128, 1, 1), float32], %s1.b1.f.se.f_ex.0.bias: Tensor[(8), float32], %s1.b1.f.se.f_ex.2.weight: Tensor[(128, 8, 1, 1), float32], %s1.b1.f.se.f_ex.2.bias: Tensor[(128), float32], %s1.b1.f.c.weight: Tensor[(128, 128, 1, 1), float32], %s1.b1.f.c_bn.weight: Tensor[(128), float32], %s1.b1.f.c_bn.bias: Tensor[(128), float32], %s1.b1.f.c_bn.running_mean: Tensor[(128), float32], %s1.b1.f.c_bn.running_var: Tensor[(128), float32], %s1.b2.f.a.weight: Tensor[(128, 128, 1, 1), float32], %s1.b2.f.a_bn.weight: Tensor[(128), float32], %s1.b2.f.a_bn.bias: Tensor[(128), float32], %s1.b2.f.a_bn.running_mean: Tensor[(128), float32], %s1.b2.f.a_bn.running_var: Tensor[(128), float32], %s1.b2.f.b.weight: Tensor[(128, 64, 3, 3), float32], %s1.b2.f.b_bn.weight: Tensor[(128), float32], %s1.b2.f.b_bn.bias: Tensor[(128), float32], %s1.b2.f.b_bn.running_mean: Tensor[(128), float32], %s1.b2.f.b_bn.running_var: Tensor[(128), float32], %s1.b2.f.se.f_ex.0.weight: Tensor[(32, 128, 1, 1), float32], %s1.b2.f.se.f_ex.0.bias: Tensor[(32), float32], %s1.b2.f.se.f_ex.2.weight: Tensor[(128, 32, 1, 1), float32], %s1.b2.f.se.f_ex.2.bias: Tensor[(128), float32], %s1.b2.f.c.weight: Tensor[(128, 128, 1, 1), float32], %s1.b2.f.c_bn.weight: Tensor[(128), float32], %s1.b2.f.c_bn.bias: Tensor[(128), float32], %s1.b2.f.c_bn.running_mean: Tensor[(128), float32], %s1.b2.f.c_bn.running_var: Tensor[(128), float32], %s2.b1.proj.weight: Tensor[(192, 128, 1, 1), float32], %s2.b1.bn.weight: Tensor[(192), float32], %s2.b1.bn.bias: Tensor[(192), float32], %s2.b1.bn.running_mean: Tensor[(192), float32], %s2.b1.bn.running_var: Tensor[(192), float32], %s2.b1.f.a.weight: Tensor[(192, 128, 1, 1), float32], %s2.b1.f.a_bn.weight: Tensor[(192), float32], %s2.b1.f.a_bn.bias: Tensor[(192), float32], %s2.b1.f.a_bn.running_mean: Tensor[(192), float32], %s2.b1.f.a_bn.running_var: Tensor[(192), float32], %s2.b1.f.b.weight: Tensor[(192, 64, 3, 3), float32], %s2.b1.f.b_bn.weight: Tensor[(192), float32], %s2.b1.f.b_bn.bias: Tensor[(192), float32], %s2.b1.f.b_bn.running_mean: Tensor[(192), float32], %s2.b1.f.b_bn.running_var: Tensor[(192), float32], %s2.b1.f.se.f_ex.0.weight: Tensor[(32, 192, 1, 1), float32], %s2.b1.f.se.f_ex.0.bias: Tensor[(32), float32], %s2.b1.f.se.f_ex.2.weight: Tensor[(192, 32, 1, 1), float32], %s2.b1.f.se.f_ex.2.bias: Tensor[(192), float32], %s2.b1.f.c.weight: Tensor[(192, 192, 1, 1), float32], %s2.b1.f.c_bn.weight: Tensor[(192), float32], %s2.b1.f.c_bn.bias: Tensor[(192), float32], %s2.b1.f.c_bn.running_mean: Tensor[(192), float32], %s2.b1.f.c_bn.running_var: Tensor[(192), float32], %s2.b2.f.a.weight: Tensor[(192, 192, 1, 1), float32], %s2.b2.f.a_bn.weight: Tensor[(192), float32], %s2.b2.f.a_bn.bias: Tensor[(192), float32], %s2.b2.f.a_bn.running_mean: Tensor[(192), float32], %s2.b2.f.a_bn.running_var: Tensor[(192), float32], %s2.b2.f.b.weight: Tensor[(192, 64, 3, 3), float32], %s2.b2.f.b_bn.weight: Tensor[(192), float32], %s2.b2.f.b_bn.bias: Tensor[(192), float32], %s2.b2.f.b_bn.running_mean: Tensor[(192), float32], %s2.b2.f.b_bn.running_var: Tensor[(192), float32], %s2.b2.f.se.f_ex.0.weight: Tensor[(48, 192, 1, 1), float32], %s2.b2.f.se.f_ex.0.bias: Tensor[(48), float32], %s2.b2.f.se.f_ex.2.weight: Tensor[(192, 48, 1, 1), float32], %s2.b2.f.se.f_ex.2.bias: Tensor[(192), float32], %s2.b2.f.c.weight: Tensor[(192, 192, 1, 1), float32], %s2.b2.f.c_bn.weight: Tensor[(192), float32], %s2.b2.f.c_bn.bias: Tensor[(192), float32], %s2.b2.f.c_bn.running_mean: Tensor[(192), float32], %s2.b2.f.c_bn.running_var: Tensor[(192), float32], %s2.b3.f.a.weight: Tensor[(192, 192, 1, 1), float32], %s2.b3.f.a_bn.weight: Tensor[(192), float32], %s2.b3.f.a_bn.bias: Tensor[(192), float32], %s2.b3.f.a_bn.running_mean: Tensor[(192), float32], %s2.b3.f.a_bn.running_var: Tensor[(192), float32], %s2.b3.f.b.weight: Tensor[(192, 64, 3, 3), float32], %s2.b3.f.b_bn.weight: Tensor[(192), float32], %s2.b3.f.b_bn.bias: Tensor[(192), float32], %s2.b3.f.b_bn.running_mean: Tensor[(192), float32], %s2.b3.f.b_bn.running_var: Tensor[(192), float32], %s2.b3.f.se.f_ex.0.weight: Tensor[(48, 192, 1, 1), float32], %s2.b3.f.se.f_ex.0.bias: Tensor[(48), float32], %s2.b3.f.se.f_ex.2.weight: Tensor[(192, 48, 1, 1), float32], %s2.b3.f.se.f_ex.2.bias: Tensor[(192), float32], %s2.b3.f.c.weight: Tensor[(192, 192, 1, 1), float32], %s2.b3.f.c_bn.weight: Tensor[(192), float32], %s2.b3.f.c_bn.bias: Tensor[(192), float32], %s2.b3.f.c_bn.running_mean: Tensor[(192), float32], %s2.b3.f.c_bn.running_var: Tensor[(192), float32], %s2.b4.f.a.weight: Tensor[(192, 192, 1, 1), float32], %s2.b4.f.a_bn.weight: Tensor[(192), float32], %s2.b4.f.a_bn.bias: Tensor[(192), float32], %s2.b4.f.a_bn.running_mean: Tensor[(192), float32], %s2.b4.f.a_bn.running_var: Tensor[(192), float32], %s2.b4.f.b.weight: Tensor[(192, 64, 3, 3), float32], %s2.b4.f.b_bn.weight: Tensor[(192), float32], %s2.b4.f.b_bn.bias: Tensor[(192), float32], %s2.b4.f.b_bn.running_mean: Tensor[(192), float32], %s2.b4.f.b_bn.running_var: Tensor[(192), float32], %s2.b4.f.se.f_ex.0.weight: Tensor[(48, 192, 1, 1), float32], %s2.b4.f.se.f_ex.0.bias: Tensor[(48), float32], %s2.b4.f.se.f_ex.2.weight: Tensor[(192, 48, 1, 1), float32], %s2.b4.f.se.f_ex.2.bias: Tensor[(192), float32], %s2.b4.f.c.weight: Tensor[(192, 192, 1, 1), float32], %s2.b4.f.c_bn.weight: Tensor[(192), float32], %s2.b4.f.c_bn.bias: Tensor[(192), float32], %s2.b4.f.c_bn.running_mean: Tensor[(192), float32], %s2.b4.f.c_bn.running_var: Tensor[(192), float32], %s2.b5.f.a.weight: Tensor[(192, 192, 1, 1), float32], %s2.b5.f.a_bn.weight: Tensor[(192), float32], %s2.b5.f.a_bn.bias: Tensor[(192), float32], %s2.b5.f.a_bn.running_mean: Tensor[(192), float32], %s2.b5.f.a_bn.running_var: Tensor[(192), float32], %s2.b5.f.b.weight: Tensor[(192, 64, 3, 3), float32], %s2.b5.f.b_bn.weight: Tensor[(192), float32], %s2.b5.f.b_bn.bias: Tensor[(192), float32], %s2.b5.f.b_bn.running_mean: Tensor[(192), float32], %s2.b5.f.b_bn.running_var: Tensor[(192), float32], %s2.b5.f.se.f_ex.0.weight: Tensor[(48, 192, 1, 1), float32], %s2.b5.f.se.f_ex.0.bias: Tensor[(48), float32], %s2.b5.f.se.f_ex.2.weight: Tensor[(192, 48, 1, 1), float32], %s2.b5.f.se.f_ex.2.bias: Tensor[(192), float32], %s2.b5.f.c.weight: Tensor[(192, 192, 1, 1), float32], %s2.b5.f.c_bn.weight: Tensor[(192), float32], %s2.b5.f.c_bn.bias: Tensor[(192), float32], %s2.b5.f.c_bn.running_mean: Tensor[(192), float32], %s2.b5.f.c_bn.running_var: Tensor[(192), float32], %s2.b6.f.a.weight: Tensor[(192, 192, 1, 1), float32], %s2.b6.f.a_bn.weight: Tensor[(192), float32], %s2.b6.f.a_bn.bias: Tensor[(192), float32], %s2.b6.f.a_bn.running_mean: Tensor[(192), float32], %s2.b6.f.a_bn.running_var: Tensor[(192), float32], %s2.b6.f.b.weight: Tensor[(192, 64, 3, 3), float32], %s2.b6.f.b_bn.weight: Tensor[(192), float32], %s2.b6.f.b_bn.bias: Tensor[(192), float32], %s2.b6.f.b_bn.running_mean: Tensor[(192), float32], %s2.b6.f.b_bn.running_var: Tensor[(192), float32], %s2.b6.f.se.f_ex.0.weight: Tensor[(48, 192, 1, 1), float32], %s2.b6.f.se.f_ex.0.bias: Tensor[(48), float32], %s2.b6.f.se.f_ex.2.weight: Tensor[(192, 48, 1, 1), float32], %s2.b6.f.se.f_ex.2.bias: Tensor[(192), float32], %s2.b6.f.c.weight: Tensor[(192, 192, 1, 1), float32], %s2.b6.f.c_bn.weight: Tensor[(192), float32], %s2.b6.f.c_bn.bias: Tensor[(192), float32], %s2.b6.f.c_bn.running_mean: Tensor[(192), float32], %s2.b6.f.c_bn.running_var: Tensor[(192), float32], %s3.b1.proj.weight: Tensor[(512, 192, 1, 1), float32], %s3.b1.bn.weight: Tensor[(512), float32], %s3.b1.bn.bias: Tensor[(512), float32], %s3.b1.bn.running_mean: Tensor[(512), float32], %s3.b1.bn.running_var: Tensor[(512), float32], %s3.b1.f.a.weight: Tensor[(512, 192, 1, 1), float32], %s3.b1.f.a_bn.weight: Tensor[(512), float32], %s3.b1.f.a_bn.bias: Tensor[(512), float32], %s3.b1.f.a_bn.running_mean: Tensor[(512), float32], %s3.b1.f.a_bn.running_var: Tensor[(512), float32], %s3.b1.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b1.f.b_bn.weight: Tensor[(512), float32], %s3.b1.f.b_bn.bias: Tensor[(512), float32], %s3.b1.f.b_bn.running_mean: Tensor[(512), float32], %s3.b1.f.b_bn.running_var: Tensor[(512), float32], %s3.b1.f.se.f_ex.0.weight: Tensor[(48, 512, 1, 1), float32], %s3.b1.f.se.f_ex.0.bias: Tensor[(48), float32], %s3.b1.f.se.f_ex.2.weight: Tensor[(512, 48, 1, 1), float32], %s3.b1.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b1.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b1.f.c_bn.weight: Tensor[(512), float32], %s3.b1.f.c_bn.bias: Tensor[(512), float32], %s3.b1.f.c_bn.running_mean: Tensor[(512), float32], %s3.b1.f.c_bn.running_var: Tensor[(512), float32], %s3.b2.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b2.f.a_bn.weight: Tensor[(512), float32], %s3.b2.f.a_bn.bias: Tensor[(512), float32], %s3.b2.f.a_bn.running_mean: Tensor[(512), float32], %s3.b2.f.a_bn.running_var: Tensor[(512), float32], %s3.b2.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b2.f.b_bn.weight: Tensor[(512), float32], %s3.b2.f.b_bn.bias: Tensor[(512), float32], %s3.b2.f.b_bn.running_mean: Tensor[(512), float32], %s3.b2.f.b_bn.running_var: Tensor[(512), float32], %s3.b2.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b2.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b2.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b2.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b2.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b2.f.c_bn.weight: Tensor[(512), float32], %s3.b2.f.c_bn.bias: Tensor[(512), float32], %s3.b2.f.c_bn.running_mean: Tensor[(512), float32], %s3.b2.f.c_bn.running_var: Tensor[(512), float32], %s3.b3.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b3.f.a_bn.weight: Tensor[(512), float32], %s3.b3.f.a_bn.bias: Tensor[(512), float32], %s3.b3.f.a_bn.running_mean: Tensor[(512), float32], %s3.b3.f.a_bn.running_var: Tensor[(512), float32], %s3.b3.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b3.f.b_bn.weight: Tensor[(512), float32], %s3.b3.f.b_bn.bias: Tensor[(512), float32], %s3.b3.f.b_bn.running_mean: Tensor[(512), float32], %s3.b3.f.b_bn.running_var: Tensor[(512), float32], %s3.b3.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b3.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b3.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b3.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b3.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b3.f.c_bn.weight: Tensor[(512), float32], %s3.b3.f.c_bn.bias: Tensor[(512), float32], %s3.b3.f.c_bn.running_mean: Tensor[(512), float32], %s3.b3.f.c_bn.running_var: Tensor[(512), float32], %s3.b4.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b4.f.a_bn.weight: Tensor[(512), float32], %s3.b4.f.a_bn.bias: Tensor[(512), float32], %s3.b4.f.a_bn.running_mean: Tensor[(512), float32], %s3.b4.f.a_bn.running_var: Tensor[(512), float32], %s3.b4.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b4.f.b_bn.weight: Tensor[(512), float32], %s3.b4.f.b_bn.bias: Tensor[(512), float32], %s3.b4.f.b_bn.running_mean: Tensor[(512), float32], %s3.b4.f.b_bn.running_var: Tensor[(512), float32], %s3.b4.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b4.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b4.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b4.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b4.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b4.f.c_bn.weight: Tensor[(512), float32], %s3.b4.f.c_bn.bias: Tensor[(512), float32], %s3.b4.f.c_bn.running_mean: Tensor[(512), float32], %s3.b4.f.c_bn.running_var: Tensor[(512), float32], %s3.b5.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b5.f.a_bn.weight: Tensor[(512), float32], %s3.b5.f.a_bn.bias: Tensor[(512), float32], %s3.b5.f.a_bn.running_mean: Tensor[(512), float32], %s3.b5.f.a_bn.running_var: Tensor[(512), float32], %s3.b5.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b5.f.b_bn.weight: Tensor[(512), float32], %s3.b5.f.b_bn.bias: Tensor[(512), float32], %s3.b5.f.b_bn.running_mean: Tensor[(512), float32], %s3.b5.f.b_bn.running_var: Tensor[(512), float32], %s3.b5.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b5.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b5.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b5.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b5.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b5.f.c_bn.weight: Tensor[(512), float32], %s3.b5.f.c_bn.bias: Tensor[(512), float32], %s3.b5.f.c_bn.running_mean: Tensor[(512), float32], %s3.b5.f.c_bn.running_var: Tensor[(512), float32], %s3.b6.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b6.f.a_bn.weight: Tensor[(512), float32], %s3.b6.f.a_bn.bias: Tensor[(512), float32], %s3.b6.f.a_bn.running_mean: Tensor[(512), float32], %s3.b6.f.a_bn.running_var: Tensor[(512), float32], %s3.b6.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b6.f.b_bn.weight: Tensor[(512), float32], %s3.b6.f.b_bn.bias: Tensor[(512), float32], %s3.b6.f.b_bn.running_mean: Tensor[(512), float32], %s3.b6.f.b_bn.running_var: Tensor[(512), float32], %s3.b6.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b6.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b6.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b6.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b6.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b6.f.c_bn.weight: Tensor[(512), float32], %s3.b6.f.c_bn.bias: Tensor[(512), float32], %s3.b6.f.c_bn.running_mean: Tensor[(512), float32], %s3.b6.f.c_bn.running_var: Tensor[(512), float32], %s3.b7.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b7.f.a_bn.weight: Tensor[(512), float32], %s3.b7.f.a_bn.bias: Tensor[(512), float32], %s3.b7.f.a_bn.running_mean: Tensor[(512), float32], %s3.b7.f.a_bn.running_var: Tensor[(512), float32], %s3.b7.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b7.f.b_bn.weight: Tensor[(512), float32], %s3.b7.f.b_bn.bias: Tensor[(512), float32], %s3.b7.f.b_bn.running_mean: Tensor[(512), float32], %s3.b7.f.b_bn.running_var: Tensor[(512), float32], %s3.b7.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b7.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b7.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b7.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b7.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b7.f.c_bn.weight: Tensor[(512), float32], %s3.b7.f.c_bn.bias: Tensor[(512), float32], %s3.b7.f.c_bn.running_mean: Tensor[(512), float32], %s3.b7.f.c_bn.running_var: Tensor[(512), float32], %s3.b8.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b8.f.a_bn.weight: Tensor[(512), float32], %s3.b8.f.a_bn.bias: Tensor[(512), float32], %s3.b8.f.a_bn.running_mean: Tensor[(512), float32], %s3.b8.f.a_bn.running_var: Tensor[(512), float32], %s3.b8.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b8.f.b_bn.weight: Tensor[(512), float32], %s3.b8.f.b_bn.bias: Tensor[(512), float32], %s3.b8.f.b_bn.running_mean: Tensor[(512), float32], %s3.b8.f.b_bn.running_var: Tensor[(512), float32], %s3.b8.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b8.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b8.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b8.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b8.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b8.f.c_bn.weight: Tensor[(512), float32], %s3.b8.f.c_bn.bias: Tensor[(512), float32], %s3.b8.f.c_bn.running_mean: Tensor[(512), float32], %s3.b8.f.c_bn.running_var: Tensor[(512), float32], %s3.b9.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b9.f.a_bn.weight: Tensor[(512), float32], %s3.b9.f.a_bn.bias: Tensor[(512), float32], %s3.b9.f.a_bn.running_mean: Tensor[(512), float32], %s3.b9.f.a_bn.running_var: Tensor[(512), float32], %s3.b9.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b9.f.b_bn.weight: Tensor[(512), float32], %s3.b9.f.b_bn.bias: Tensor[(512), float32], %s3.b9.f.b_bn.running_mean: Tensor[(512), float32], %s3.b9.f.b_bn.running_var: Tensor[(512), float32], %s3.b9.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b9.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b9.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b9.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b9.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b9.f.c_bn.weight: Tensor[(512), float32], %s3.b9.f.c_bn.bias: Tensor[(512), float32], %s3.b9.f.c_bn.running_mean: Tensor[(512), float32], %s3.b9.f.c_bn.running_var: Tensor[(512), float32], %s3.b10.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b10.f.a_bn.weight: Tensor[(512), float32], %s3.b10.f.a_bn.bias: Tensor[(512), float32], %s3.b10.f.a_bn.running_mean: Tensor[(512), float32], %s3.b10.f.a_bn.running_var: Tensor[(512), float32], %s3.b10.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b10.f.b_bn.weight: Tensor[(512), float32], %s3.b10.f.b_bn.bias: Tensor[(512), float32], %s3.b10.f.b_bn.running_mean: Tensor[(512), float32], %s3.b10.f.b_bn.running_var: Tensor[(512), float32], %s3.b10.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b10.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b10.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b10.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b10.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b10.f.c_bn.weight: Tensor[(512), float32], %s3.b10.f.c_bn.bias: Tensor[(512), float32], %s3.b10.f.c_bn.running_mean: Tensor[(512), float32], %s3.b10.f.c_bn.running_var: Tensor[(512), float32], %s3.b11.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b11.f.a_bn.weight: Tensor[(512), float32], %s3.b11.f.a_bn.bias: Tensor[(512), float32], %s3.b11.f.a_bn.running_mean: Tensor[(512), float32], %s3.b11.f.a_bn.running_var: Tensor[(512), float32], %s3.b11.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b11.f.b_bn.weight: Tensor[(512), float32], %s3.b11.f.b_bn.bias: Tensor[(512), float32], %s3.b11.f.b_bn.running_mean: Tensor[(512), float32], %s3.b11.f.b_bn.running_var: Tensor[(512), float32], %s3.b11.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b11.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b11.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b11.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b11.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b11.f.c_bn.weight: Tensor[(512), float32], %s3.b11.f.c_bn.bias: Tensor[(512), float32], %s3.b11.f.c_bn.running_mean: Tensor[(512), float32], %s3.b11.f.c_bn.running_var: Tensor[(512), float32], %s3.b12.f.a.weight: Tensor[(512, 512, 1, 1), float32], %s3.b12.f.a_bn.weight: Tensor[(512), float32], %s3.b12.f.a_bn.bias: Tensor[(512), float32], %s3.b12.f.a_bn.running_mean: Tensor[(512), float32], %s3.b12.f.a_bn.running_var: Tensor[(512), float32], %s3.b12.f.b.weight: Tensor[(512, 64, 3, 3), float32], %s3.b12.f.b_bn.weight: Tensor[(512), float32], %s3.b12.f.b_bn.bias: Tensor[(512), float32], %s3.b12.f.b_bn.running_mean: Tensor[(512), float32], %s3.b12.f.b_bn.running_var: Tensor[(512), float32], %s3.b12.f.se.f_ex.0.weight: Tensor[(128, 512, 1, 1), float32], %s3.b12.f.se.f_ex.0.bias: Tensor[(128), float32], %s3.b12.f.se.f_ex.2.weight: Tensor[(512, 128, 1, 1), float32], %s3.b12.f.se.f_ex.2.bias: Tensor[(512), float32], %s3.b12.f.c.weight: Tensor[(512, 512, 1, 1), float32], %s3.b12.f.c_bn.weight: Tensor[(512), float32], %s3.b12.f.c_bn.bias: Tensor[(512), float32], %s3.b12.f.c_bn.running_mean: Tensor[(512), float32], %s3.b12.f.c_bn.running_var: Tensor[(512), float32], %s4.b1.proj.weight: Tensor[(1088, 512, 1, 1), float32], %s4.b1.bn.weight: Tensor[(1088), float32], %s4.b1.bn.bias: Tensor[(1088), float32], %s4.b1.bn.running_mean: Tensor[(1088), float32], %s4.b1.bn.running_var: Tensor[(1088), float32], %s4.b1.f.a.weight: Tensor[(1088, 512, 1, 1), float32], %s4.b1.f.a_bn.weight: Tensor[(1088), float32], %s4.b1.f.a_bn.bias: Tensor[(1088), float32], %s4.b1.f.a_bn.running_mean: Tensor[(1088), float32], %s4.b1.f.a_bn.running_var: Tensor[(1088), float32], %s4.b1.f.b.weight: Tensor[(1088, 64, 3, 3), float32], %s4.b1.f.b_bn.weight: Tensor[(1088), float32], %s4.b1.f.b_bn.bias: Tensor[(1088), float32], %s4.b1.f.b_bn.running_mean: Tensor[(1088), float32], %s4.b1.f.b_bn.running_var: Tensor[(1088), float32], %s4.b1.f.se.f_ex.0.weight: Tensor[(128, 1088, 1, 1), float32], %s4.b1.f.se.f_ex.0.bias: Tensor[(128), float32], %s4.b1.f.se.f_ex.2.weight: Tensor[(1088, 128, 1, 1), float32], %s4.b1.f.se.f_ex.2.bias: Tensor[(1088), float32], %s4.b1.f.c.weight: Tensor[(1088, 1088, 1, 1), float32], %s4.b1.f.c_bn.weight: Tensor[(1088), float32], %s4.b1.f.c_bn.bias: Tensor[(1088), float32], %s4.b1.f.c_bn.running_mean: Tensor[(1088), float32], %s4.b1.f.c_bn.running_var: Tensor[(1088), float32], %s4.b2.f.a.weight: Tensor[(1088, 1088, 1, 1), float32], %s4.b2.f.a_bn.weight: Tensor[(1088), float32], %s4.b2.f.a_bn.bias: Tensor[(1088), float32], %s4.b2.f.a_bn.running_mean: Tensor[(1088), float32], %s4.b2.f.a_bn.running_var: Tensor[(1088), float32], %s4.b2.f.b.weight: Tensor[(1088, 64, 3, 3), float32], %s4.b2.f.b_bn.weight: Tensor[(1088), float32], %s4.b2.f.b_bn.bias: Tensor[(1088), float32], %s4.b2.f.b_bn.running_mean: Tensor[(1088), float32], %s4.b2.f.b_bn.running_var: Tensor[(1088), float32], %s4.b2.f.se.f_ex.0.weight: Tensor[(272, 1088, 1, 1), float32], %s4.b2.f.se.f_ex.0.bias: Tensor[(272), float32], %s4.b2.f.se.f_ex.2.weight: Tensor[(1088, 272, 1, 1), float32], %s4.b2.f.se.f_ex.2.bias: Tensor[(1088), float32], %s4.b2.f.c.weight: Tensor[(1088, 1088, 1, 1), float32], %s4.b2.f.c_bn.weight: Tensor[(1088), float32], %s4.b2.f.c_bn.bias: Tensor[(1088), float32], %s4.b2.f.c_bn.running_mean: Tensor[(1088), float32], %s4.b2.f.c_bn.running_var: Tensor[(1088), float32], %head.fc.weight: Tensor[(1000, 1088), float32], %head.fc.bias: Tensor[(1000), float32]) -> Tensor[(1, 1000), float32] {
+  %0 = nn.conv2d(%input0, %stem.conv.weight, strides=[2, 2], padding=[1, 1, 1, 1], channels=32, kernel_size=[3, 3]) /* ty=Tensor[(1, 32, 112, 112), float32] */;
+  %1 = nn.batch_norm(%0, %stem.bn.weight, %stem.bn.bias, %stem.bn.running_mean, %stem.bn.running_var) /* ty=(Tensor[(1, 32, 112, 112), float32], Tensor[(32), float32], Tensor[(32), float32]) */;
+  %2 = %1.0;
+  %3 = nn.relu(%2) /* ty=Tensor[(1, 32, 112, 112), float32] */;
+  %4 = nn.conv2d(%3, %s1.b1.proj.weight, strides=[2, 2], padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %5 = nn.batch_norm(%4, %s1.b1.bn.weight, %s1.b1.bn.bias, %s1.b1.bn.running_mean, %s1.b1.bn.running_var) /* ty=(Tensor[(1, 128, 56, 56), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %6 = nn.conv2d(%3, %s1.b1.f.a.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 112, 112), float32] */;
+  %7 = nn.batch_norm(%6, %s1.b1.f.a_bn.weight, %s1.b1.f.a_bn.bias, %s1.b1.f.a_bn.running_mean, %s1.b1.f.a_bn.running_var) /* ty=(Tensor[(1, 128, 112, 112), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %8 = %7.0;
+  %9 = nn.relu(%8) /* ty=Tensor[(1, 128, 112, 112), float32] */;
+  %10 = nn.conv2d(%9, %s1.b1.f.b.weight, strides=[2, 2], padding=[1, 1, 1, 1], groups=2, channels=128, kernel_size=[3, 3]) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %11 = nn.batch_norm(%10, %s1.b1.f.b_bn.weight, %s1.b1.f.b_bn.bias, %s1.b1.f.b_bn.running_mean, %s1.b1.f.b_bn.running_var) /* ty=(Tensor[(1, 128, 56, 56), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %12 = %11.0;
+  %13 = nn.relu(%12) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %14 = nn.adaptive_avg_pool2d(%13, output_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %15 = nn.conv2d(%14, %s1.b1.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=8, kernel_size=[1, 1]) /* ty=Tensor[(1, 8, 1, 1), float32] */;
+  %16 = nn.bias_add(%15, %s1.b1.f.se.f_ex.0.bias) /* ty=Tensor[(1, 8, 1, 1), float32] */;
+  %17 = nn.relu(%16) /* ty=Tensor[(1, 8, 1, 1), float32] */;
+  %18 = nn.conv2d(%17, %s1.b1.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %19 = nn.bias_add(%18, %s1.b1.f.se.f_ex.2.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %20 = sigmoid(%19) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %21 = multiply(%13, %20) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %22 = nn.conv2d(%21, %s1.b1.f.c.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %23 = nn.batch_norm(%22, %s1.b1.f.c_bn.weight, %s1.b1.f.c_bn.bias, %s1.b1.f.c_bn.running_mean, %s1.b1.f.c_bn.running_var) /* ty=(Tensor[(1, 128, 56, 56), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %24 = %5.0;
+  %25 = %23.0;
+  %26 = add(%24, %25) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %27 = nn.relu(%26) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %28 = nn.conv2d(%27, %s1.b2.f.a.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %29 = nn.batch_norm(%28, %s1.b2.f.a_bn.weight, %s1.b2.f.a_bn.bias, %s1.b2.f.a_bn.running_mean, %s1.b2.f.a_bn.running_var) /* ty=(Tensor[(1, 128, 56, 56), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %30 = %29.0;
+  %31 = nn.relu(%30) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %32 = nn.conv2d(%31, %s1.b2.f.b.weight, padding=[1, 1, 1, 1], groups=2, channels=128, kernel_size=[3, 3]) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %33 = nn.batch_norm(%32, %s1.b2.f.b_bn.weight, %s1.b2.f.b_bn.bias, %s1.b2.f.b_bn.running_mean, %s1.b2.f.b_bn.running_var) /* ty=(Tensor[(1, 128, 56, 56), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %34 = %33.0;
+  %35 = nn.relu(%34) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %36 = nn.adaptive_avg_pool2d(%35, output_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %37 = nn.conv2d(%36, %s1.b2.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=32, kernel_size=[1, 1]) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %38 = nn.bias_add(%37, %s1.b2.f.se.f_ex.0.bias) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %39 = nn.relu(%38) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %40 = nn.conv2d(%39, %s1.b2.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %41 = nn.bias_add(%40, %s1.b2.f.se.f_ex.2.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %42 = sigmoid(%41) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %43 = multiply(%35, %42) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %44 = nn.conv2d(%43, %s1.b2.f.c.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %45 = nn.batch_norm(%44, %s1.b2.f.c_bn.weight, %s1.b2.f.c_bn.bias, %s1.b2.f.c_bn.running_mean, %s1.b2.f.c_bn.running_var) /* ty=(Tensor[(1, 128, 56, 56), float32], Tensor[(128), float32], Tensor[(128), float32]) */;
+  %46 = %45.0;
+  %47 = add(%27, %46) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %48 = nn.relu(%47) /* ty=Tensor[(1, 128, 56, 56), float32] */;
+  %49 = nn.conv2d(%48, %s2.b1.proj.weight, strides=[2, 2], padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %50 = nn.batch_norm(%49, %s2.b1.bn.weight, %s2.b1.bn.bias, %s2.b1.bn.running_mean, %s2.b1.bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %51 = nn.conv2d(%48, %s2.b1.f.a.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 56, 56), float32] */;
+  %52 = nn.batch_norm(%51, %s2.b1.f.a_bn.weight, %s2.b1.f.a_bn.bias, %s2.b1.f.a_bn.running_mean, %s2.b1.f.a_bn.running_var) /* ty=(Tensor[(1, 192, 56, 56), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %53 = %52.0;
+  %54 = nn.relu(%53) /* ty=Tensor[(1, 192, 56, 56), float32] */;
+  %55 = nn.conv2d(%54, %s2.b1.f.b.weight, strides=[2, 2], padding=[1, 1, 1, 1], groups=3, channels=192, kernel_size=[3, 3]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %56 = nn.batch_norm(%55, %s2.b1.f.b_bn.weight, %s2.b1.f.b_bn.bias, %s2.b1.f.b_bn.running_mean, %s2.b1.f.b_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %57 = %56.0;
+  %58 = nn.relu(%57) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %59 = nn.adaptive_avg_pool2d(%58, output_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %60 = nn.conv2d(%59, %s2.b1.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=32, kernel_size=[1, 1]) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %61 = nn.bias_add(%60, %s2.b1.f.se.f_ex.0.bias) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %62 = nn.relu(%61) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %63 = nn.conv2d(%62, %s2.b1.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %64 = nn.bias_add(%63, %s2.b1.f.se.f_ex.2.bias) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %65 = sigmoid(%64) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %66 = multiply(%58, %65) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %67 = nn.conv2d(%66, %s2.b1.f.c.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %68 = nn.batch_norm(%67, %s2.b1.f.c_bn.weight, %s2.b1.f.c_bn.bias, %s2.b1.f.c_bn.running_mean, %s2.b1.f.c_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %69 = %50.0;
+  %70 = %68.0;
+  %71 = add(%69, %70) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %72 = nn.relu(%71) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %73 = nn.conv2d(%72, %s2.b2.f.a.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %74 = nn.batch_norm(%73, %s2.b2.f.a_bn.weight, %s2.b2.f.a_bn.bias, %s2.b2.f.a_bn.running_mean, %s2.b2.f.a_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %75 = %74.0;
+  %76 = nn.relu(%75) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %77 = nn.conv2d(%76, %s2.b2.f.b.weight, padding=[1, 1, 1, 1], groups=3, channels=192, kernel_size=[3, 3]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %78 = nn.batch_norm(%77, %s2.b2.f.b_bn.weight, %s2.b2.f.b_bn.bias, %s2.b2.f.b_bn.running_mean, %s2.b2.f.b_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %79 = %78.0;
+  %80 = nn.relu(%79) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %81 = nn.adaptive_avg_pool2d(%80, output_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %82 = nn.conv2d(%81, %s2.b2.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=48, kernel_size=[1, 1]) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %83 = nn.bias_add(%82, %s2.b2.f.se.f_ex.0.bias) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %84 = nn.relu(%83) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %85 = nn.conv2d(%84, %s2.b2.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %86 = nn.bias_add(%85, %s2.b2.f.se.f_ex.2.bias) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %87 = sigmoid(%86) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %88 = multiply(%80, %87) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %89 = nn.conv2d(%88, %s2.b2.f.c.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %90 = nn.batch_norm(%89, %s2.b2.f.c_bn.weight, %s2.b2.f.c_bn.bias, %s2.b2.f.c_bn.running_mean, %s2.b2.f.c_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %91 = %90.0;
+  %92 = add(%72, %91) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %93 = nn.relu(%92) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %94 = nn.conv2d(%93, %s2.b3.f.a.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %95 = nn.batch_norm(%94, %s2.b3.f.a_bn.weight, %s2.b3.f.a_bn.bias, %s2.b3.f.a_bn.running_mean, %s2.b3.f.a_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %96 = %95.0;
+  %97 = nn.relu(%96) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %98 = nn.conv2d(%97, %s2.b3.f.b.weight, padding=[1, 1, 1, 1], groups=3, channels=192, kernel_size=[3, 3]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %99 = nn.batch_norm(%98, %s2.b3.f.b_bn.weight, %s2.b3.f.b_bn.bias, %s2.b3.f.b_bn.running_mean, %s2.b3.f.b_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %100 = %99.0;
+  %101 = nn.relu(%100) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %102 = nn.adaptive_avg_pool2d(%101, output_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %103 = nn.conv2d(%102, %s2.b3.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=48, kernel_size=[1, 1]) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %104 = nn.bias_add(%103, %s2.b3.f.se.f_ex.0.bias) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %105 = nn.relu(%104) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %106 = nn.conv2d(%105, %s2.b3.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %107 = nn.bias_add(%106, %s2.b3.f.se.f_ex.2.bias) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %108 = sigmoid(%107) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %109 = multiply(%101, %108) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %110 = nn.conv2d(%109, %s2.b3.f.c.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %111 = nn.batch_norm(%110, %s2.b3.f.c_bn.weight, %s2.b3.f.c_bn.bias, %s2.b3.f.c_bn.running_mean, %s2.b3.f.c_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %112 = %111.0;
+  %113 = add(%93, %112) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %114 = nn.relu(%113) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %115 = nn.conv2d(%114, %s2.b4.f.a.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %116 = nn.batch_norm(%115, %s2.b4.f.a_bn.weight, %s2.b4.f.a_bn.bias, %s2.b4.f.a_bn.running_mean, %s2.b4.f.a_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %117 = %116.0;
+  %118 = nn.relu(%117) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %119 = nn.conv2d(%118, %s2.b4.f.b.weight, padding=[1, 1, 1, 1], groups=3, channels=192, kernel_size=[3, 3]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %120 = nn.batch_norm(%119, %s2.b4.f.b_bn.weight, %s2.b4.f.b_bn.bias, %s2.b4.f.b_bn.running_mean, %s2.b4.f.b_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %121 = %120.0;
+  %122 = nn.relu(%121) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %123 = nn.adaptive_avg_pool2d(%122, output_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %124 = nn.conv2d(%123, %s2.b4.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=48, kernel_size=[1, 1]) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %125 = nn.bias_add(%124, %s2.b4.f.se.f_ex.0.bias) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %126 = nn.relu(%125) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %127 = nn.conv2d(%126, %s2.b4.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %128 = nn.bias_add(%127, %s2.b4.f.se.f_ex.2.bias) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %129 = sigmoid(%128) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %130 = multiply(%122, %129) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %131 = nn.conv2d(%130, %s2.b4.f.c.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %132 = nn.batch_norm(%131, %s2.b4.f.c_bn.weight, %s2.b4.f.c_bn.bias, %s2.b4.f.c_bn.running_mean, %s2.b4.f.c_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %133 = %132.0;
+  %134 = add(%114, %133) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %135 = nn.relu(%134) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %136 = nn.conv2d(%135, %s2.b5.f.a.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %137 = nn.batch_norm(%136, %s2.b5.f.a_bn.weight, %s2.b5.f.a_bn.bias, %s2.b5.f.a_bn.running_mean, %s2.b5.f.a_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %138 = %137.0;
+  %139 = nn.relu(%138) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %140 = nn.conv2d(%139, %s2.b5.f.b.weight, padding=[1, 1, 1, 1], groups=3, channels=192, kernel_size=[3, 3]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %141 = nn.batch_norm(%140, %s2.b5.f.b_bn.weight, %s2.b5.f.b_bn.bias, %s2.b5.f.b_bn.running_mean, %s2.b5.f.b_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %142 = %141.0;
+  %143 = nn.relu(%142) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %144 = nn.adaptive_avg_pool2d(%143, output_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %145 = nn.conv2d(%144, %s2.b5.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=48, kernel_size=[1, 1]) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %146 = nn.bias_add(%145, %s2.b5.f.se.f_ex.0.bias) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %147 = nn.relu(%146) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %148 = nn.conv2d(%147, %s2.b5.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %149 = nn.bias_add(%148, %s2.b5.f.se.f_ex.2.bias) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %150 = sigmoid(%149) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %151 = multiply(%143, %150) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %152 = nn.conv2d(%151, %s2.b5.f.c.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %153 = nn.batch_norm(%152, %s2.b5.f.c_bn.weight, %s2.b5.f.c_bn.bias, %s2.b5.f.c_bn.running_mean, %s2.b5.f.c_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %154 = %153.0;
+  %155 = add(%135, %154) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %156 = nn.relu(%155) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %157 = nn.conv2d(%156, %s2.b6.f.a.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %158 = nn.batch_norm(%157, %s2.b6.f.a_bn.weight, %s2.b6.f.a_bn.bias, %s2.b6.f.a_bn.running_mean, %s2.b6.f.a_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %159 = %158.0;
+  %160 = nn.relu(%159) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %161 = nn.conv2d(%160, %s2.b6.f.b.weight, padding=[1, 1, 1, 1], groups=3, channels=192, kernel_size=[3, 3]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %162 = nn.batch_norm(%161, %s2.b6.f.b_bn.weight, %s2.b6.f.b_bn.bias, %s2.b6.f.b_bn.running_mean, %s2.b6.f.b_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %163 = %162.0;
+  %164 = nn.relu(%163) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %165 = nn.adaptive_avg_pool2d(%164, output_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %166 = nn.conv2d(%165, %s2.b6.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=48, kernel_size=[1, 1]) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %167 = nn.bias_add(%166, %s2.b6.f.se.f_ex.0.bias) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %168 = nn.relu(%167) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %169 = nn.conv2d(%168, %s2.b6.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %170 = nn.bias_add(%169, %s2.b6.f.se.f_ex.2.bias) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %171 = sigmoid(%170) /* ty=Tensor[(1, 192, 1, 1), float32] */;
+  %172 = multiply(%164, %171) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %173 = nn.conv2d(%172, %s2.b6.f.c.weight, padding=[0, 0, 0, 0], channels=192, kernel_size=[1, 1]) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %174 = nn.batch_norm(%173, %s2.b6.f.c_bn.weight, %s2.b6.f.c_bn.bias, %s2.b6.f.c_bn.running_mean, %s2.b6.f.c_bn.running_var) /* ty=(Tensor[(1, 192, 28, 28), float32], Tensor[(192), float32], Tensor[(192), float32]) */;
+  %175 = %174.0;
+  %176 = add(%156, %175) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %177 = nn.relu(%176) /* ty=Tensor[(1, 192, 28, 28), float32] */;
+  %178 = nn.conv2d(%177, %s3.b1.proj.weight, strides=[2, 2], padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %179 = nn.batch_norm(%178, %s3.b1.bn.weight, %s3.b1.bn.bias, %s3.b1.bn.running_mean, %s3.b1.bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %180 = nn.conv2d(%177, %s3.b1.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 28, 28), float32] */;
+  %181 = nn.batch_norm(%180, %s3.b1.f.a_bn.weight, %s3.b1.f.a_bn.bias, %s3.b1.f.a_bn.running_mean, %s3.b1.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 28, 28), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %182 = %181.0;
+  %183 = nn.relu(%182) /* ty=Tensor[(1, 512, 28, 28), float32] */;
+  %184 = nn.conv2d(%183, %s3.b1.f.b.weight, strides=[2, 2], padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %185 = nn.batch_norm(%184, %s3.b1.f.b_bn.weight, %s3.b1.f.b_bn.bias, %s3.b1.f.b_bn.running_mean, %s3.b1.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %186 = %185.0;
+  %187 = nn.relu(%186) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %188 = nn.adaptive_avg_pool2d(%187, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %189 = nn.conv2d(%188, %s3.b1.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=48, kernel_size=[1, 1]) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %190 = nn.bias_add(%189, %s3.b1.f.se.f_ex.0.bias) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %191 = nn.relu(%190) /* ty=Tensor[(1, 48, 1, 1), float32] */;
+  %192 = nn.conv2d(%191, %s3.b1.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %193 = nn.bias_add(%192, %s3.b1.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %194 = sigmoid(%193) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %195 = multiply(%187, %194) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %196 = nn.conv2d(%195, %s3.b1.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %197 = nn.batch_norm(%196, %s3.b1.f.c_bn.weight, %s3.b1.f.c_bn.bias, %s3.b1.f.c_bn.running_mean, %s3.b1.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %198 = %179.0;
+  %199 = %197.0;
+  %200 = add(%198, %199) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %201 = nn.relu(%200) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %202 = nn.conv2d(%201, %s3.b2.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %203 = nn.batch_norm(%202, %s3.b2.f.a_bn.weight, %s3.b2.f.a_bn.bias, %s3.b2.f.a_bn.running_mean, %s3.b2.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %204 = %203.0;
+  %205 = nn.relu(%204) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %206 = nn.conv2d(%205, %s3.b2.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %207 = nn.batch_norm(%206, %s3.b2.f.b_bn.weight, %s3.b2.f.b_bn.bias, %s3.b2.f.b_bn.running_mean, %s3.b2.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %208 = %207.0;
+  %209 = nn.relu(%208) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %210 = nn.adaptive_avg_pool2d(%209, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %211 = nn.conv2d(%210, %s3.b2.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %212 = nn.bias_add(%211, %s3.b2.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %213 = nn.relu(%212) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %214 = nn.conv2d(%213, %s3.b2.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %215 = nn.bias_add(%214, %s3.b2.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %216 = sigmoid(%215) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %217 = multiply(%209, %216) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %218 = nn.conv2d(%217, %s3.b2.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %219 = nn.batch_norm(%218, %s3.b2.f.c_bn.weight, %s3.b2.f.c_bn.bias, %s3.b2.f.c_bn.running_mean, %s3.b2.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %220 = %219.0;
+  %221 = add(%201, %220) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %222 = nn.relu(%221) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %223 = nn.conv2d(%222, %s3.b3.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %224 = nn.batch_norm(%223, %s3.b3.f.a_bn.weight, %s3.b3.f.a_bn.bias, %s3.b3.f.a_bn.running_mean, %s3.b3.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %225 = %224.0;
+  %226 = nn.relu(%225) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %227 = nn.conv2d(%226, %s3.b3.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %228 = nn.batch_norm(%227, %s3.b3.f.b_bn.weight, %s3.b3.f.b_bn.bias, %s3.b3.f.b_bn.running_mean, %s3.b3.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %229 = %228.0;
+  %230 = nn.relu(%229) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %231 = nn.adaptive_avg_pool2d(%230, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %232 = nn.conv2d(%231, %s3.b3.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %233 = nn.bias_add(%232, %s3.b3.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %234 = nn.relu(%233) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %235 = nn.conv2d(%234, %s3.b3.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %236 = nn.bias_add(%235, %s3.b3.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %237 = sigmoid(%236) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %238 = multiply(%230, %237) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %239 = nn.conv2d(%238, %s3.b3.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %240 = nn.batch_norm(%239, %s3.b3.f.c_bn.weight, %s3.b3.f.c_bn.bias, %s3.b3.f.c_bn.running_mean, %s3.b3.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %241 = %240.0;
+  %242 = add(%222, %241) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %243 = nn.relu(%242) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %244 = nn.conv2d(%243, %s3.b4.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %245 = nn.batch_norm(%244, %s3.b4.f.a_bn.weight, %s3.b4.f.a_bn.bias, %s3.b4.f.a_bn.running_mean, %s3.b4.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %246 = %245.0;
+  %247 = nn.relu(%246) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %248 = nn.conv2d(%247, %s3.b4.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %249 = nn.batch_norm(%248, %s3.b4.f.b_bn.weight, %s3.b4.f.b_bn.bias, %s3.b4.f.b_bn.running_mean, %s3.b4.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %250 = %249.0;
+  %251 = nn.relu(%250) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %252 = nn.adaptive_avg_pool2d(%251, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %253 = nn.conv2d(%252, %s3.b4.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %254 = nn.bias_add(%253, %s3.b4.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %255 = nn.relu(%254) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %256 = nn.conv2d(%255, %s3.b4.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %257 = nn.bias_add(%256, %s3.b4.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %258 = sigmoid(%257) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %259 = multiply(%251, %258) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %260 = nn.conv2d(%259, %s3.b4.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %261 = nn.batch_norm(%260, %s3.b4.f.c_bn.weight, %s3.b4.f.c_bn.bias, %s3.b4.f.c_bn.running_mean, %s3.b4.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %262 = %261.0;
+  %263 = add(%243, %262) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %264 = nn.relu(%263) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %265 = nn.conv2d(%264, %s3.b5.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %266 = nn.batch_norm(%265, %s3.b5.f.a_bn.weight, %s3.b5.f.a_bn.bias, %s3.b5.f.a_bn.running_mean, %s3.b5.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %267 = %266.0;
+  %268 = nn.relu(%267) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %269 = nn.conv2d(%268, %s3.b5.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %270 = nn.batch_norm(%269, %s3.b5.f.b_bn.weight, %s3.b5.f.b_bn.bias, %s3.b5.f.b_bn.running_mean, %s3.b5.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %271 = %270.0;
+  %272 = nn.relu(%271) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %273 = nn.adaptive_avg_pool2d(%272, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %274 = nn.conv2d(%273, %s3.b5.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %275 = nn.bias_add(%274, %s3.b5.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %276 = nn.relu(%275) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %277 = nn.conv2d(%276, %s3.b5.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %278 = nn.bias_add(%277, %s3.b5.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %279 = sigmoid(%278) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %280 = multiply(%272, %279) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %281 = nn.conv2d(%280, %s3.b5.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %282 = nn.batch_norm(%281, %s3.b5.f.c_bn.weight, %s3.b5.f.c_bn.bias, %s3.b5.f.c_bn.running_mean, %s3.b5.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %283 = %282.0;
+  %284 = add(%264, %283) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %285 = nn.relu(%284) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %286 = nn.conv2d(%285, %s3.b6.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %287 = nn.batch_norm(%286, %s3.b6.f.a_bn.weight, %s3.b6.f.a_bn.bias, %s3.b6.f.a_bn.running_mean, %s3.b6.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %288 = %287.0;
+  %289 = nn.relu(%288) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %290 = nn.conv2d(%289, %s3.b6.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %291 = nn.batch_norm(%290, %s3.b6.f.b_bn.weight, %s3.b6.f.b_bn.bias, %s3.b6.f.b_bn.running_mean, %s3.b6.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %292 = %291.0;
+  %293 = nn.relu(%292) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %294 = nn.adaptive_avg_pool2d(%293, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %295 = nn.conv2d(%294, %s3.b6.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %296 = nn.bias_add(%295, %s3.b6.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %297 = nn.relu(%296) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %298 = nn.conv2d(%297, %s3.b6.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %299 = nn.bias_add(%298, %s3.b6.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %300 = sigmoid(%299) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %301 = multiply(%293, %300) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %302 = nn.conv2d(%301, %s3.b6.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %303 = nn.batch_norm(%302, %s3.b6.f.c_bn.weight, %s3.b6.f.c_bn.bias, %s3.b6.f.c_bn.running_mean, %s3.b6.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %304 = %303.0;
+  %305 = add(%285, %304) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %306 = nn.relu(%305) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %307 = nn.conv2d(%306, %s3.b7.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %308 = nn.batch_norm(%307, %s3.b7.f.a_bn.weight, %s3.b7.f.a_bn.bias, %s3.b7.f.a_bn.running_mean, %s3.b7.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %309 = %308.0;
+  %310 = nn.relu(%309) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %311 = nn.conv2d(%310, %s3.b7.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %312 = nn.batch_norm(%311, %s3.b7.f.b_bn.weight, %s3.b7.f.b_bn.bias, %s3.b7.f.b_bn.running_mean, %s3.b7.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %313 = %312.0;
+  %314 = nn.relu(%313) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %315 = nn.adaptive_avg_pool2d(%314, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %316 = nn.conv2d(%315, %s3.b7.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %317 = nn.bias_add(%316, %s3.b7.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %318 = nn.relu(%317) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %319 = nn.conv2d(%318, %s3.b7.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %320 = nn.bias_add(%319, %s3.b7.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %321 = sigmoid(%320) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %322 = multiply(%314, %321) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %323 = nn.conv2d(%322, %s3.b7.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %324 = nn.batch_norm(%323, %s3.b7.f.c_bn.weight, %s3.b7.f.c_bn.bias, %s3.b7.f.c_bn.running_mean, %s3.b7.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %325 = %324.0;
+  %326 = add(%306, %325) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %327 = nn.relu(%326) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %328 = nn.conv2d(%327, %s3.b8.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %329 = nn.batch_norm(%328, %s3.b8.f.a_bn.weight, %s3.b8.f.a_bn.bias, %s3.b8.f.a_bn.running_mean, %s3.b8.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %330 = %329.0;
+  %331 = nn.relu(%330) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %332 = nn.conv2d(%331, %s3.b8.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %333 = nn.batch_norm(%332, %s3.b8.f.b_bn.weight, %s3.b8.f.b_bn.bias, %s3.b8.f.b_bn.running_mean, %s3.b8.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %334 = %333.0;
+  %335 = nn.relu(%334) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %336 = nn.adaptive_avg_pool2d(%335, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %337 = nn.conv2d(%336, %s3.b8.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %338 = nn.bias_add(%337, %s3.b8.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %339 = nn.relu(%338) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %340 = nn.conv2d(%339, %s3.b8.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %341 = nn.bias_add(%340, %s3.b8.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %342 = sigmoid(%341) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %343 = multiply(%335, %342) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %344 = nn.conv2d(%343, %s3.b8.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %345 = nn.batch_norm(%344, %s3.b8.f.c_bn.weight, %s3.b8.f.c_bn.bias, %s3.b8.f.c_bn.running_mean, %s3.b8.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %346 = %345.0;
+  %347 = add(%327, %346) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %348 = nn.relu(%347) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %349 = nn.conv2d(%348, %s3.b9.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %350 = nn.batch_norm(%349, %s3.b9.f.a_bn.weight, %s3.b9.f.a_bn.bias, %s3.b9.f.a_bn.running_mean, %s3.b9.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %351 = %350.0;
+  %352 = nn.relu(%351) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %353 = nn.conv2d(%352, %s3.b9.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %354 = nn.batch_norm(%353, %s3.b9.f.b_bn.weight, %s3.b9.f.b_bn.bias, %s3.b9.f.b_bn.running_mean, %s3.b9.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %355 = %354.0;
+  %356 = nn.relu(%355) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %357 = nn.adaptive_avg_pool2d(%356, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %358 = nn.conv2d(%357, %s3.b9.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %359 = nn.bias_add(%358, %s3.b9.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %360 = nn.relu(%359) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %361 = nn.conv2d(%360, %s3.b9.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %362 = nn.bias_add(%361, %s3.b9.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %363 = sigmoid(%362) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %364 = multiply(%356, %363) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %365 = nn.conv2d(%364, %s3.b9.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %366 = nn.batch_norm(%365, %s3.b9.f.c_bn.weight, %s3.b9.f.c_bn.bias, %s3.b9.f.c_bn.running_mean, %s3.b9.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %367 = %366.0;
+  %368 = add(%348, %367) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %369 = nn.relu(%368) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %370 = nn.conv2d(%369, %s3.b10.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %371 = nn.batch_norm(%370, %s3.b10.f.a_bn.weight, %s3.b10.f.a_bn.bias, %s3.b10.f.a_bn.running_mean, %s3.b10.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %372 = %371.0;
+  %373 = nn.relu(%372) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %374 = nn.conv2d(%373, %s3.b10.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %375 = nn.batch_norm(%374, %s3.b10.f.b_bn.weight, %s3.b10.f.b_bn.bias, %s3.b10.f.b_bn.running_mean, %s3.b10.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %376 = %375.0;
+  %377 = nn.relu(%376) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %378 = nn.adaptive_avg_pool2d(%377, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %379 = nn.conv2d(%378, %s3.b10.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %380 = nn.bias_add(%379, %s3.b10.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %381 = nn.relu(%380) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %382 = nn.conv2d(%381, %s3.b10.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %383 = nn.bias_add(%382, %s3.b10.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %384 = sigmoid(%383) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %385 = multiply(%377, %384) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %386 = nn.conv2d(%385, %s3.b10.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %387 = nn.batch_norm(%386, %s3.b10.f.c_bn.weight, %s3.b10.f.c_bn.bias, %s3.b10.f.c_bn.running_mean, %s3.b10.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %388 = %387.0;
+  %389 = add(%369, %388) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %390 = nn.relu(%389) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %391 = nn.conv2d(%390, %s3.b11.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %392 = nn.batch_norm(%391, %s3.b11.f.a_bn.weight, %s3.b11.f.a_bn.bias, %s3.b11.f.a_bn.running_mean, %s3.b11.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %393 = %392.0;
+  %394 = nn.relu(%393) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %395 = nn.conv2d(%394, %s3.b11.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %396 = nn.batch_norm(%395, %s3.b11.f.b_bn.weight, %s3.b11.f.b_bn.bias, %s3.b11.f.b_bn.running_mean, %s3.b11.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %397 = %396.0;
+  %398 = nn.relu(%397) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %399 = nn.adaptive_avg_pool2d(%398, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %400 = nn.conv2d(%399, %s3.b11.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %401 = nn.bias_add(%400, %s3.b11.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %402 = nn.relu(%401) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %403 = nn.conv2d(%402, %s3.b11.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %404 = nn.bias_add(%403, %s3.b11.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %405 = sigmoid(%404) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %406 = multiply(%398, %405) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %407 = nn.conv2d(%406, %s3.b11.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %408 = nn.batch_norm(%407, %s3.b11.f.c_bn.weight, %s3.b11.f.c_bn.bias, %s3.b11.f.c_bn.running_mean, %s3.b11.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %409 = %408.0;
+  %410 = add(%390, %409) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %411 = nn.relu(%410) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %412 = nn.conv2d(%411, %s3.b12.f.a.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %413 = nn.batch_norm(%412, %s3.b12.f.a_bn.weight, %s3.b12.f.a_bn.bias, %s3.b12.f.a_bn.running_mean, %s3.b12.f.a_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %414 = %413.0;
+  %415 = nn.relu(%414) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %416 = nn.conv2d(%415, %s3.b12.f.b.weight, padding=[1, 1, 1, 1], groups=8, channels=512, kernel_size=[3, 3]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %417 = nn.batch_norm(%416, %s3.b12.f.b_bn.weight, %s3.b12.f.b_bn.bias, %s3.b12.f.b_bn.running_mean, %s3.b12.f.b_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %418 = %417.0;
+  %419 = nn.relu(%418) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %420 = nn.adaptive_avg_pool2d(%419, output_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %421 = nn.conv2d(%420, %s3.b12.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %422 = nn.bias_add(%421, %s3.b12.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %423 = nn.relu(%422) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %424 = nn.conv2d(%423, %s3.b12.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %425 = nn.bias_add(%424, %s3.b12.f.se.f_ex.2.bias) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %426 = sigmoid(%425) /* ty=Tensor[(1, 512, 1, 1), float32] */;
+  %427 = multiply(%419, %426) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %428 = nn.conv2d(%427, %s3.b12.f.c.weight, padding=[0, 0, 0, 0], channels=512, kernel_size=[1, 1]) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %429 = nn.batch_norm(%428, %s3.b12.f.c_bn.weight, %s3.b12.f.c_bn.bias, %s3.b12.f.c_bn.running_mean, %s3.b12.f.c_bn.running_var) /* ty=(Tensor[(1, 512, 14, 14), float32], Tensor[(512), float32], Tensor[(512), float32]) */;
+  %430 = %429.0;
+  %431 = add(%411, %430) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %432 = nn.relu(%431) /* ty=Tensor[(1, 512, 14, 14), float32] */;
+  %433 = nn.conv2d(%432, %s4.b1.proj.weight, strides=[2, 2], padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %434 = nn.batch_norm(%433, %s4.b1.bn.weight, %s4.b1.bn.bias, %s4.b1.bn.running_mean, %s4.b1.bn.running_var) /* ty=(Tensor[(1, 1088, 7, 7), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %435 = nn.conv2d(%432, %s4.b1.f.a.weight, padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 14, 14), float32] */;
+  %436 = nn.batch_norm(%435, %s4.b1.f.a_bn.weight, %s4.b1.f.a_bn.bias, %s4.b1.f.a_bn.running_mean, %s4.b1.f.a_bn.running_var) /* ty=(Tensor[(1, 1088, 14, 14), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %437 = %436.0;
+  %438 = nn.relu(%437) /* ty=Tensor[(1, 1088, 14, 14), float32] */;
+  %439 = nn.conv2d(%438, %s4.b1.f.b.weight, strides=[2, 2], padding=[1, 1, 1, 1], groups=17, channels=1088, kernel_size=[3, 3]) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %440 = nn.batch_norm(%439, %s4.b1.f.b_bn.weight, %s4.b1.f.b_bn.bias, %s4.b1.f.b_bn.running_mean, %s4.b1.f.b_bn.running_var) /* ty=(Tensor[(1, 1088, 7, 7), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %441 = %440.0;
+  %442 = nn.relu(%441) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %443 = nn.adaptive_avg_pool2d(%442, output_size=[1, 1]) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %444 = nn.conv2d(%443, %s4.b1.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=128, kernel_size=[1, 1]) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %445 = nn.bias_add(%444, %s4.b1.f.se.f_ex.0.bias) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %446 = nn.relu(%445) /* ty=Tensor[(1, 128, 1, 1), float32] */;
+  %447 = nn.conv2d(%446, %s4.b1.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %448 = nn.bias_add(%447, %s4.b1.f.se.f_ex.2.bias) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %449 = sigmoid(%448) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %450 = multiply(%442, %449) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %451 = nn.conv2d(%450, %s4.b1.f.c.weight, padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %452 = nn.batch_norm(%451, %s4.b1.f.c_bn.weight, %s4.b1.f.c_bn.bias, %s4.b1.f.c_bn.running_mean, %s4.b1.f.c_bn.running_var) /* ty=(Tensor[(1, 1088, 7, 7), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %453 = %434.0;
+  %454 = %452.0;
+  %455 = add(%453, %454) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %456 = nn.relu(%455) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %457 = nn.conv2d(%456, %s4.b2.f.a.weight, padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %458 = nn.batch_norm(%457, %s4.b2.f.a_bn.weight, %s4.b2.f.a_bn.bias, %s4.b2.f.a_bn.running_mean, %s4.b2.f.a_bn.running_var) /* ty=(Tensor[(1, 1088, 7, 7), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %459 = %458.0;
+  %460 = nn.relu(%459) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %461 = nn.conv2d(%460, %s4.b2.f.b.weight, padding=[1, 1, 1, 1], groups=17, channels=1088, kernel_size=[3, 3]) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %462 = nn.batch_norm(%461, %s4.b2.f.b_bn.weight, %s4.b2.f.b_bn.bias, %s4.b2.f.b_bn.running_mean, %s4.b2.f.b_bn.running_var) /* ty=(Tensor[(1, 1088, 7, 7), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %463 = %462.0;
+  %464 = nn.relu(%463) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %465 = nn.adaptive_avg_pool2d(%464, output_size=[1, 1]) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %466 = nn.conv2d(%465, %s4.b2.f.se.f_ex.0.weight, padding=[0, 0, 0, 0], channels=272, kernel_size=[1, 1]) /* ty=Tensor[(1, 272, 1, 1), float32] */;
+  %467 = nn.bias_add(%466, %s4.b2.f.se.f_ex.0.bias) /* ty=Tensor[(1, 272, 1, 1), float32] */;
+  %468 = nn.relu(%467) /* ty=Tensor[(1, 272, 1, 1), float32] */;
+  %469 = nn.conv2d(%468, %s4.b2.f.se.f_ex.2.weight, padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %470 = nn.bias_add(%469, %s4.b2.f.se.f_ex.2.bias) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %471 = sigmoid(%470) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %472 = multiply(%464, %471) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %473 = nn.conv2d(%472, %s4.b2.f.c.weight, padding=[0, 0, 0, 0], channels=1088, kernel_size=[1, 1]) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %474 = nn.batch_norm(%473, %s4.b2.f.c_bn.weight, %s4.b2.f.c_bn.bias, %s4.b2.f.c_bn.running_mean, %s4.b2.f.c_bn.running_var) /* ty=(Tensor[(1, 1088, 7, 7), float32], Tensor[(1088), float32], Tensor[(1088), float32]) */;
+  %475 = %474.0;
+  %476 = add(%456, %475) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %477 = nn.relu(%476) /* ty=Tensor[(1, 1088, 7, 7), float32] */;
+  %478 = nn.adaptive_avg_pool2d(%477, output_size=[1, 1]) /* ty=Tensor[(1, 1088, 1, 1), float32] */;
+  %479 = transpose(%head.fc.weight, axes=[1, 0]) /* ty=Tensor[(1088, 1000), float32] */;
+  %480 = reshape(%478, newshape=[1, -1]) /* ty=Tensor[(1, 1088), float32] */;
+  %481 = transpose(%479, axes=[1, 0]) /* ty=Tensor[(1000, 1088), float32] */;
+  %482 = nn.dense(%480, %481, units=1000) /* ty=Tensor[(1, 1000), float32] */;
+  add(%482, %head.fc.bias) /* ty=Tensor[(1, 1000), float32] */
+}
+
+Relay top-1 id: 285, class name: Egyptian cat
+Torch top-1 id: 285, class name: Egyptian cat
