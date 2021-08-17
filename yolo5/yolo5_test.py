@@ -65,9 +65,13 @@ input_name = "input0"
 shape_list = [(input_name, input_shape)]
 mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
+from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+mod = ToMixedPrecision("float16")(mod)
+
 # print(relay.transform.InferType()(mod))
 
-target = "vulkan"
+target = "vulkan -from_device=0"
+# target = "llvm"
 
 with tvm.transform.PassContext(opt_level=3):
     vm_exec = relay.vm.compile(mod, target=target, params=params)

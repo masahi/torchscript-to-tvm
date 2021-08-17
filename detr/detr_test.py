@@ -63,7 +63,7 @@ with torch.no_grad():
     trace = torch.jit.trace(model, inp)
     torch_res = model(inp)
 
-target = "vulkan -supports_int8=1 -supports_int64=1 -supports_8bit_buffer=1 -supports_storage_buffer_storage_class=1"
+target = "vulkan -from_device=0"
 
 
 def auto_schedule():
@@ -106,6 +106,10 @@ def auto_schedule():
 
 def bench_tvm():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+
+    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+    mod = ToMixedPrecision("float16")(mod)
+    print(mod)
 
     with tvm.transform.PassContext(opt_level=3):
         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
