@@ -117,25 +117,27 @@ def auto_schedule():
     mod = rewrite_batched_nms_with_max_out_size(mod)
     mod = rewrite_scatter_to_gather(mod, 4)
 
-    desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    desired_layouts = {'nn.conv2d': ['NHWC', 'default'], "vision.roi_align": ["NHWC", "default"]}
     seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
     with tvm.transform.PassContext(opt_level=3):
         mod = seq(mod)
 
-    # target = "cuda"
-    target = "vulkan"
+    target = "cuda"
+    # target = "vulkan"
 
+    print("extracting task")
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
+    print("extracting task done")
 
     for idx, task in enumerate(tasks):
         print("========== Task %d  (workload key: %s) ==========" % (idx, task.workload_key))
         print(task.compute_dag)
 
-    log_file = "logs/maskrcnn_vulkan_nhwc.log"
+    log_file = "logs/maskrcnn_rtx3070.log"
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
 
-    tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
-    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
+    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
+    tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
     tune_option = auto_scheduler.TuningOptions(
         num_measure_trials=100000,  # change this to 20000 to achieve the best performance
         runner=measure_ctx.runner,
@@ -164,14 +166,13 @@ def bench_tvm():
 
     target = "nvptx -libs=cublas"
     # target = "rocm -libs=thrust"
-    target = "opencl"
     # target = "cuda -libs=cublas,cudnn"
     # target = "cuda -libs=cublas"
+    target = "cuda -libs=cublas"
 
     if True:
-        # with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_nvptx_nhwc.log"):
-            # with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": False}):
-            with tvm.transform.PassContext(opt_level=3):
+        with auto_scheduler.ApplyHistoryBest("logs/maskrcnn_rtx3070.log"):
+            with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
                 desired_layouts = {'nn.conv2d': ['NHWC', 'default'], "vision.roi_align": ["NHWC", "default"]}
                 seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
                 mod = seq(mod)
@@ -191,14 +192,14 @@ def bench_tvm():
     # # Inference with Relay VM
     # # -----------------------
     ctx = tvm.device(target, 0)
-    vm = profiler_vm.VirtualMachineProfiler(vm_exec, ctx)
-    # vm = VirtualMachine(vm_exec, ctx)
+    # vm = profiler_vm.VirtualMachineProfiler(vm_exec, ctx)
+    vm = VirtualMachine(vm_exec, ctx)
     vm.set_input("main", **{input_name: img})
     vm.run()
     # # print("\n{}".format(vm.get_stat()))
 
-    # ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
-    # print(ftimer("main"))
+    ftimer = vm.module.time_evaluator("invoke", ctx, number=1, repeat=num_iters)
+    print(ftimer("main"))
 
 # benchmark_torch(model, inp, num_iters)
 bench_tvm()

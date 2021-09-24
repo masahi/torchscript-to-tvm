@@ -4,7 +4,6 @@ from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 
 import numpy as np
-import cv2
 
 # PyTorch imports
 import torch
@@ -13,7 +12,6 @@ import torchvision
 in_size = 300
 
 input_shape = (1, 3, in_size, in_size)
-
 
 class TraceWrapper(torch.nn.Module):
     def __init__(self, model):
@@ -57,27 +55,27 @@ num_iters = 50
 detr = torch.hub.load('facebookresearch/detr', 'detr_resnet50', pretrained=True)
 model = TraceWrapper(detr.eval())
 model.eval()
-inp = torch.rand(1, 3, 750, 800)
+inp = torch.rand(8, 3, 750, 800)
 
 with torch.no_grad():
     trace = torch.jit.trace(model, inp)
     torch_res = model(inp)
 
-target = "vulkan -from_device=0"
-
+target = "cuda"
+log_file = "detr_b8.log"
 
 def auto_schedule():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    # with open("detr_mod.json", "w") as fo:
-    #     fo.write(tvm.ir.save_json(mod))
-    # with open("detr.params", "wb") as fo:
-    #     fo.write(relay.save_param_dict(params))
+    with open("detr_mod.json", "w") as fo:
+        fo.write(tvm.ir.save_json(mod))
+    with open("detr.params", "wb") as fo:
+        fo.write(relay.save_param_dict(params))
 
-    # with open("detr_mod.json", "r") as fi:
-    #     mod = tvm.ir.load_json(fi.read())
-    # with open("detr.params", "rb") as fi:
-    #     params = relay.load_param_dict(fi.read())
+    with open("detr_mod.json", "r") as fi:
+        mod = tvm.ir.load_json(fi.read())
+    with open("detr.params", "rb") as fi:
+        params = relay.load_param_dict(fi.read())
 
     with tvm.transform.PassContext(opt_level=3):
         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
@@ -90,9 +88,7 @@ def auto_schedule():
         print("========== Task %d  (workload key: %s) ==========" % (idx, task.workload_key))
         print(task.compute_dag)
 
-    log_file = "detr.log"
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
-
     tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
     # tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
     tune_option = auto_scheduler.TuningOptions(
@@ -107,22 +103,22 @@ def auto_schedule():
 def bench_tvm():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
-    mod = ToMixedPrecision("float16")(mod)
-    print(mod)
+    # from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+    # mod = ToMixedPrecision("float16")(mod)
+    # print(mod)
 
-    with tvm.transform.PassContext(opt_level=3):
-        desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
-        seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
-        mod = seq(mod)
-        json, lib, params = relay.build(mod, target=target, params=params)
+    # with tvm.transform.PassContext(opt_level=3):
+    #     desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    #     seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+    #     mod = seq(mod)
+    #     json, lib, params = relay.build(mod, target=target, params=params)
 
-    # with auto_scheduler.ApplyHistoryBest("detr.log"):
-    #     with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
-    #         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
-    #         seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
-    #         mod = seq(mod)
-    #         json, lib, params = relay.build(mod, target=target, params=params)
+    with auto_scheduler.ApplyHistoryBest(log_file):
+        with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
+            desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+            seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+            mod = seq(mod)
+            json, lib, params = relay.build(mod, target=target, params=params)
 
     ctx = tvm.device(target, 0)
     runtime = tvm.contrib.graph_executor.create(json, lib, ctx)
@@ -136,10 +132,10 @@ def bench_tvm():
     for pt_res, tvm_res in zip(pt_results, tvm_results):
         print(np.mean(np.abs(pt_res - tvm_res)))
 
-    # ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=20)
-    # prof_res = np.array(ftimer().results) * 1000
-    # print(prof_res)
-    # print(np.mean(prof_res))
+    ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=50)
+    prof_res = np.array(ftimer().results) * 1000
+    print(prof_res)
+    print(np.mean(prof_res))
 
 
 # benchmark_torch(model, inp, num_iters)

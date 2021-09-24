@@ -36,10 +36,10 @@ class TraceWrapper(nn.Module):
         return dict_to_tuple(out[0])
 
 
-from yolort.models import yolov5s
+from yolort.models import yolov5l
 
 
-model_func = yolov5s(export_friendly=True, pretrained=True)
+model_func = yolov5l(export_friendly=True, pretrained=True)
 
 
 model = TraceWrapper(model_func)
@@ -65,12 +65,12 @@ input_name = "input0"
 shape_list = [(input_name, input_shape)]
 mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
-from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
-mod = ToMixedPrecision("float16")(mod)
+# from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+# mod = ToMixedPrecision("float16")(mod)
 
 # print(relay.transform.InferType()(mod))
 
-target = "vulkan -from_device=0"
+target = "cuda"
 # target = "llvm"
 
 with tvm.transform.PassContext(opt_level=3):

@@ -1,0 +1,609 @@
+type List[A] {
+  Cons(A, List[A]),
+  Nil,
+}
+
+type tensor_float32_t {
+  tensor_nil_float32,
+  tensor0_float32(float32),
+  tensor1_float32(Tensor[(?), float32]),
+  tensor2_float32(Tensor[(?, ?), float32]),
+  tensor3_float32(Tensor[(?, ?, ?), float32]),
+  tensor4_float32(Tensor[(?, ?, ?, ?), float32]),
+  tensor5_float32(Tensor[(?, ?, ?, ?, ?), float32]),
+  tensor6_float32(Tensor[(?, ?, ?, ?, ?, ?), float32]),
+}
+
+type tensor_float64_t {
+  tensor_nil_float64,
+  tensor0_float64(float64),
+  tensor1_float64(Tensor[(?), float64]),
+  tensor2_float64(Tensor[(?, ?), float64]),
+  tensor3_float64(Tensor[(?, ?, ?), float64]),
+  tensor4_float64(Tensor[(?, ?, ?, ?), float64]),
+  tensor5_float64(Tensor[(?, ?, ?, ?, ?), float64]),
+  tensor6_float64(Tensor[(?, ?, ?, ?, ?, ?), float64]),
+}
+
+type tensor_uint8_t {
+  tensor_nil_uint8,
+  tensor0_uint8(uint8),
+  tensor1_uint8(Tensor[(?), uint8]),
+  tensor2_uint8(Tensor[(?, ?), uint8]),
+  tensor3_uint8(Tensor[(?, ?, ?), uint8]),
+  tensor4_uint8(Tensor[(?, ?, ?, ?), uint8]),
+  tensor5_uint8(Tensor[(?, ?, ?, ?, ?), uint8]),
+  tensor6_uint8(Tensor[(?, ?, ?, ?, ?, ?), uint8]),
+}
+
+type tensor_int32_t {
+  tensor_nil_int32,
+  tensor0_int32(int32),
+  tensor1_int32(Tensor[(?), int32]),
+  tensor2_int32(Tensor[(?, ?), int32]),
+  tensor3_int32(Tensor[(?, ?, ?), int32]),
+  tensor4_int32(Tensor[(?, ?, ?, ?), int32]),
+  tensor5_int32(Tensor[(?, ?, ?, ?, ?), int32]),
+  tensor6_int32(Tensor[(?, ?, ?, ?, ?, ?), int32]),
+}
+
+type tensor_int8_t {
+  tensor_nil_int8,
+  tensor0_int8(int8),
+  tensor1_int8(Tensor[(?), int8]),
+  tensor2_int8(Tensor[(?, ?), int8]),
+  tensor3_int8(Tensor[(?, ?, ?), int8]),
+  tensor4_int8(Tensor[(?, ?, ?, ?), int8]),
+  tensor5_int8(Tensor[(?, ?, ?, ?, ?), int8]),
+  tensor6_int8(Tensor[(?, ?, ?, ?, ?, ?), int8]),
+}
+
+type tensor_int16_t {
+  tensor_nil_int16,
+  tensor0_int16(int16),
+  tensor1_int16(Tensor[(?), int16]),
+  tensor2_int16(Tensor[(?, ?), int16]),
+  tensor3_int16(Tensor[(?, ?, ?), int16]),
+  tensor4_int16(Tensor[(?, ?, ?, ?), int16]),
+  tensor5_int16(Tensor[(?, ?, ?, ?, ?), int16]),
+  tensor6_int16(Tensor[(?, ?, ?, ?, ?, ?), int16]),
+}
+
+type Tree[A] {
+  Rose(A, List[Tree[A]]),
+}
+
+type tensor_uint16_t {
+  tensor_nil_uint16,
+  tensor0_uint16(uint16),
+  tensor1_uint16(Tensor[(?), uint16]),
+  tensor2_uint16(Tensor[(?, ?), uint16]),
+  tensor3_uint16(Tensor[(?, ?, ?), uint16]),
+  tensor4_uint16(Tensor[(?, ?, ?, ?), uint16]),
+  tensor5_uint16(Tensor[(?, ?, ?, ?, ?), uint16]),
+  tensor6_uint16(Tensor[(?, ?, ?, ?, ?, ?), uint16]),
+}
+
+type Option[A] {
+  Some(A),
+  None,
+}
+
+type tensor_float16_t {
+  tensor_nil_float16,
+  tensor0_float16(float16),
+  tensor1_float16(Tensor[(?), float16]),
+  tensor2_float16(Tensor[(?, ?), float16]),
+  tensor3_float16(Tensor[(?, ?, ?), float16]),
+  tensor4_float16(Tensor[(?, ?, ?, ?), float16]),
+  tensor5_float16(Tensor[(?, ?, ?, ?, ?), float16]),
+  tensor6_float16(Tensor[(?, ?, ?, ?, ?, ?), float16]),
+}
+
+type tensor_int64_t {
+  tensor_nil_int64,
+  tensor0_int64(int64),
+  tensor1_int64(Tensor[(?), int64]),
+  tensor2_int64(Tensor[(?, ?), int64]),
+  tensor3_int64(Tensor[(?, ?, ?), int64]),
+  tensor4_int64(Tensor[(?, ?, ?, ?), int64]),
+  tensor5_int64(Tensor[(?, ?, ?, ?, ?), int64]),
+  tensor6_int64(Tensor[(?, ?, ?, ?, ?, ?), int64]),
+}
+
+def @main(%input: Tensor[(8, 3, 512, 512), float32], %model.backbone.0.0.weight: Tensor[(16, 3, 3, 3), float32], %model.backbone.0.1.weight: Tensor[(16), float32], %model.backbone.0.1.bias: Tensor[(16), float32], %model.backbone.0.1.running_mean: Tensor[(16), float32], %model.backbone.0.1.running_var: Tensor[(16), float32], %model.backbone.1.block.0.0.weight: Tensor[(16, 1, 3, 3), float32], %model.backbone.1.block.0.1.weight: Tensor[(16), float32], %model.backbone.1.block.0.1.bias: Tensor[(16), float32], %model.backbone.1.block.0.1.running_mean: Tensor[(16), float32], %model.backbone.1.block.0.1.running_var: Tensor[(16), float32], %model.backbone.1.block.1.0.weight: Tensor[(16, 16, 1, 1), float32], %model.backbone.1.block.1.1.weight: Tensor[(16), float32], %model.backbone.1.block.1.1.bias: Tensor[(16), float32], %model.backbone.1.block.1.1.running_mean: Tensor[(16), float32], %model.backbone.1.block.1.1.running_var: Tensor[(16), float32], %model.backbone.2.block.0.0.weight: Tensor[(64, 16, 1, 1), float32], %model.backbone.2.block.0.1.weight: Tensor[(64), float32], %model.backbone.2.block.0.1.bias: Tensor[(64), float32], %model.backbone.2.block.0.1.running_mean: Tensor[(64), float32], %model.backbone.2.block.0.1.running_var: Tensor[(64), float32], %model.backbone.2.block.1.0.weight: Tensor[(64, 1, 3, 3), float32], %model.backbone.2.block.1.1.weight: Tensor[(64), float32], %model.backbone.2.block.1.1.bias: Tensor[(64), float32], %model.backbone.2.block.1.1.running_mean: Tensor[(64), float32], %model.backbone.2.block.1.1.running_var: Tensor[(64), float32], %model.backbone.2.block.2.0.weight: Tensor[(24, 64, 1, 1), float32], %model.backbone.2.block.2.1.weight: Tensor[(24), float32], %model.backbone.2.block.2.1.bias: Tensor[(24), float32], %model.backbone.2.block.2.1.running_mean: Tensor[(24), float32], %model.backbone.2.block.2.1.running_var: Tensor[(24), float32], %model.backbone.3.block.0.0.weight: Tensor[(72, 24, 1, 1), float32], %model.backbone.3.block.0.1.weight: Tensor[(72), float32], %model.backbone.3.block.0.1.bias: Tensor[(72), float32], %model.backbone.3.block.0.1.running_mean: Tensor[(72), float32], %model.backbone.3.block.0.1.running_var: Tensor[(72), float32], %model.backbone.3.block.1.0.weight: Tensor[(72, 1, 3, 3), float32], %model.backbone.3.block.1.1.weight: Tensor[(72), float32], %model.backbone.3.block.1.1.bias: Tensor[(72), float32], %model.backbone.3.block.1.1.running_mean: Tensor[(72), float32], %model.backbone.3.block.1.1.running_var: Tensor[(72), float32], %model.backbone.3.block.2.0.weight: Tensor[(24, 72, 1, 1), float32], %model.backbone.3.block.2.1.weight: Tensor[(24), float32], %model.backbone.3.block.2.1.bias: Tensor[(24), float32], %model.backbone.3.block.2.1.running_mean: Tensor[(24), float32], %model.backbone.3.block.2.1.running_var: Tensor[(24), float32], %model.backbone.4.block.0.0.weight: Tensor[(72, 24, 1, 1), float32], %model.backbone.4.block.0.1.weight: Tensor[(72), float32], %model.backbone.4.block.0.1.bias: Tensor[(72), float32], %model.backbone.4.block.0.1.running_mean: Tensor[(72), float32], %model.backbone.4.block.0.1.running_var: Tensor[(72), float32], %model.backbone.4.block.1.0.weight: Tensor[(72, 1, 5, 5), float32], %model.backbone.4.block.1.1.weight: Tensor[(72), float32], %model.backbone.4.block.1.1.bias: Tensor[(72), float32], %model.backbone.4.block.1.1.running_mean: Tensor[(72), float32], %model.backbone.4.block.1.1.running_var: Tensor[(72), float32], %model.backbone.4.block.2.fc1.weight: Tensor[(24, 72, 1, 1), float32], %model.backbone.4.block.2.fc1.bias: Tensor[(24), float32], %model.backbone.4.block.2.fc2.weight: Tensor[(72, 24, 1, 1), float32], %model.backbone.4.block.2.fc2.bias: Tensor[(72), float32], %model.backbone.4.block.3.0.weight: Tensor[(40, 72, 1, 1), float32], %model.backbone.4.block.3.1.weight: Tensor[(40), float32], %model.backbone.4.block.3.1.bias: Tensor[(40), float32], %model.backbone.4.block.3.1.running_mean: Tensor[(40), float32], %model.backbone.4.block.3.1.running_var: Tensor[(40), float32], %model.backbone.5.block.0.0.weight: Tensor[(120, 40, 1, 1), float32], %model.backbone.5.block.0.1.weight: Tensor[(120), float32], %model.backbone.5.block.0.1.bias: Tensor[(120), float32], %model.backbone.5.block.0.1.running_mean: Tensor[(120), float32], %model.backbone.5.block.0.1.running_var: Tensor[(120), float32], %model.backbone.5.block.1.0.weight: Tensor[(120, 1, 5, 5), float32], %model.backbone.5.block.1.1.weight: Tensor[(120), float32], %model.backbone.5.block.1.1.bias: Tensor[(120), float32], %model.backbone.5.block.1.1.running_mean: Tensor[(120), float32], %model.backbone.5.block.1.1.running_var: Tensor[(120), float32], %model.backbone.5.block.2.fc1.weight: Tensor[(32, 120, 1, 1), float32], %model.backbone.5.block.2.fc1.bias: Tensor[(32), float32], %model.backbone.5.block.2.fc2.weight: Tensor[(120, 32, 1, 1), float32], %model.backbone.5.block.2.fc2.bias: Tensor[(120), float32], %model.backbone.5.block.3.0.weight: Tensor[(40, 120, 1, 1), float32], %model.backbone.5.block.3.1.weight: Tensor[(40), float32], %model.backbone.5.block.3.1.bias: Tensor[(40), float32], %model.backbone.5.block.3.1.running_mean: Tensor[(40), float32], %model.backbone.5.block.3.1.running_var: Tensor[(40), float32], %model.backbone.6.block.0.0.weight: Tensor[(120, 40, 1, 1), float32], %model.backbone.6.block.0.1.weight: Tensor[(120), float32], %model.backbone.6.block.0.1.bias: Tensor[(120), float32], %model.backbone.6.block.0.1.running_mean: Tensor[(120), float32], %model.backbone.6.block.0.1.running_var: Tensor[(120), float32], %model.backbone.6.block.1.0.weight: Tensor[(120, 1, 5, 5), float32], %model.backbone.6.block.1.1.weight: Tensor[(120), float32], %model.backbone.6.block.1.1.bias: Tensor[(120), float32], %model.backbone.6.block.1.1.running_mean: Tensor[(120), float32], %model.backbone.6.block.1.1.running_var: Tensor[(120), float32], %model.backbone.6.block.2.fc1.weight: Tensor[(32, 120, 1, 1), float32], %model.backbone.6.block.2.fc1.bias: Tensor[(32), float32], %model.backbone.6.block.2.fc2.weight: Tensor[(120, 32, 1, 1), float32], %model.backbone.6.block.2.fc2.bias: Tensor[(120), float32], %model.backbone.6.block.3.0.weight: Tensor[(40, 120, 1, 1), float32], %model.backbone.6.block.3.1.weight: Tensor[(40), float32], %model.backbone.6.block.3.1.bias: Tensor[(40), float32], %model.backbone.6.block.3.1.running_mean: Tensor[(40), float32], %model.backbone.6.block.3.1.running_var: Tensor[(40), float32], %model.backbone.7.block.0.0.weight: Tensor[(240, 40, 1, 1), float32], %model.backbone.7.block.0.1.weight: Tensor[(240), float32], %model.backbone.7.block.0.1.bias: Tensor[(240), float32], %model.backbone.7.block.0.1.running_mean: Tensor[(240), float32], %model.backbone.7.block.0.1.running_var: Tensor[(240), float32], %model.backbone.7.block.1.0.weight: Tensor[(240, 1, 3, 3), float32], %model.backbone.7.block.1.1.weight: Tensor[(240), float32], %model.backbone.7.block.1.1.bias: Tensor[(240), float32], %model.backbone.7.block.1.1.running_mean: Tensor[(240), float32], %model.backbone.7.block.1.1.running_var: Tensor[(240), float32], %model.backbone.7.block.2.0.weight: Tensor[(80, 240, 1, 1), float32], %model.backbone.7.block.2.1.weight: Tensor[(80), float32], %model.backbone.7.block.2.1.bias: Tensor[(80), float32], %model.backbone.7.block.2.1.running_mean: Tensor[(80), float32], %model.backbone.7.block.2.1.running_var: Tensor[(80), float32], %model.backbone.8.block.0.0.weight: Tensor[(200, 80, 1, 1), float32], %model.backbone.8.block.0.1.weight: Tensor[(200), float32], %model.backbone.8.block.0.1.bias: Tensor[(200), float32], %model.backbone.8.block.0.1.running_mean: Tensor[(200), float32], %model.backbone.8.block.0.1.running_var: Tensor[(200), float32], %model.backbone.8.block.1.0.weight: Tensor[(200, 1, 3, 3), float32], %model.backbone.8.block.1.1.weight: Tensor[(200), float32], %model.backbone.8.block.1.1.bias: Tensor[(200), float32], %model.backbone.8.block.1.1.running_mean: Tensor[(200), float32], %model.backbone.8.block.1.1.running_var: Tensor[(200), float32], %model.backbone.8.block.2.0.weight: Tensor[(80, 200, 1, 1), float32], %model.backbone.8.block.2.1.weight: Tensor[(80), float32], %model.backbone.8.block.2.1.bias: Tensor[(80), float32], %model.backbone.8.block.2.1.running_mean: Tensor[(80), float32], %model.backbone.8.block.2.1.running_var: Tensor[(80), float32], %model.backbone.9.block.0.0.weight: Tensor[(184, 80, 1, 1), float32], %model.backbone.9.block.0.1.weight: Tensor[(184), float32], %model.backbone.9.block.0.1.bias: Tensor[(184), float32], %model.backbone.9.block.0.1.running_mean: Tensor[(184), float32], %model.backbone.9.block.0.1.running_var: Tensor[(184), float32], %model.backbone.9.block.1.0.weight: Tensor[(184, 1, 3, 3), float32], %model.backbone.9.block.1.1.weight: Tensor[(184), float32], %model.backbone.9.block.1.1.bias: Tensor[(184), float32], %model.backbone.9.block.1.1.running_mean: Tensor[(184), float32], %model.backbone.9.block.1.1.running_var: Tensor[(184), float32], %model.backbone.9.block.2.0.weight: Tensor[(80, 184, 1, 1), float32], %model.backbone.9.block.2.1.weight: Tensor[(80), float32], %model.backbone.9.block.2.1.bias: Tensor[(80), float32], %model.backbone.9.block.2.1.running_mean: Tensor[(80), float32], %model.backbone.9.block.2.1.running_var: Tensor[(80), float32], %model.backbone.10.block.0.0.weight: Tensor[(184, 80, 1, 1), float32], %model.backbone.10.block.0.1.weight: Tensor[(184), float32], %model.backbone.10.block.0.1.bias: Tensor[(184), float32], %model.backbone.10.block.0.1.running_mean: Tensor[(184), float32], %model.backbone.10.block.0.1.running_var: Tensor[(184), float32], %model.backbone.10.block.1.0.weight: Tensor[(184, 1, 3, 3), float32], %model.backbone.10.block.1.1.weight: Tensor[(184), float32], %model.backbone.10.block.1.1.bias: Tensor[(184), float32], %model.backbone.10.block.1.1.running_mean: Tensor[(184), float32], %model.backbone.10.block.1.1.running_var: Tensor[(184), float32], %model.backbone.10.block.2.0.weight: Tensor[(80, 184, 1, 1), float32], %model.backbone.10.block.2.1.weight: Tensor[(80), float32], %model.backbone.10.block.2.1.bias: Tensor[(80), float32], %model.backbone.10.block.2.1.running_mean: Tensor[(80), float32], %model.backbone.10.block.2.1.running_var: Tensor[(80), float32], %model.backbone.11.block.0.0.weight: Tensor[(480, 80, 1, 1), float32], %model.backbone.11.block.0.1.weight: Tensor[(480), float32], %model.backbone.11.block.0.1.bias: Tensor[(480), float32], %model.backbone.11.block.0.1.running_mean: Tensor[(480), float32], %model.backbone.11.block.0.1.running_var: Tensor[(480), float32], %model.backbone.11.block.1.0.weight: Tensor[(480, 1, 3, 3), float32], %model.backbone.11.block.1.1.weight: Tensor[(480), float32], %model.backbone.11.block.1.1.bias: Tensor[(480), float32], %model.backbone.11.block.1.1.running_mean: Tensor[(480), float32], %model.backbone.11.block.1.1.running_var: Tensor[(480), float32], %model.backbone.11.block.2.fc1.weight: Tensor[(120, 480, 1, 1), float32], %model.backbone.11.block.2.fc1.bias: Tensor[(120), float32], %model.backbone.11.block.2.fc2.weight: Tensor[(480, 120, 1, 1), float32], %model.backbone.11.block.2.fc2.bias: Tensor[(480), float32], %model.backbone.11.block.3.0.weight: Tensor[(112, 480, 1, 1), float32], %model.backbone.11.block.3.1.weight: Tensor[(112), float32], %model.backbone.11.block.3.1.bias: Tensor[(112), float32], %model.backbone.11.block.3.1.running_mean: Tensor[(112), float32], %model.backbone.11.block.3.1.running_var: Tensor[(112), float32], %model.backbone.12.block.0.0.weight: Tensor[(672, 112, 1, 1), float32], %model.backbone.12.block.0.1.weight: Tensor[(672), float32], %model.backbone.12.block.0.1.bias: Tensor[(672), float32], %model.backbone.12.block.0.1.running_mean: Tensor[(672), float32], %model.backbone.12.block.0.1.running_var: Tensor[(672), float32], %model.backbone.12.block.1.0.weight: Tensor[(672, 1, 3, 3), float32], %model.backbone.12.block.1.1.weight: Tensor[(672), float32], %model.backbone.12.block.1.1.bias: Tensor[(672), float32], %model.backbone.12.block.1.1.running_mean: Tensor[(672), float32], %model.backbone.12.block.1.1.running_var: Tensor[(672), float32], %model.backbone.12.block.2.fc1.weight: Tensor[(168, 672, 1, 1), float32], %model.backbone.12.block.2.fc1.bias: Tensor[(168), float32], %model.backbone.12.block.2.fc2.weight: Tensor[(672, 168, 1, 1), float32], %model.backbone.12.block.2.fc2.bias: Tensor[(672), float32], %model.backbone.12.block.3.0.weight: Tensor[(112, 672, 1, 1), float32], %model.backbone.12.block.3.1.weight: Tensor[(112), float32], %model.backbone.12.block.3.1.bias: Tensor[(112), float32], %model.backbone.12.block.3.1.running_mean: Tensor[(112), float32], %model.backbone.12.block.3.1.running_var: Tensor[(112), float32], %model.backbone.13.block.0.0.weight: Tensor[(672, 112, 1, 1), float32], %model.backbone.13.block.0.1.weight: Tensor[(672), float32], %model.backbone.13.block.0.1.bias: Tensor[(672), float32], %model.backbone.13.block.0.1.running_mean: Tensor[(672), float32], %model.backbone.13.block.0.1.running_var: Tensor[(672), float32], %model.backbone.13.block.1.0.weight: Tensor[(672, 1, 5, 5), float32], %model.backbone.13.block.1.1.weight: Tensor[(672), float32], %model.backbone.13.block.1.1.bias: Tensor[(672), float32], %model.backbone.13.block.1.1.running_mean: Tensor[(672), float32], %model.backbone.13.block.1.1.running_var: Tensor[(672), float32], %model.backbone.13.block.2.fc1.weight: Tensor[(168, 672, 1, 1), float32], %model.backbone.13.block.2.fc1.bias: Tensor[(168), float32], %model.backbone.13.block.2.fc2.weight: Tensor[(672, 168, 1, 1), float32], %model.backbone.13.block.2.fc2.bias: Tensor[(672), float32], %model.backbone.13.block.3.0.weight: Tensor[(160, 672, 1, 1), float32], %model.backbone.13.block.3.1.weight: Tensor[(160), float32], %model.backbone.13.block.3.1.bias: Tensor[(160), float32], %model.backbone.13.block.3.1.running_mean: Tensor[(160), float32], %model.backbone.13.block.3.1.running_var: Tensor[(160), float32], %model.backbone.14.block.0.0.weight: Tensor[(960, 160, 1, 1), float32], %model.backbone.14.block.0.1.weight: Tensor[(960), float32], %model.backbone.14.block.0.1.bias: Tensor[(960), float32], %model.backbone.14.block.0.1.running_mean: Tensor[(960), float32], %model.backbone.14.block.0.1.running_var: Tensor[(960), float32], %model.backbone.14.block.1.0.weight: Tensor[(960, 1, 5, 5), float32], %model.backbone.14.block.1.1.weight: Tensor[(960), float32], %model.backbone.14.block.1.1.bias: Tensor[(960), float32], %model.backbone.14.block.1.1.running_mean: Tensor[(960), float32], %model.backbone.14.block.1.1.running_var: Tensor[(960), float32], %model.backbone.14.block.2.fc1.weight: Tensor[(240, 960, 1, 1), float32], %model.backbone.14.block.2.fc1.bias: Tensor[(240), float32], %model.backbone.14.block.2.fc2.weight: Tensor[(960, 240, 1, 1), float32], %model.backbone.14.block.2.fc2.bias: Tensor[(960), float32], %model.backbone.14.block.3.0.weight: Tensor[(160, 960, 1, 1), float32], %model.backbone.14.block.3.1.weight: Tensor[(160), float32], %model.backbone.14.block.3.1.bias: Tensor[(160), float32], %model.backbone.14.block.3.1.running_mean: Tensor[(160), float32], %model.backbone.14.block.3.1.running_var: Tensor[(160), float32], %model.backbone.15.block.0.0.weight: Tensor[(960, 160, 1, 1), float32], %model.backbone.15.block.0.1.weight: Tensor[(960), float32], %model.backbone.15.block.0.1.bias: Tensor[(960), float32], %model.backbone.15.block.0.1.running_mean: Tensor[(960), float32], %model.backbone.15.block.0.1.running_var: Tensor[(960), float32], %model.backbone.15.block.1.0.weight: Tensor[(960, 1, 5, 5), float32], %model.backbone.15.block.1.1.weight: Tensor[(960), float32], %model.backbone.15.block.1.1.bias: Tensor[(960), float32], %model.backbone.15.block.1.1.running_mean: Tensor[(960), float32], %model.backbone.15.block.1.1.running_var: Tensor[(960), float32], %model.backbone.15.block.2.fc1.weight: Tensor[(240, 960, 1, 1), float32], %model.backbone.15.block.2.fc1.bias: Tensor[(240), float32], %model.backbone.15.block.2.fc2.weight: Tensor[(960, 240, 1, 1), float32], %model.backbone.15.block.2.fc2.bias: Tensor[(960), float32], %model.backbone.15.block.3.0.weight: Tensor[(160, 960, 1, 1), float32], %model.backbone.15.block.3.1.weight: Tensor[(160), float32], %model.backbone.15.block.3.1.bias: Tensor[(160), float32], %model.backbone.15.block.3.1.running_mean: Tensor[(160), float32], %model.backbone.15.block.3.1.running_var: Tensor[(160), float32], %model.backbone.16.0.weight: Tensor[(960, 160, 1, 1), float32], %model.backbone.16.1.weight: Tensor[(960), float32], %model.backbone.16.1.bias: Tensor[(960), float32], %model.backbone.16.1.running_mean: Tensor[(960), float32], %model.backbone.16.1.running_var: Tensor[(960), float32], %model.classifier.0.convs.0.0.weight: Tensor[(256, 960, 1, 1), float32], %model.classifier.0.convs.0.1.weight: Tensor[(256), float32], %model.classifier.0.convs.0.1.bias: Tensor[(256), float32], %model.classifier.0.convs.0.1.running_mean: Tensor[(256), float32], %model.classifier.0.convs.0.1.running_var: Tensor[(256), float32], %model.classifier.0.convs.1.0.weight: Tensor[(256, 960, 3, 3), float32], %model.classifier.0.convs.1.1.weight: Tensor[(256), float32], %model.classifier.0.convs.1.1.bias: Tensor[(256), float32], %model.classifier.0.convs.1.1.running_mean: Tensor[(256), float32], %model.classifier.0.convs.1.1.running_var: Tensor[(256), float32], %model.classifier.0.convs.2.0.weight: Tensor[(256, 960, 3, 3), float32], %model.classifier.0.convs.2.1.weight: Tensor[(256), float32], %model.classifier.0.convs.2.1.bias: Tensor[(256), float32], %model.classifier.0.convs.2.1.running_mean: Tensor[(256), float32], %model.classifier.0.convs.2.1.running_var: Tensor[(256), float32], %model.classifier.0.convs.3.0.weight: Tensor[(256, 960, 3, 3), float32], %model.classifier.0.convs.3.1.weight: Tensor[(256), float32], %model.classifier.0.convs.3.1.bias: Tensor[(256), float32], %model.classifier.0.convs.3.1.running_mean: Tensor[(256), float32], %model.classifier.0.convs.3.1.running_var: Tensor[(256), float32], %model.classifier.0.convs.4.1.weight: Tensor[(256, 960, 1, 1), float32], %model.classifier.0.convs.4.2.weight: Tensor[(256), float32], %model.classifier.0.convs.4.2.bias: Tensor[(256), float32], %model.classifier.0.convs.4.2.running_mean: Tensor[(256), float32], %model.classifier.0.convs.4.2.running_var: Tensor[(256), float32], %model.classifier.0.project.0.weight: Tensor[(256, 1280, 1, 1), float32], %model.classifier.0.project.1.weight: Tensor[(256), float32], %model.classifier.0.project.1.bias: Tensor[(256), float32], %model.classifier.0.project.1.running_mean: Tensor[(256), float32], %model.classifier.0.project.1.running_var: Tensor[(256), float32], %model.classifier.1.weight: Tensor[(256, 256, 3, 3), float32], %model.classifier.2.weight: Tensor[(256), float32], %model.classifier.2.bias: Tensor[(256), float32], %model.classifier.2.running_mean: Tensor[(256), float32], %model.classifier.2.running_var: Tensor[(256), float32], %model.classifier.4.weight: Tensor[(21, 256, 1, 1), float32], %model.classifier.4.bias: Tensor[(21), float32]) -> Tensor[(8, 21, 512, 512), float32] {
+  %0 = layout_transform(%input, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(8, 512, 512, 3), float32] */;
+  %1 = layout_transform(%model.backbone.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(3, 3, 3, 16), float32] */;
+  %2 = nn.conv2d(%0, %1, strides=[2, 2], padding=[1, 1, 1, 1], channels=16, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %3 = nn.batch_norm(%2, %model.backbone.0.1.weight, %model.backbone.0.1.bias, %model.backbone.0.1.running_mean, %model.backbone.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 256, 256, 16), float32], Tensor[(16), float32], Tensor[(16), float32]) */;
+  %4 = %3.0;
+  %5 = add(%4, 3f /* ty=float32 */) /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %6 = clip(%5, a_min=0f, a_max=6f) /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %7 = divide(%6, 6f /* ty=float32 */) /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %8 = reshape(%model.backbone.1.block.0.0.weight, newshape=[16, 1, 3, 3]) /* ty=Tensor[(16, 1, 3, 3), float32] */;
+  %9 = multiply(%4, %7) /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %10 = layout_transform(%8, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 16, 1), float32] */;
+  %11 = nn.conv2d(%9, %10, padding=[1, 1, 1, 1], groups=16, channels=16, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %12 = nn.batch_norm(%11, %model.backbone.1.block.0.1.weight, %model.backbone.1.block.0.1.bias, %model.backbone.1.block.0.1.running_mean, %model.backbone.1.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 256, 256, 16), float32], Tensor[(16), float32], Tensor[(16), float32]) */;
+  %13 = %12.0;
+  %14 = nn.relu(%13) /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %15 = layout_transform(%model.backbone.1.block.1.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 16, 16), float32] */;
+  %16 = nn.conv2d(%14, %15, padding=[0, 0, 0, 0], channels=16, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %17 = nn.batch_norm(%16, %model.backbone.1.block.1.1.weight, %model.backbone.1.block.1.1.bias, %model.backbone.1.block.1.1.running_mean, %model.backbone.1.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 256, 256, 16), float32], Tensor[(16), float32], Tensor[(16), float32]) */;
+  %18 = %17.0;
+  %19 = add(%18, %9) /* ty=Tensor[(8, 256, 256, 16), float32] */;
+  %20 = layout_transform(%model.backbone.2.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 16, 64), float32] */;
+  %21 = nn.conv2d(%19, %20, padding=[0, 0, 0, 0], channels=64, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 256, 256, 64), float32] */;
+  %22 = nn.batch_norm(%21, %model.backbone.2.block.0.1.weight, %model.backbone.2.block.0.1.bias, %model.backbone.2.block.0.1.running_mean, %model.backbone.2.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 256, 256, 64), float32], Tensor[(64), float32], Tensor[(64), float32]) */;
+  %23 = %22.0;
+  %24 = reshape(%model.backbone.2.block.1.0.weight, newshape=[64, 1, 3, 3]) /* ty=Tensor[(64, 1, 3, 3), float32] */;
+  %25 = nn.relu(%23) /* ty=Tensor[(8, 256, 256, 64), float32] */;
+  %26 = layout_transform(%24, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 64, 1), float32] */;
+  %27 = nn.conv2d(%25, %26, strides=[2, 2], padding=[1, 1, 1, 1], groups=64, channels=64, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 128, 128, 64), float32] */;
+  %28 = nn.batch_norm(%27, %model.backbone.2.block.1.1.weight, %model.backbone.2.block.1.1.bias, %model.backbone.2.block.1.1.running_mean, %model.backbone.2.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 128, 128, 64), float32], Tensor[(64), float32], Tensor[(64), float32]) */;
+  %29 = %28.0;
+  %30 = nn.relu(%29) /* ty=Tensor[(8, 128, 128, 64), float32] */;
+  %31 = layout_transform(%model.backbone.2.block.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 64, 24), float32] */;
+  %32 = nn.conv2d(%30, %31, padding=[0, 0, 0, 0], channels=24, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 128, 128, 24), float32] */;
+  %33 = nn.batch_norm(%32, %model.backbone.2.block.2.1.weight, %model.backbone.2.block.2.1.bias, %model.backbone.2.block.2.1.running_mean, %model.backbone.2.block.2.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 128, 128, 24), float32], Tensor[(24), float32], Tensor[(24), float32]) */;
+  %34 = %33.0;
+  %35 = layout_transform(%model.backbone.3.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 24, 72), float32] */;
+  %36 = nn.conv2d(%34, %35, padding=[0, 0, 0, 0], channels=72, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 128, 128, 72), float32] */;
+  %37 = nn.batch_norm(%36, %model.backbone.3.block.0.1.weight, %model.backbone.3.block.0.1.bias, %model.backbone.3.block.0.1.running_mean, %model.backbone.3.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 128, 128, 72), float32], Tensor[(72), float32], Tensor[(72), float32]) */;
+  %38 = %37.0;
+  %39 = reshape(%model.backbone.3.block.1.0.weight, newshape=[72, 1, 3, 3]) /* ty=Tensor[(72, 1, 3, 3), float32] */;
+  %40 = nn.relu(%38) /* ty=Tensor[(8, 128, 128, 72), float32] */;
+  %41 = layout_transform(%39, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 72, 1), float32] */;
+  %42 = nn.conv2d(%40, %41, padding=[1, 1, 1, 1], groups=72, channels=72, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 128, 128, 72), float32] */;
+  %43 = nn.batch_norm(%42, %model.backbone.3.block.1.1.weight, %model.backbone.3.block.1.1.bias, %model.backbone.3.block.1.1.running_mean, %model.backbone.3.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 128, 128, 72), float32], Tensor[(72), float32], Tensor[(72), float32]) */;
+  %44 = %43.0;
+  %45 = nn.relu(%44) /* ty=Tensor[(8, 128, 128, 72), float32] */;
+  %46 = layout_transform(%model.backbone.3.block.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 72, 24), float32] */;
+  %47 = nn.conv2d(%45, %46, padding=[0, 0, 0, 0], channels=24, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 128, 128, 24), float32] */;
+  %48 = nn.batch_norm(%47, %model.backbone.3.block.2.1.weight, %model.backbone.3.block.2.1.bias, %model.backbone.3.block.2.1.running_mean, %model.backbone.3.block.2.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 128, 128, 24), float32], Tensor[(24), float32], Tensor[(24), float32]) */;
+  %49 = %48.0;
+  %50 = add(%49, %34) /* ty=Tensor[(8, 128, 128, 24), float32] */;
+  %51 = layout_transform(%model.backbone.4.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 24, 72), float32] */;
+  %52 = nn.conv2d(%50, %51, padding=[0, 0, 0, 0], channels=72, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 128, 128, 72), float32] */;
+  %53 = nn.batch_norm(%52, %model.backbone.4.block.0.1.weight, %model.backbone.4.block.0.1.bias, %model.backbone.4.block.0.1.running_mean, %model.backbone.4.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 128, 128, 72), float32], Tensor[(72), float32], Tensor[(72), float32]) */;
+  %54 = %53.0;
+  %55 = reshape(%model.backbone.4.block.1.0.weight, newshape=[72, 1, 5, 5]) /* ty=Tensor[(72, 1, 5, 5), float32] */;
+  %56 = nn.relu(%54) /* ty=Tensor[(8, 128, 128, 72), float32] */;
+  %57 = layout_transform(%55, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(5, 5, 72, 1), float32] */;
+  %58 = nn.conv2d(%56, %57, strides=[2, 2], padding=[2, 2, 2, 2], groups=72, channels=72, kernel_size=[5, 5], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 64, 64, 72), float32] */;
+  %59 = nn.batch_norm(%58, %model.backbone.4.block.1.1.weight, %model.backbone.4.block.1.1.bias, %model.backbone.4.block.1.1.running_mean, %model.backbone.4.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 72), float32], Tensor[(72), float32], Tensor[(72), float32]) */;
+  %60 = %59.0;
+  %61 = nn.relu(%60) /* ty=Tensor[(8, 64, 64, 72), float32] */;
+  %62 = nn.adaptive_avg_pool2d(%61, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 72), float32] */;
+  %63 = layout_transform(%model.backbone.4.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 72, 24), float32] */;
+  %64 = expand_dims(%model.backbone.4.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(24, 1, 1), float32] */;
+  %65 = expand_dims(%64, axis=0) /* ty=Tensor[(1, 24, 1, 1), float32] */;
+  %66 = nn.conv2d(%62, %63, padding=[0, 0, 0, 0], channels=24, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 24), float32] */;
+  %67 = layout_transform(%65, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 24), float32] */;
+  %68 = add(%66, %67) /* ty=Tensor[(8, 1, 1, 24), float32] */;
+  %69 = nn.relu(%68) /* ty=Tensor[(8, 1, 1, 24), float32] */;
+  %70 = layout_transform(%model.backbone.4.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 24, 72), float32] */;
+  %71 = expand_dims(%model.backbone.4.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(72, 1, 1), float32] */;
+  %72 = expand_dims(%71, axis=0) /* ty=Tensor[(1, 72, 1, 1), float32] */;
+  %73 = nn.conv2d(%69, %70, padding=[0, 0, 0, 0], channels=72, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 72), float32] */;
+  %74 = layout_transform(%72, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 72), float32] */;
+  %75 = add(%73, %74) /* ty=Tensor[(8, 1, 1, 72), float32] */;
+  %76 = add(%75, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 72), float32] */;
+  %77 = clip(%76, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 72), float32] */;
+  %78 = divide(%77, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 72), float32] */;
+  %79 = multiply(%78, %61) /* ty=Tensor[(8, 64, 64, 72), float32] */;
+  %80 = layout_transform(%model.backbone.4.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 72, 40), float32] */;
+  %81 = nn.conv2d(%79, %80, padding=[0, 0, 0, 0], channels=40, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 64, 64, 40), float32] */;
+  %82 = nn.batch_norm(%81, %model.backbone.4.block.3.1.weight, %model.backbone.4.block.3.1.bias, %model.backbone.4.block.3.1.running_mean, %model.backbone.4.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 40), float32], Tensor[(40), float32], Tensor[(40), float32]) */;
+  %83 = %82.0;
+  %84 = layout_transform(%model.backbone.5.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 40, 120), float32] */;
+  %85 = nn.conv2d(%83, %84, padding=[0, 0, 0, 0], channels=120, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %86 = nn.batch_norm(%85, %model.backbone.5.block.0.1.weight, %model.backbone.5.block.0.1.bias, %model.backbone.5.block.0.1.running_mean, %model.backbone.5.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 120), float32], Tensor[(120), float32], Tensor[(120), float32]) */;
+  %87 = %86.0;
+  %88 = reshape(%model.backbone.5.block.1.0.weight, newshape=[120, 1, 5, 5]) /* ty=Tensor[(120, 1, 5, 5), float32] */;
+  %89 = nn.relu(%87) /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %90 = layout_transform(%88, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(5, 5, 120, 1), float32] */;
+  %91 = nn.conv2d(%89, %90, padding=[2, 2, 2, 2], groups=120, channels=120, kernel_size=[5, 5], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %92 = nn.batch_norm(%91, %model.backbone.5.block.1.1.weight, %model.backbone.5.block.1.1.bias, %model.backbone.5.block.1.1.running_mean, %model.backbone.5.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 120), float32], Tensor[(120), float32], Tensor[(120), float32]) */;
+  %93 = %92.0;
+  %94 = nn.relu(%93) /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %95 = nn.adaptive_avg_pool2d(%94, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %96 = layout_transform(%model.backbone.5.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 120, 32), float32] */;
+  %97 = expand_dims(%model.backbone.5.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(32, 1, 1), float32] */;
+  %98 = expand_dims(%97, axis=0) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %99 = nn.conv2d(%95, %96, padding=[0, 0, 0, 0], channels=32, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 32), float32] */;
+  %100 = layout_transform(%98, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 32), float32] */;
+  %101 = add(%99, %100) /* ty=Tensor[(8, 1, 1, 32), float32] */;
+  %102 = nn.relu(%101) /* ty=Tensor[(8, 1, 1, 32), float32] */;
+  %103 = layout_transform(%model.backbone.5.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 32, 120), float32] */;
+  %104 = expand_dims(%model.backbone.5.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(120, 1, 1), float32] */;
+  %105 = expand_dims(%104, axis=0) /* ty=Tensor[(1, 120, 1, 1), float32] */;
+  %106 = nn.conv2d(%102, %103, padding=[0, 0, 0, 0], channels=120, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %107 = layout_transform(%105, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 120), float32] */;
+  %108 = add(%106, %107) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %109 = add(%108, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %110 = clip(%109, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %111 = divide(%110, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %112 = multiply(%111, %94) /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %113 = layout_transform(%model.backbone.5.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 120, 40), float32] */;
+  %114 = nn.conv2d(%112, %113, padding=[0, 0, 0, 0], channels=40, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 64, 64, 40), float32] */;
+  %115 = nn.batch_norm(%114, %model.backbone.5.block.3.1.weight, %model.backbone.5.block.3.1.bias, %model.backbone.5.block.3.1.running_mean, %model.backbone.5.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 40), float32], Tensor[(40), float32], Tensor[(40), float32]) */;
+  %116 = %115.0;
+  %117 = add(%116, %83) /* ty=Tensor[(8, 64, 64, 40), float32] */;
+  %118 = layout_transform(%model.backbone.6.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 40, 120), float32] */;
+  %119 = nn.conv2d(%117, %118, padding=[0, 0, 0, 0], channels=120, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %120 = nn.batch_norm(%119, %model.backbone.6.block.0.1.weight, %model.backbone.6.block.0.1.bias, %model.backbone.6.block.0.1.running_mean, %model.backbone.6.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 120), float32], Tensor[(120), float32], Tensor[(120), float32]) */;
+  %121 = %120.0;
+  %122 = reshape(%model.backbone.6.block.1.0.weight, newshape=[120, 1, 5, 5]) /* ty=Tensor[(120, 1, 5, 5), float32] */;
+  %123 = nn.relu(%121) /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %124 = layout_transform(%122, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(5, 5, 120, 1), float32] */;
+  %125 = nn.conv2d(%123, %124, padding=[2, 2, 2, 2], groups=120, channels=120, kernel_size=[5, 5], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %126 = nn.batch_norm(%125, %model.backbone.6.block.1.1.weight, %model.backbone.6.block.1.1.bias, %model.backbone.6.block.1.1.running_mean, %model.backbone.6.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 120), float32], Tensor[(120), float32], Tensor[(120), float32]) */;
+  %127 = %126.0;
+  %128 = nn.relu(%127) /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %129 = nn.adaptive_avg_pool2d(%128, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %130 = layout_transform(%model.backbone.6.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 120, 32), float32] */;
+  %131 = expand_dims(%model.backbone.6.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(32, 1, 1), float32] */;
+  %132 = expand_dims(%131, axis=0) /* ty=Tensor[(1, 32, 1, 1), float32] */;
+  %133 = nn.conv2d(%129, %130, padding=[0, 0, 0, 0], channels=32, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 32), float32] */;
+  %134 = layout_transform(%132, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 32), float32] */;
+  %135 = add(%133, %134) /* ty=Tensor[(8, 1, 1, 32), float32] */;
+  %136 = nn.relu(%135) /* ty=Tensor[(8, 1, 1, 32), float32] */;
+  %137 = layout_transform(%model.backbone.6.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 32, 120), float32] */;
+  %138 = expand_dims(%model.backbone.6.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(120, 1, 1), float32] */;
+  %139 = expand_dims(%138, axis=0) /* ty=Tensor[(1, 120, 1, 1), float32] */;
+  %140 = nn.conv2d(%136, %137, padding=[0, 0, 0, 0], channels=120, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %141 = layout_transform(%139, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 120), float32] */;
+  %142 = add(%140, %141) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %143 = add(%142, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %144 = clip(%143, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %145 = divide(%144, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %146 = multiply(%145, %128) /* ty=Tensor[(8, 64, 64, 120), float32] */;
+  %147 = layout_transform(%model.backbone.6.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 120, 40), float32] */;
+  %148 = nn.conv2d(%146, %147, padding=[0, 0, 0, 0], channels=40, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 64, 64, 40), float32] */;
+  %149 = nn.batch_norm(%148, %model.backbone.6.block.3.1.weight, %model.backbone.6.block.3.1.bias, %model.backbone.6.block.3.1.running_mean, %model.backbone.6.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 40), float32], Tensor[(40), float32], Tensor[(40), float32]) */;
+  %150 = %149.0;
+  %151 = add(%150, %117) /* ty=Tensor[(8, 64, 64, 40), float32] */;
+  %152 = layout_transform(%model.backbone.7.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 40, 240), float32] */;
+  %153 = nn.conv2d(%151, %152, padding=[0, 0, 0, 0], channels=240, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 64, 64, 240), float32] */;
+  %154 = nn.batch_norm(%153, %model.backbone.7.block.0.1.weight, %model.backbone.7.block.0.1.bias, %model.backbone.7.block.0.1.running_mean, %model.backbone.7.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 64, 64, 240), float32], Tensor[(240), float32], Tensor[(240), float32]) */;
+  %155 = %154.0;
+  %156 = add(%155, 3f /* ty=float32 */) /* ty=Tensor[(8, 64, 64, 240), float32] */;
+  %157 = clip(%156, a_min=0f, a_max=6f) /* ty=Tensor[(8, 64, 64, 240), float32] */;
+  %158 = divide(%157, 6f /* ty=float32 */) /* ty=Tensor[(8, 64, 64, 240), float32] */;
+  %159 = reshape(%model.backbone.7.block.1.0.weight, newshape=[240, 1, 3, 3]) /* ty=Tensor[(240, 1, 3, 3), float32] */;
+  %160 = multiply(%155, %158) /* ty=Tensor[(8, 64, 64, 240), float32] */;
+  %161 = layout_transform(%159, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 240, 1), float32] */;
+  %162 = nn.conv2d(%160, %161, strides=[2, 2], padding=[1, 1, 1, 1], groups=240, channels=240, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 240), float32] */;
+  %163 = nn.batch_norm(%162, %model.backbone.7.block.1.1.weight, %model.backbone.7.block.1.1.bias, %model.backbone.7.block.1.1.running_mean, %model.backbone.7.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 240), float32], Tensor[(240), float32], Tensor[(240), float32]) */;
+  %164 = %163.0;
+  %165 = add(%164, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 240), float32] */;
+  %166 = clip(%165, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 240), float32] */;
+  %167 = divide(%166, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 240), float32] */;
+  %168 = multiply(%164, %167) /* ty=Tensor[(8, 32, 32, 240), float32] */;
+  %169 = layout_transform(%model.backbone.7.block.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 240, 80), float32] */;
+  %170 = nn.conv2d(%168, %169, padding=[0, 0, 0, 0], channels=80, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %171 = nn.batch_norm(%170, %model.backbone.7.block.2.1.weight, %model.backbone.7.block.2.1.bias, %model.backbone.7.block.2.1.running_mean, %model.backbone.7.block.2.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 80), float32], Tensor[(80), float32], Tensor[(80), float32]) */;
+  %172 = %171.0;
+  %173 = layout_transform(%model.backbone.8.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 80, 200), float32] */;
+  %174 = nn.conv2d(%172, %173, padding=[0, 0, 0, 0], channels=200, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %175 = nn.batch_norm(%174, %model.backbone.8.block.0.1.weight, %model.backbone.8.block.0.1.bias, %model.backbone.8.block.0.1.running_mean, %model.backbone.8.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 200), float32], Tensor[(200), float32], Tensor[(200), float32]) */;
+  %176 = %175.0;
+  %177 = add(%176, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %178 = clip(%177, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %179 = divide(%178, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %180 = reshape(%model.backbone.8.block.1.0.weight, newshape=[200, 1, 3, 3]) /* ty=Tensor[(200, 1, 3, 3), float32] */;
+  %181 = multiply(%176, %179) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %182 = layout_transform(%180, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 200, 1), float32] */;
+  %183 = nn.conv2d(%181, %182, padding=[1, 1, 1, 1], groups=200, channels=200, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %184 = nn.batch_norm(%183, %model.backbone.8.block.1.1.weight, %model.backbone.8.block.1.1.bias, %model.backbone.8.block.1.1.running_mean, %model.backbone.8.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 200), float32], Tensor[(200), float32], Tensor[(200), float32]) */;
+  %185 = %184.0;
+  %186 = add(%185, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %187 = clip(%186, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %188 = divide(%187, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %189 = multiply(%185, %188) /* ty=Tensor[(8, 32, 32, 200), float32] */;
+  %190 = layout_transform(%model.backbone.8.block.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 200, 80), float32] */;
+  %191 = nn.conv2d(%189, %190, padding=[0, 0, 0, 0], channels=80, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %192 = nn.batch_norm(%191, %model.backbone.8.block.2.1.weight, %model.backbone.8.block.2.1.bias, %model.backbone.8.block.2.1.running_mean, %model.backbone.8.block.2.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 80), float32], Tensor[(80), float32], Tensor[(80), float32]) */;
+  %193 = %192.0;
+  %194 = add(%193, %172) /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %195 = layout_transform(%model.backbone.9.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 80, 184), float32] */;
+  %196 = nn.conv2d(%194, %195, padding=[0, 0, 0, 0], channels=184, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %197 = nn.batch_norm(%196, %model.backbone.9.block.0.1.weight, %model.backbone.9.block.0.1.bias, %model.backbone.9.block.0.1.running_mean, %model.backbone.9.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 184), float32], Tensor[(184), float32], Tensor[(184), float32]) */;
+  %198 = %197.0;
+  %199 = add(%198, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %200 = clip(%199, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %201 = divide(%200, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %202 = reshape(%model.backbone.9.block.1.0.weight, newshape=[184, 1, 3, 3]) /* ty=Tensor[(184, 1, 3, 3), float32] */;
+  %203 = multiply(%198, %201) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %204 = layout_transform(%202, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 184, 1), float32] */;
+  %205 = nn.conv2d(%203, %204, padding=[1, 1, 1, 1], groups=184, channels=184, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %206 = nn.batch_norm(%205, %model.backbone.9.block.1.1.weight, %model.backbone.9.block.1.1.bias, %model.backbone.9.block.1.1.running_mean, %model.backbone.9.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 184), float32], Tensor[(184), float32], Tensor[(184), float32]) */;
+  %207 = %206.0;
+  %208 = add(%207, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %209 = clip(%208, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %210 = divide(%209, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %211 = multiply(%207, %210) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %212 = layout_transform(%model.backbone.9.block.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 184, 80), float32] */;
+  %213 = nn.conv2d(%211, %212, padding=[0, 0, 0, 0], channels=80, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %214 = nn.batch_norm(%213, %model.backbone.9.block.2.1.weight, %model.backbone.9.block.2.1.bias, %model.backbone.9.block.2.1.running_mean, %model.backbone.9.block.2.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 80), float32], Tensor[(80), float32], Tensor[(80), float32]) */;
+  %215 = %214.0;
+  %216 = add(%215, %194) /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %217 = layout_transform(%model.backbone.10.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 80, 184), float32] */;
+  %218 = nn.conv2d(%216, %217, padding=[0, 0, 0, 0], channels=184, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %219 = nn.batch_norm(%218, %model.backbone.10.block.0.1.weight, %model.backbone.10.block.0.1.bias, %model.backbone.10.block.0.1.running_mean, %model.backbone.10.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 184), float32], Tensor[(184), float32], Tensor[(184), float32]) */;
+  %220 = %219.0;
+  %221 = add(%220, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %222 = clip(%221, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %223 = divide(%222, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %224 = reshape(%model.backbone.10.block.1.0.weight, newshape=[184, 1, 3, 3]) /* ty=Tensor[(184, 1, 3, 3), float32] */;
+  %225 = multiply(%220, %223) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %226 = layout_transform(%224, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 184, 1), float32] */;
+  %227 = nn.conv2d(%225, %226, padding=[1, 1, 1, 1], groups=184, channels=184, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %228 = nn.batch_norm(%227, %model.backbone.10.block.1.1.weight, %model.backbone.10.block.1.1.bias, %model.backbone.10.block.1.1.running_mean, %model.backbone.10.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 184), float32], Tensor[(184), float32], Tensor[(184), float32]) */;
+  %229 = %228.0;
+  %230 = add(%229, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %231 = clip(%230, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %232 = divide(%231, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %233 = multiply(%229, %232) /* ty=Tensor[(8, 32, 32, 184), float32] */;
+  %234 = layout_transform(%model.backbone.10.block.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 184, 80), float32] */;
+  %235 = nn.conv2d(%233, %234, padding=[0, 0, 0, 0], channels=80, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %236 = nn.batch_norm(%235, %model.backbone.10.block.2.1.weight, %model.backbone.10.block.2.1.bias, %model.backbone.10.block.2.1.running_mean, %model.backbone.10.block.2.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 80), float32], Tensor[(80), float32], Tensor[(80), float32]) */;
+  %237 = %236.0;
+  %238 = add(%237, %216) /* ty=Tensor[(8, 32, 32, 80), float32] */;
+  %239 = layout_transform(%model.backbone.11.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 80, 480), float32] */;
+  %240 = nn.conv2d(%238, %239, padding=[0, 0, 0, 0], channels=480, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %241 = nn.batch_norm(%240, %model.backbone.11.block.0.1.weight, %model.backbone.11.block.0.1.bias, %model.backbone.11.block.0.1.running_mean, %model.backbone.11.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 480), float32], Tensor[(480), float32], Tensor[(480), float32]) */;
+  %242 = %241.0;
+  %243 = add(%242, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %244 = clip(%243, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %245 = divide(%244, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %246 = reshape(%model.backbone.11.block.1.0.weight, newshape=[480, 1, 3, 3]) /* ty=Tensor[(480, 1, 3, 3), float32] */;
+  %247 = multiply(%242, %245) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %248 = layout_transform(%246, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 480, 1), float32] */;
+  %249 = nn.conv2d(%247, %248, padding=[1, 1, 1, 1], groups=480, channels=480, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %250 = nn.batch_norm(%249, %model.backbone.11.block.1.1.weight, %model.backbone.11.block.1.1.bias, %model.backbone.11.block.1.1.running_mean, %model.backbone.11.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 480), float32], Tensor[(480), float32], Tensor[(480), float32]) */;
+  %251 = %250.0;
+  %252 = add(%251, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %253 = clip(%252, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %254 = divide(%253, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %255 = multiply(%251, %254) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %256 = nn.adaptive_avg_pool2d(%255, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 480), float32] */;
+  %257 = layout_transform(%model.backbone.11.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 480, 120), float32] */;
+  %258 = expand_dims(%model.backbone.11.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(120, 1, 1), float32] */;
+  %259 = expand_dims(%258, axis=0) /* ty=Tensor[(1, 120, 1, 1), float32] */;
+  %260 = nn.conv2d(%256, %257, padding=[0, 0, 0, 0], channels=120, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %261 = layout_transform(%259, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 120), float32] */;
+  %262 = add(%260, %261) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %263 = nn.relu(%262) /* ty=Tensor[(8, 1, 1, 120), float32] */;
+  %264 = layout_transform(%model.backbone.11.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 120, 480), float32] */;
+  %265 = expand_dims(%model.backbone.11.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(480, 1, 1), float32] */;
+  %266 = expand_dims(%265, axis=0) /* ty=Tensor[(1, 480, 1, 1), float32] */;
+  %267 = nn.conv2d(%263, %264, padding=[0, 0, 0, 0], channels=480, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 480), float32] */;
+  %268 = layout_transform(%266, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 480), float32] */;
+  %269 = add(%267, %268) /* ty=Tensor[(8, 1, 1, 480), float32] */;
+  %270 = add(%269, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 480), float32] */;
+  %271 = clip(%270, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 480), float32] */;
+  %272 = divide(%271, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 480), float32] */;
+  %273 = multiply(%272, %255) /* ty=Tensor[(8, 32, 32, 480), float32] */;
+  %274 = layout_transform(%model.backbone.11.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 480, 112), float32] */;
+  %275 = nn.conv2d(%273, %274, padding=[0, 0, 0, 0], channels=112, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 112), float32] */;
+  %276 = nn.batch_norm(%275, %model.backbone.11.block.3.1.weight, %model.backbone.11.block.3.1.bias, %model.backbone.11.block.3.1.running_mean, %model.backbone.11.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 112), float32], Tensor[(112), float32], Tensor[(112), float32]) */;
+  %277 = %276.0;
+  %278 = layout_transform(%model.backbone.12.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 112, 672), float32] */;
+  %279 = nn.conv2d(%277, %278, padding=[0, 0, 0, 0], channels=672, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %280 = nn.batch_norm(%279, %model.backbone.12.block.0.1.weight, %model.backbone.12.block.0.1.bias, %model.backbone.12.block.0.1.running_mean, %model.backbone.12.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 672), float32], Tensor[(672), float32], Tensor[(672), float32]) */;
+  %281 = %280.0;
+  %282 = add(%281, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %283 = clip(%282, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %284 = divide(%283, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %285 = reshape(%model.backbone.12.block.1.0.weight, newshape=[672, 1, 3, 3]) /* ty=Tensor[(672, 1, 3, 3), float32] */;
+  %286 = multiply(%281, %284) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %287 = layout_transform(%285, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(3, 3, 672, 1), float32] */;
+  %288 = nn.conv2d(%286, %287, padding=[1, 1, 1, 1], groups=672, channels=672, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %289 = nn.batch_norm(%288, %model.backbone.12.block.1.1.weight, %model.backbone.12.block.1.1.bias, %model.backbone.12.block.1.1.running_mean, %model.backbone.12.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 672), float32], Tensor[(672), float32], Tensor[(672), float32]) */;
+  %290 = %289.0;
+  %291 = add(%290, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %292 = clip(%291, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %293 = divide(%292, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %294 = multiply(%290, %293) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %295 = nn.adaptive_avg_pool2d(%294, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %296 = layout_transform(%model.backbone.12.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 672, 168), float32] */;
+  %297 = expand_dims(%model.backbone.12.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(168, 1, 1), float32] */;
+  %298 = expand_dims(%297, axis=0) /* ty=Tensor[(1, 168, 1, 1), float32] */;
+  %299 = nn.conv2d(%295, %296, padding=[0, 0, 0, 0], channels=168, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 168), float32] */;
+  %300 = layout_transform(%298, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 168), float32] */;
+  %301 = add(%299, %300) /* ty=Tensor[(8, 1, 1, 168), float32] */;
+  %302 = nn.relu(%301) /* ty=Tensor[(8, 1, 1, 168), float32] */;
+  %303 = layout_transform(%model.backbone.12.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 168, 672), float32] */;
+  %304 = expand_dims(%model.backbone.12.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(672, 1, 1), float32] */;
+  %305 = expand_dims(%304, axis=0) /* ty=Tensor[(1, 672, 1, 1), float32] */;
+  %306 = nn.conv2d(%302, %303, padding=[0, 0, 0, 0], channels=672, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %307 = layout_transform(%305, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 672), float32] */;
+  %308 = add(%306, %307) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %309 = add(%308, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %310 = clip(%309, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %311 = divide(%310, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %312 = multiply(%311, %294) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %313 = layout_transform(%model.backbone.12.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 672, 112), float32] */;
+  %314 = nn.conv2d(%312, %313, padding=[0, 0, 0, 0], channels=112, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 112), float32] */;
+  %315 = nn.batch_norm(%314, %model.backbone.12.block.3.1.weight, %model.backbone.12.block.3.1.bias, %model.backbone.12.block.3.1.running_mean, %model.backbone.12.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 112), float32], Tensor[(112), float32], Tensor[(112), float32]) */;
+  %316 = %315.0;
+  %317 = add(%316, %277) /* ty=Tensor[(8, 32, 32, 112), float32] */;
+  %318 = layout_transform(%model.backbone.13.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 112, 672), float32] */;
+  %319 = nn.conv2d(%317, %318, padding=[0, 0, 0, 0], channels=672, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %320 = nn.batch_norm(%319, %model.backbone.13.block.0.1.weight, %model.backbone.13.block.0.1.bias, %model.backbone.13.block.0.1.running_mean, %model.backbone.13.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 672), float32], Tensor[(672), float32], Tensor[(672), float32]) */;
+  %321 = %320.0;
+  %322 = add(%321, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %323 = clip(%322, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %324 = divide(%323, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %325 = reshape(%model.backbone.13.block.1.0.weight, newshape=[672, 1, 5, 5]) /* ty=Tensor[(672, 1, 5, 5), float32] */;
+  %326 = multiply(%321, %324) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %327 = layout_transform(%325, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(5, 5, 672, 1), float32] */;
+  %328 = nn.conv2d(%326, %327, padding=[4, 4, 4, 4], dilation=[2, 2], groups=672, channels=672, kernel_size=[5, 5], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %329 = nn.batch_norm(%328, %model.backbone.13.block.1.1.weight, %model.backbone.13.block.1.1.bias, %model.backbone.13.block.1.1.running_mean, %model.backbone.13.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 672), float32], Tensor[(672), float32], Tensor[(672), float32]) */;
+  %330 = %329.0;
+  %331 = add(%330, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %332 = clip(%331, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %333 = divide(%332, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %334 = multiply(%330, %333) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %335 = nn.adaptive_avg_pool2d(%334, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %336 = layout_transform(%model.backbone.13.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 672, 168), float32] */;
+  %337 = expand_dims(%model.backbone.13.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(168, 1, 1), float32] */;
+  %338 = expand_dims(%337, axis=0) /* ty=Tensor[(1, 168, 1, 1), float32] */;
+  %339 = nn.conv2d(%335, %336, padding=[0, 0, 0, 0], channels=168, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 168), float32] */;
+  %340 = layout_transform(%338, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 168), float32] */;
+  %341 = add(%339, %340) /* ty=Tensor[(8, 1, 1, 168), float32] */;
+  %342 = nn.relu(%341) /* ty=Tensor[(8, 1, 1, 168), float32] */;
+  %343 = layout_transform(%model.backbone.13.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 168, 672), float32] */;
+  %344 = expand_dims(%model.backbone.13.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(672, 1, 1), float32] */;
+  %345 = expand_dims(%344, axis=0) /* ty=Tensor[(1, 672, 1, 1), float32] */;
+  %346 = nn.conv2d(%342, %343, padding=[0, 0, 0, 0], channels=672, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %347 = layout_transform(%345, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 672), float32] */;
+  %348 = add(%346, %347) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %349 = add(%348, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %350 = clip(%349, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %351 = divide(%350, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 672), float32] */;
+  %352 = multiply(%351, %334) /* ty=Tensor[(8, 32, 32, 672), float32] */;
+  %353 = layout_transform(%model.backbone.13.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 672, 160), float32] */;
+  %354 = nn.conv2d(%352, %353, padding=[0, 0, 0, 0], channels=160, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 160), float32] */;
+  %355 = nn.batch_norm(%354, %model.backbone.13.block.3.1.weight, %model.backbone.13.block.3.1.bias, %model.backbone.13.block.3.1.running_mean, %model.backbone.13.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 160), float32], Tensor[(160), float32], Tensor[(160), float32]) */;
+  %356 = %355.0;
+  %357 = layout_transform(%model.backbone.14.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 160, 960), float32] */;
+  %358 = nn.conv2d(%356, %357, padding=[0, 0, 0, 0], channels=960, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %359 = nn.batch_norm(%358, %model.backbone.14.block.0.1.weight, %model.backbone.14.block.0.1.bias, %model.backbone.14.block.0.1.running_mean, %model.backbone.14.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 960), float32], Tensor[(960), float32], Tensor[(960), float32]) */;
+  %360 = %359.0;
+  %361 = add(%360, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %362 = clip(%361, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %363 = divide(%362, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %364 = reshape(%model.backbone.14.block.1.0.weight, newshape=[960, 1, 5, 5]) /* ty=Tensor[(960, 1, 5, 5), float32] */;
+  %365 = multiply(%360, %363) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %366 = layout_transform(%364, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(5, 5, 960, 1), float32] */;
+  %367 = nn.conv2d(%365, %366, padding=[4, 4, 4, 4], dilation=[2, 2], groups=960, channels=960, kernel_size=[5, 5], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %368 = nn.batch_norm(%367, %model.backbone.14.block.1.1.weight, %model.backbone.14.block.1.1.bias, %model.backbone.14.block.1.1.running_mean, %model.backbone.14.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 960), float32], Tensor[(960), float32], Tensor[(960), float32]) */;
+  %369 = %368.0;
+  %370 = add(%369, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %371 = clip(%370, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %372 = divide(%371, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %373 = multiply(%369, %372) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %374 = nn.adaptive_avg_pool2d(%373, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %375 = layout_transform(%model.backbone.14.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 960, 240), float32] */;
+  %376 = expand_dims(%model.backbone.14.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(240, 1, 1), float32] */;
+  %377 = expand_dims(%376, axis=0) /* ty=Tensor[(1, 240, 1, 1), float32] */;
+  %378 = nn.conv2d(%374, %375, padding=[0, 0, 0, 0], channels=240, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 240), float32] */;
+  %379 = layout_transform(%377, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 240), float32] */;
+  %380 = add(%378, %379) /* ty=Tensor[(8, 1, 1, 240), float32] */;
+  %381 = nn.relu(%380) /* ty=Tensor[(8, 1, 1, 240), float32] */;
+  %382 = layout_transform(%model.backbone.14.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 240, 960), float32] */;
+  %383 = expand_dims(%model.backbone.14.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(960, 1, 1), float32] */;
+  %384 = expand_dims(%383, axis=0) /* ty=Tensor[(1, 960, 1, 1), float32] */;
+  %385 = nn.conv2d(%381, %382, padding=[0, 0, 0, 0], channels=960, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %386 = layout_transform(%384, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 960), float32] */;
+  %387 = add(%385, %386) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %388 = add(%387, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %389 = clip(%388, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %390 = divide(%389, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %391 = multiply(%390, %373) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %392 = layout_transform(%model.backbone.14.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 960, 160), float32] */;
+  %393 = nn.conv2d(%391, %392, padding=[0, 0, 0, 0], channels=160, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 160), float32] */;
+  %394 = nn.batch_norm(%393, %model.backbone.14.block.3.1.weight, %model.backbone.14.block.3.1.bias, %model.backbone.14.block.3.1.running_mean, %model.backbone.14.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 160), float32], Tensor[(160), float32], Tensor[(160), float32]) */;
+  %395 = %394.0;
+  %396 = add(%395, %356) /* ty=Tensor[(8, 32, 32, 160), float32] */;
+  %397 = layout_transform(%model.backbone.15.block.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 160, 960), float32] */;
+  %398 = nn.conv2d(%396, %397, padding=[0, 0, 0, 0], channels=960, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %399 = nn.batch_norm(%398, %model.backbone.15.block.0.1.weight, %model.backbone.15.block.0.1.bias, %model.backbone.15.block.0.1.running_mean, %model.backbone.15.block.0.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 960), float32], Tensor[(960), float32], Tensor[(960), float32]) */;
+  %400 = %399.0;
+  %401 = add(%400, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %402 = clip(%401, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %403 = divide(%402, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %404 = reshape(%model.backbone.15.block.1.0.weight, newshape=[960, 1, 5, 5]) /* ty=Tensor[(960, 1, 5, 5), float32] */;
+  %405 = multiply(%400, %403) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %406 = layout_transform(%404, src_layout="OIHW", dst_layout="HWOI") /* ty=Tensor[(5, 5, 960, 1), float32] */;
+  %407 = nn.conv2d(%405, %406, padding=[4, 4, 4, 4], dilation=[2, 2], groups=960, channels=960, kernel_size=[5, 5], data_layout="NHWC", kernel_layout="HWOI") /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %408 = nn.batch_norm(%407, %model.backbone.15.block.1.1.weight, %model.backbone.15.block.1.1.bias, %model.backbone.15.block.1.1.running_mean, %model.backbone.15.block.1.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 960), float32], Tensor[(960), float32], Tensor[(960), float32]) */;
+  %409 = %408.0;
+  %410 = add(%409, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %411 = clip(%410, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %412 = divide(%411, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %413 = multiply(%409, %412) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %414 = nn.adaptive_avg_pool2d(%413, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %415 = layout_transform(%model.backbone.15.block.2.fc1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 960, 240), float32] */;
+  %416 = expand_dims(%model.backbone.15.block.2.fc1.bias, axis=1, num_newaxis=2) /* ty=Tensor[(240, 1, 1), float32] */;
+  %417 = expand_dims(%416, axis=0) /* ty=Tensor[(1, 240, 1, 1), float32] */;
+  %418 = nn.conv2d(%414, %415, padding=[0, 0, 0, 0], channels=240, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 240), float32] */;
+  %419 = layout_transform(%417, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 240), float32] */;
+  %420 = add(%418, %419) /* ty=Tensor[(8, 1, 1, 240), float32] */;
+  %421 = nn.relu(%420) /* ty=Tensor[(8, 1, 1, 240), float32] */;
+  %422 = layout_transform(%model.backbone.15.block.2.fc2.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 240, 960), float32] */;
+  %423 = expand_dims(%model.backbone.15.block.2.fc2.bias, axis=1, num_newaxis=2) /* ty=Tensor[(960, 1, 1), float32] */;
+  %424 = expand_dims(%423, axis=0) /* ty=Tensor[(1, 960, 1, 1), float32] */;
+  %425 = nn.conv2d(%421, %422, padding=[0, 0, 0, 0], channels=960, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %426 = layout_transform(%424, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 960), float32] */;
+  %427 = add(%425, %426) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %428 = add(%427, 3f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %429 = clip(%428, a_min=0f, a_max=6f) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %430 = divide(%429, 6f /* ty=float32 */) /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %431 = multiply(%430, %413) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %432 = layout_transform(%model.backbone.15.block.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 960, 160), float32] */;
+  %433 = nn.conv2d(%431, %432, padding=[0, 0, 0, 0], channels=160, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 160), float32] */;
+  %434 = nn.batch_norm(%433, %model.backbone.15.block.3.1.weight, %model.backbone.15.block.3.1.bias, %model.backbone.15.block.3.1.running_mean, %model.backbone.15.block.3.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 160), float32], Tensor[(160), float32], Tensor[(160), float32]) */;
+  %435 = %434.0;
+  %436 = add(%435, %396) /* ty=Tensor[(8, 32, 32, 160), float32] */;
+  %437 = layout_transform(%model.backbone.16.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 160, 960), float32] */;
+  %438 = nn.conv2d(%436, %437, padding=[0, 0, 0, 0], channels=960, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %439 = nn.batch_norm(%438, %model.backbone.16.1.weight, %model.backbone.16.1.bias, %model.backbone.16.1.running_mean, %model.backbone.16.1.running_var, axis=3, epsilon=0.001f) /* ty=(Tensor[(8, 32, 32, 960), float32], Tensor[(960), float32], Tensor[(960), float32]) */;
+  %440 = %439.0;
+  %441 = add(%440, 3f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %442 = clip(%441, a_min=0f, a_max=6f) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %443 = divide(%442, 6f /* ty=float32 */) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %444 = multiply(%440, %443) /* ty=Tensor[(8, 32, 32, 960), float32] */;
+  %445 = layout_transform(%model.classifier.0.convs.0.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 960, 256), float32] */;
+  %446 = nn.conv2d(%444, %445, padding=[0, 0, 0, 0], channels=256, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %447 = nn.batch_norm(%446, %model.classifier.0.convs.0.1.weight, %model.classifier.0.convs.0.1.bias, %model.classifier.0.convs.0.1.running_mean, %model.classifier.0.convs.0.1.running_var, axis=3) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %448 = %447.0;
+  %449 = layout_transform(%model.classifier.0.convs.1.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(3, 3, 960, 256), float32] */;
+  %450 = nn.conv2d(%444, %449, padding=[12, 12, 12, 12], dilation=[12, 12], channels=256, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %451 = nn.batch_norm(%450, %model.classifier.0.convs.1.1.weight, %model.classifier.0.convs.1.1.bias, %model.classifier.0.convs.1.1.running_mean, %model.classifier.0.convs.1.1.running_var, axis=3) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %452 = %451.0;
+  %453 = layout_transform(%model.classifier.0.convs.2.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(3, 3, 960, 256), float32] */;
+  %454 = nn.conv2d(%444, %453, padding=[24, 24, 24, 24], dilation=[24, 24], channels=256, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %455 = nn.batch_norm(%454, %model.classifier.0.convs.2.1.weight, %model.classifier.0.convs.2.1.bias, %model.classifier.0.convs.2.1.running_mean, %model.classifier.0.convs.2.1.running_var, axis=3) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %456 = %455.0;
+  %457 = layout_transform(%model.classifier.0.convs.3.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(3, 3, 960, 256), float32] */;
+  %458 = nn.conv2d(%444, %457, padding=[36, 36, 36, 36], dilation=[36, 36], channels=256, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %459 = nn.batch_norm(%458, %model.classifier.0.convs.3.1.weight, %model.classifier.0.convs.3.1.bias, %model.classifier.0.convs.3.1.running_mean, %model.classifier.0.convs.3.1.running_var, axis=3) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %460 = %459.0;
+  %461 = nn.adaptive_avg_pool2d(%444, output_size=[1, 1], layout="NHWC") /* ty=Tensor[(8, 1, 1, 960), float32] */;
+  %462 = layout_transform(%model.classifier.0.convs.4.1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 960, 256), float32] */;
+  %463 = nn.conv2d(%461, %462, padding=[0, 0, 0, 0], channels=256, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 1, 1, 256), float32] */;
+  %464 = nn.batch_norm(%463, %model.classifier.0.convs.4.2.weight, %model.classifier.0.convs.4.2.bias, %model.classifier.0.convs.4.2.running_mean, %model.classifier.0.convs.4.2.running_var, axis=3) /* ty=(Tensor[(8, 1, 1, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %465 = %464.0;
+  %466 = nn.relu(%465) /* ty=Tensor[(8, 1, 1, 256), float32] */;
+  %467 = nn.relu(%448) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %468 = nn.relu(%452) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %469 = nn.relu(%456) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %470 = nn.relu(%460) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %471 = image.resize2d(%466, size=[32, 32], layout="NHWC", rounding_method="", cubic_alpha=-0.75f) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %472 = (%467, %468, %469, %470, %471);
+  %473 = concatenate(%472, axis=3) /* ty=Tensor[(8, 32, 32, 1280), float32] */;
+  %474 = layout_transform(%model.classifier.0.project.0.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 1280, 256), float32] */;
+  %475 = nn.conv2d(%473, %474, padding=[0, 0, 0, 0], channels=256, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %476 = nn.batch_norm(%475, %model.classifier.0.project.1.weight, %model.classifier.0.project.1.bias, %model.classifier.0.project.1.running_mean, %model.classifier.0.project.1.running_var, axis=3) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %477 = %476.0;
+  %478 = nn.relu(%477) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %479 = nn.dropout(%478) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(8, 32, 32, 256), float32]) */;
+  %480 = %479.0;
+  %481 = layout_transform(%model.classifier.1.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(3, 3, 256, 256), float32] */;
+  %482 = nn.conv2d(%480, %481, padding=[1, 1, 1, 1], channels=256, kernel_size=[3, 3], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %483 = nn.batch_norm(%482, %model.classifier.2.weight, %model.classifier.2.bias, %model.classifier.2.running_mean, %model.classifier.2.running_var, axis=3) /* ty=(Tensor[(8, 32, 32, 256), float32], Tensor[(256), float32], Tensor[(256), float32]) */;
+  %484 = %483.0;
+  %485 = nn.relu(%484) /* ty=Tensor[(8, 32, 32, 256), float32] */;
+  %486 = layout_transform(%model.classifier.4.weight, src_layout="OIHW", dst_layout="HWIO") /* ty=Tensor[(1, 1, 256, 21), float32] */;
+  %487 = expand_dims(%model.classifier.4.bias, axis=1, num_newaxis=2) /* ty=Tensor[(21, 1, 1), float32] */;
+  %488 = expand_dims(%487, axis=0) /* ty=Tensor[(1, 21, 1, 1), float32] */;
+  %489 = nn.conv2d(%485, %486, padding=[0, 0, 0, 0], channels=21, kernel_size=[1, 1], data_layout="NHWC", kernel_layout="HWIO") /* ty=Tensor[(8, 32, 32, 21), float32] */;
+  %490 = layout_transform(%488, src_layout="NCHW", dst_layout="NHWC") /* ty=Tensor[(1, 1, 1, 21), float32] */;
+  %491 = add(%489, %490) /* ty=Tensor[(8, 32, 32, 21), float32] */;
+  %492 = image.resize2d(%491, size=[512, 512], layout="NHWC", rounding_method="", cubic_alpha=-0.75f) /* ty=Tensor[(8, 512, 512, 21), float32] */;
+  layout_transform(%492, src_layout="NHWC", dst_layout="NCHW") /* ty=Tensor[(8, 21, 512, 512), float32] */
+}
