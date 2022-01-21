@@ -1,13 +1,13 @@
+# PyTorch imports
+import torch
+import torchvision
+
 import tvm
 from tvm import relay, auto_scheduler
 from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
 
 import numpy as np
-
-# PyTorch imports
-import torch
-import torchvision
 
 in_size = 300
 
@@ -52,17 +52,17 @@ def get_torch_outputs(model, inp):
 
 
 num_iters = 50
-detr = torch.hub.load('facebookresearch/detr', 'detr_resnet50', pretrained=True)
+detr = torch.hub.load('facebookresearch/detr', 'detr_resnet50', pretrained=False)
 model = TraceWrapper(detr.eval())
 model.eval()
-inp = torch.rand(8, 3, 750, 800)
+inp = torch.rand(1, 3, 750, 800)
 
 with torch.no_grad():
     trace = torch.jit.trace(model, inp)
     torch_res = model(inp)
 
-target = "cuda"
-log_file = "detr_b8.log"
+target = "vulkan -from_device=0"
+log_file = "logs/radv_llvm_6600xt.log"
 
 def auto_schedule():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
