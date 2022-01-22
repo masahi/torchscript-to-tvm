@@ -62,20 +62,23 @@ with torch.no_grad():
     torch_res = model(inp)
 
 target = "vulkan -from_device=0"
-log_file = "logs/radv_llvm_6600xt.log"
+log_file = "logs/radv_llvm_6600xt_fp16.log"
 
 def auto_schedule():
-    mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+    # mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    with open("detr_mod.json", "w") as fo:
-        fo.write(tvm.ir.save_json(mod))
-    with open("detr.params", "wb") as fo:
-        fo.write(relay.save_param_dict(params))
+    # with open("detr_mod.json", "w") as fo:
+    #     fo.write(tvm.ir.save_json(mod))
+    # with open("detr.params", "wb") as fo:
+    #     fo.write(relay.save_param_dict(params))
 
     with open("detr_mod.json", "r") as fi:
         mod = tvm.ir.load_json(fi.read())
     with open("detr.params", "rb") as fi:
         params = relay.load_param_dict(fi.read())
+
+    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+    mod = ToMixedPrecision("float16")(mod)
 
     with tvm.transform.PassContext(opt_level=3):
         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
@@ -103,8 +106,8 @@ def auto_schedule():
 def bench_tvm():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    # from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
-    # mod = ToMixedPrecision("float16")(mod)
+    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+    mod = ToMixedPrecision("float16")(mod)
     # print(mod)
 
     # with tvm.transform.PassContext(opt_level=3):
