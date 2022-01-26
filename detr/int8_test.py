@@ -1,26 +1,28 @@
+# PyTorch imports
+import torch
+import torchvision
+from torch.quantization import get_default_qconfig
+from torch.quantization.quantize_fx import prepare_fx, convert_fx
+
 import tvm
 from tvm import relay, auto_scheduler
 from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
-from torch.quantization import get_default_qconfig
-from torch.quantization.quantize_fx import prepare_fx, convert_fx
 
 import numpy as np
 
-# PyTorch imports
-import torch
-import torchvision
-from torch import nn
+in_size = 300
 
+input_shape = (1, 3, in_size, in_size)
 
-class TraceWrapper(nn.Module):
+class TraceWrapper(torch.nn.Module):
     def __init__(self, model):
         super().__init__()
         self.model = model
 
     def forward(self, inp):
         out = self.model(inp)
-        return out["out"]
+        return (out['pred_logits'], out['pred_boxes'])
 
 
 def benchmark_torch(model, inp, num_iters):
@@ -52,38 +54,46 @@ def get_torch_outputs(model, inp):
 
 
 num_iters = 50
-deeplabv3 = torchvision.models.segmentation.deeplabv3_mobilenet_v3_large(pretrained=True)
-model = TraceWrapper(deeplabv3.eval())
+detr = torch.hub.load('facebookresearch/detr', 'detr_resnet50', pretrained=False)
+model = TraceWrapper(detr.eval())
 model.eval()
-inp = torch.rand(8, 3, 512, 512)
+inp = torch.rand(1, 3, 750, 800)
 
 qconfig = get_default_qconfig("fbgemm")
 qconfig_dict = {"": qconfig}
 
-prepared_model = prepare_fx(model, qconfig_dict)
-prepared_model(inp)
+prepared_model = model
+prepared_model.model.backbone = prepare_fx(model.model.backbone, qconfig_dict)
 qmodel = convert_fx(prepared_model)
-print(qmodel.graph)
 
 with torch.no_grad():
     trace = torch.jit.trace(qmodel, inp)
-    torch_res = model(inp)
+    torch_res = trace(inp)
 
-mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
-
-target = "cuda"
-log_file = "deeplabvv3_b8.log"
+# target = "vulkan -from_device=0"
+target = "rocm"
+log_file = "logs/rocm_6600xt_fp16.log"
 
 def auto_schedule():
-    mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+    # mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
+
+    # with open("detr_mod.json", "w") as fo:
+    #     fo.write(tvm.ir.save_json(mod))
+    # with open("detr.params", "wb") as fo:
+    #     fo.write(relay.save_param_dict(params))
+
+    with open("detr_mod.json", "r") as fi:
+        mod = tvm.ir.load_json(fi.read())
+    with open("detr.params", "rb") as fi:
+        params = relay.load_param_dict(fi.read())
+
+    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+    mod = ToMixedPrecision("float16")(mod)
 
     with tvm.transform.PassContext(opt_level=3):
         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
         seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
         mod = seq(mod)
-
-    with open("deeplabv3.txt", "w") as f:
-        f.write(str(relay.transform.InferType()(mod)))
 
     tasks, task_weights = auto_scheduler.extract_tasks(mod, params, target)
 
@@ -106,6 +116,16 @@ def auto_schedule():
 def bench_tvm():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
+    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+    mod = ToMixedPrecision("float16")(mod)
+    # print(mod)
+
+    # with tvm.transform.PassContext(opt_level=3):
+    #     desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
+    #     seq = tvm.transform.Sequential([relay.transform.ConvertLayout(desired_layouts)])
+    #     mod = seq(mod)
+    #     json, lib, params = relay.build(mod, target=target, params=params)
+
     with auto_scheduler.ApplyHistoryBest(log_file):
         with tvm.transform.PassContext(opt_level=3, config={"relay.backend.use_auto_scheduler": True}):
             desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
@@ -118,6 +138,15 @@ def bench_tvm():
     runtime.set_input(**params)
     runtime.set_input("input", inp.numpy())
     runtime.run()
+
+    with open("rocm_fp16_asm.s", "w") as f:
+        f.write(str(lib.imported_modules[0].get_source("asm")))
+
+    tvm_results = [runtime.get_output(i).asnumpy() for i in [0, 1]]
+    pt_results = get_torch_outputs(model, inp)
+
+    for pt_res, tvm_res in zip(pt_results, tvm_results):
+        print(np.mean(np.abs(pt_res - tvm_res)))
 
     ftimer = runtime.module.time_evaluator("run", ctx, number=1, repeat=50)
     prof_res = np.array(ftimer().results) * 1000

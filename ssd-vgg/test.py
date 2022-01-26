@@ -53,12 +53,12 @@ model.eval()
 in_size = 500
 img = get_input(in_size)
 inp = torch.from_numpy(img)
+input_name = "inp"
 
 with torch.no_grad():
     torch_out = model(inp)[0]
     script_module = do_trace(model)
-    script_out = script_module(inp)
-    mod, params = relay.frontend.from_pytorch(script_module, [("inp", inp.shape)])
+    mod, params = relay.frontend.from_pytorch(script_module, [(input_name, inp.shape)])
 
 target = "llvm"
 
@@ -67,7 +67,7 @@ with tvm.transform.PassContext(opt_level=3):
 
 dev = tvm.device(target, 0)
 vm = VirtualMachine(vm_exec, dev)
-vm.set_input("main", **{"inp": img})
+vm.set_input("main", **{input_name: img})
 vm.run()
 
 tvm_out = vm.get_outputs()[0].numpy()
