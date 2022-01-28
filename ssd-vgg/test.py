@@ -26,6 +26,10 @@ class TraceWrapper(torch.nn.Module):
         self.model = model
 
     def forward(self, inp):
+        # features = self.model.backbone(inp)
+        # features = list(features.values())
+        # out = self.model.head(features)
+        # return out["bbox_regression"], out["cls_logits"]
         out = self.model(inp)
         return dict_to_tuple(out[0])
 
@@ -60,6 +64,7 @@ with torch.no_grad():
     script_module = do_trace(model)
     mod, params = relay.frontend.from_pytorch(script_module, [(input_name, inp.shape)])
 
+print(relay.transform.InferType()(mod))
 target = "llvm"
 
 with tvm.transform.PassContext(opt_level=3):

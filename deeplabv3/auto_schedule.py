@@ -2,9 +2,6 @@ import tvm
 from tvm import relay, auto_scheduler
 from tvm.runtime import profiler_vm
 from tvm.runtime.vm import VirtualMachine
-from torch.quantization import get_default_qconfig
-from torch.quantization.quantize_fx import prepare_fx, convert_fx
-
 import numpy as np
 
 # PyTorch imports
@@ -57,16 +54,8 @@ model = TraceWrapper(deeplabv3.eval())
 model.eval()
 inp = torch.rand(8, 3, 512, 512)
 
-qconfig = get_default_qconfig("fbgemm")
-qconfig_dict = {"": qconfig}
-
-prepared_model = prepare_fx(model, qconfig_dict)
-prepared_model(inp)
-qmodel = convert_fx(prepared_model)
-print(qmodel.graph)
-
 with torch.no_grad():
-    trace = torch.jit.trace(qmodel, inp)
+    trace = torch.jit.trace(model, inp)
     torch_res = model(inp)
 
 mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
