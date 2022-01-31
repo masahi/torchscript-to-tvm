@@ -61,9 +61,11 @@ with torch.no_grad():
     trace = torch.jit.trace(model, inp)
     torch_res = model(inp)
 
-# target = "vulkan -from_device=0"
-target = "rocm"
-log_file = "logs/rocm_6600xt_fp16.log"
+use_fp16 = True
+target = "vulkan -from_device=0"
+log_file = "logs/radv_aco_fp16_wave32_6600xt.log"
+# target = "rocm"
+# log_file = "logs/rocm_6600xt_fp16.log"
 
 def auto_schedule():
     # mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
@@ -78,8 +80,9 @@ def auto_schedule():
     with open("detr.params", "rb") as fi:
         params = relay.load_param_dict(fi.read())
 
-    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
-    mod = ToMixedPrecision("float16")(mod)
+    if use_fp16:
+        from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+        mod = ToMixedPrecision("float16")(mod)
 
     with tvm.transform.PassContext(opt_level=3):
         desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
@@ -93,8 +96,8 @@ def auto_schedule():
         print(task.compute_dag)
 
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(repeat=1, min_repeat_ms=300, timeout=100)
-    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
-    tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)
+    tuner = auto_scheduler.TaskScheduler(tasks, task_weights)
+    # tuner = auto_scheduler.TaskScheduler(tasks, task_weights, load_log_file=log_file)x
     tune_option = auto_scheduler.TuningOptions(
         num_measure_trials=50000,  # change this to 20000 to achieve the best performance
         runner=measure_ctx.runner,
@@ -107,9 +110,10 @@ def auto_schedule():
 def bench_tvm():
     mod, params = relay.frontend.from_pytorch(trace, [('input', inp.shape)])
 
-    from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
-    mod = ToMixedPrecision("float16")(mod)
-    # print(mod)
+    if use_fp16:
+        from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
+        mod = ToMixedPrecision("float16")(mod)
+        # print(mod)
 
     # with tvm.transform.PassContext(opt_level=3):
     #     desired_layouts = {'nn.conv2d': ['NHWC', 'default']}
@@ -130,8 +134,8 @@ def bench_tvm():
     runtime.set_input("input", inp.numpy())
     runtime.run()
 
-    with open("rocm_fp16_asm.s", "w") as f:
-        f.write(str(lib.imported_modules[0].get_source("asm")))
+    # with open("rocm_fp16_asm.s", "w") as f:
+    #     f.write(str(lib.imported_modules[0].get_source("asm")))
 
     tvm_results = [runtime.get_output(i).asnumpy() for i in [0, 1]]
     pt_results = get_torch_outputs(model, inp)
