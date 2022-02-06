@@ -43,6 +43,8 @@ logging.basicConfig(
 # logging.getLogger("transformers.modeling_utils").setLevel(
 #    logging.WARN)  # Reduce logging
 
+print(torch.__version__)
+
 
 configs = Namespace()
 
@@ -53,7 +55,7 @@ configs.output_dir = "./MRPC/"
 configs.data_dir = "./glue_data/MRPC"
 
 # The model name or path for the pre-trained model.
-configs.model_name_or_path = "bert-large-uncased"
+configs.model_name_or_path = "bert-base-uncased"
 # The maximum length of an input sequence
 configs.max_seq_length = 128
 
@@ -84,7 +86,7 @@ set_seed(42)
 
 
 # load model
-model = BertForSequenceClassification.from_pretrained('bert-large-uncased')
+model = BertForSequenceClassification.from_pretrained(configs.output_dir, return_dict=False)
 model.to(configs.device)
 
 # quantize model
@@ -191,31 +193,6 @@ def evaluate(args, model, tokenizer, prefix=""):
     return results
 
 
-def export_onnx_model(args, model, tokenizer, onnx_model_path):
-    with torch.no_grad():
-        inputs = {'input_ids':      torch.ones(1,128, dtype=torch.int64),
-                    'attention_mask': torch.ones(1,128, dtype=torch.int64),
-                    'token_type_ids': torch.ones(1,128, dtype=torch.int64)}
-        outputs = model(**inputs)
-
-        symbolic_names = {0: 'batch_size', 1: 'max_seq_len'}
-        torch.onnx.export(model,                                            # model being run
-                    (inputs['input_ids'],                             # model input (or a tuple for multiple inputs)
-                    inputs['attention_mask'],
-                    inputs['token_type_ids']),                                         # model input (or a tuple for multiple inputs)
-                    onnx_model_path,                                # where to save the model (can be a file or file-like object)
-                    opset_version=11,                                 # the ONNX version to export the model to
-                    do_constant_folding=True,                         # whether to execute constant folding for optimization
-                    input_names=['input_ids',                         # the model's input names
-                                'input_mask',
-                                'segment_ids'],
-                    output_names=['output'],                    # the model's output names
-                    dynamic_axes={'input_ids': symbolic_names,        # variable length axes
-                                'input_mask' : symbolic_names,
-                                'segment_ids' : symbolic_names})
-        logger.info("ONNX Model exported to {0}".format(onnx_model_path))
-
-
 def load_and_cache_examples(args, task, tokenizer, evaluate=False):
     if args.local_rank not in [-1, 0] and not evaluate:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the othersv will use the cache
@@ -314,7 +291,9 @@ def perf_bench_torch(pt_model, inp, n_repeat):
 
 
 # define the tokenizer
-tokenizer = BertTokenizer.from_pretrained('bert-large-uncased')
+tokenizer = BertTokenizer.from_pretrained(
+    configs.output_dir, do_lower_case=configs.do_lower_case
+)
 
 quantized_output_dir = configs.output_dir + "quantized/"
 if not os.path.exists(quantized_output_dir):
@@ -322,7 +301,7 @@ if not os.path.exists(quantized_output_dir):
     quantized_model.save_pretrained(quantized_output_dir)
 
 
-batch_size = 8
+batch_size = configs.eval_batch_size
 inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
           torch.ones(batch_size, 128, dtype=torch.int64),
           torch.ones(batch_size, 128, dtype=torch.int64))
@@ -331,164 +310,136 @@ input_shapes = [("input_ids", (inputs[0].shape, "int64")),
                 ("attention_mask", (inputs[1].shape, "int64")),
                 ("token_type_ids", (inputs[2].shape, "int64"))]
 
-with torch.no_grad():
-    out = model(*inputs)
-
-
-class TraceWrapper(torch.nn.Module):
-    def __init__(self, model):
-        super().__init__()
-        self.model = model
-
-    def forward(self, *inp):
-        out = self.model(*inp)
-        return out["logits"]
-
-
-script_module = torch.jit.trace(TraceWrapper(model), inputs).eval()
+script_module = torch.jit.trace(quantized_model, inputs).eval()
 mod, params = relay.frontend.from_pytorch(script_module, input_shapes)
 
-# print(relay.transform.InferType()(mod))
-from tvm.relay.transform import InferType, ToMixedPrecision, mixed_precision
-mod = ToMixedPrecision("float16")(mod)
+# modify below for older cpus
+target = "llvm -mcpu=cascadelake"
+# target = "llvm"
 
-with open("bert_large.json", "w") as fo:
-    fo.write(tvm.ir.save_json(mod))
-with open("bert_large.params", "wb") as fo:
-    fo.write(relay.save_param_dict(params))
+with tvm.transform.PassContext(opt_level=3):
+    # opt_mod, opt_params = relay.optimize(mod, target="llvm -mcpu=cascadelake -libs=mkl", params=params)
+    # print(opt_mod["main"])
+    lib = relay.build(mod, target=target, params=params)
+    # graph, libs, params = relay.build(mod, target=target, params=params)
 
-# # modify below for older cpus
-# # target = "llvm -mcpu=cascadelake -libs=mkl"
-# # target = "llvm -mcpu=cascadelake"
-# target = "cuda"
+# # from tvm.contrib.debugger import debug_runtime
 
-# # opt_mod, _ = relay.optimize(mod, target=target, params=params)
-# # print(opt_mod)
+# # runtime = debug_runtime.create(graph, libs, tvm.cpu(0), "dump")
+runtime = tvm.contrib.graph_executor.GraphModule(lib["default"](tvm.cpu(0)))
 
-# with tvm.transform.PassContext(opt_level=3):
-#     opt_mod, opt_params = relay.optimize(mod, target=target, params=params)
-#     print(opt_mod["main"])
+runtime.set_input("input_ids", inputs[0].numpy())
+runtime.set_input("attention_mask", inputs[1].numpy())
+runtime.set_input("token_type_ids", inputs[2].numpy())
 
-#     lib = relay.build(mod, target=target, params=params)
-#     # graph, libs, params = relay.build(mod, target=target, params=params)
+runtime.run()
 
-# # # from tvm.contrib.debugger import debug_runtime
+n_repeat = 100
 
-# # # runtime = debug_runtime.create(graph, libs, tvm.cpu(0), "dump")
-# runtime = tvm.contrib.graph_executor.GraphModule(lib["default"](tvm.device(target, 0)))
+print("Running TVM time evaluator")
+ftimer = runtime.module.time_evaluator("run", tvm.cpu(0), number=1, repeat=n_repeat)
+prof_res = np.array(ftimer().results) * 1000  # multiply 1000 for converting to millisecond
+print(prof_res)
+print("TVM elapsed ms mean, median and std:", np.mean(prof_res), np.median(prof_res), np.std(prof_res))
 
-# runtime.set_input("input_ids", inputs[0].numpy())
-# runtime.set_input("attention_mask", inputs[1].numpy())
-# runtime.set_input("token_type_ids", inputs[2].numpy())
-
-# runtime.run()
-
-# # n_repeat = 100
-
-# # print("Running TVM time evaluator")
-# # ftimer = runtime.module.time_evaluator("run", tvm.cpu(0), number=1, repeat=n_repeat)
-# # prof_res = np.array(ftimer().results) * 1000  # multiply 1000 for converting to millisecond
-# # print(prof_res)
-# # print("TVM elapsed ms mean, median and std:", np.mean(prof_res), np.median(prof_res), np.std(prof_res))
-
-# # print("Running PyTorch benchmark")
-# # inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
-# #           torch.ones(batch_size, 128, dtype=torch.int64),
-# #           torch.ones(1, dtype=torch.int64),
-# #           torch.ones(batch_size, 128, dtype=torch.int64))
-# # perf_bench_torch(quantized_model, inputs, n_repeat)
+print("Running PyTorch benchmark")
+inputs = (torch.ones(batch_size, 128, dtype=torch.int64),
+          torch.ones(batch_size, 128, dtype=torch.int64),
+          torch.ones(1, dtype=torch.int64),
+          torch.ones(batch_size, 128, dtype=torch.int64))
+perf_bench_torch(quantized_model, inputs, n_repeat)
 
 
-# def evaluate_tvm(args, prefix=""):
-#     # Loop to handle MNLI double evaluation (matched, mis-matched)
-#     eval_task_names = (
-#         ("mnli", "mnli-mm") if args.task_name == "mnli" else (args.task_name,)
-#     )
-#     eval_outputs_dirs = (
-#         (args.output_dir, args.output_dir + "-MM")
-#         if args.task_name == "mnli"
-#         else (args.output_dir,)
-#     )
+def evaluate_tvm(args, prefix=""):
+    # Loop to handle MNLI double evaluation (matched, mis-matched)
+    eval_task_names = (
+        ("mnli", "mnli-mm") if args.task_name == "mnli" else (args.task_name,)
+    )
+    eval_outputs_dirs = (
+        (args.output_dir, args.output_dir + "-MM")
+        if args.task_name == "mnli"
+        else (args.output_dir,)
+    )
 
-#     results = {}
-#     for eval_task, eval_output_dir in zip(eval_task_names, eval_outputs_dirs):
-#         eval_dataset = load_and_cache_examples(
-#             args, eval_task, tokenizer, evaluate=True
-#         )
+    results = {}
+    for eval_task, eval_output_dir in zip(eval_task_names, eval_outputs_dirs):
+        eval_dataset = load_and_cache_examples(
+            args, eval_task, tokenizer, evaluate=True
+        )
 
-#         if not os.path.exists(eval_output_dir) and args.local_rank in [-1, 0]:
-#             os.makedirs(eval_output_dir)
+        if not os.path.exists(eval_output_dir) and args.local_rank in [-1, 0]:
+            os.makedirs(eval_output_dir)
 
-#         # Note that DistributedSampler samples randomly
-#         eval_sampler = SequentialSampler(eval_dataset)
-#         eval_dataloader = DataLoader(
-#             eval_dataset, sampler=eval_sampler, batch_size=args.eval_batch_size
-#         )
+        # Note that DistributedSampler samples randomly
+        eval_sampler = SequentialSampler(eval_dataset)
+        eval_dataloader = DataLoader(
+            eval_dataset, sampler=eval_sampler, batch_size=args.eval_batch_size
+        )
 
-#         # Eval!
-#         logger.info("***** Running evaluation {} *****".format(prefix))
-#         logger.info("  Num examples = %d", len(eval_dataset))
-#         logger.info("  Batch size = %d", args.eval_batch_size)
-#         # eval_loss = 0.0
-#         # nb_eval_steps = 0
-#         preds = None
-#         out_label_ids = None
-#         for batch in tqdm(eval_dataloader, desc="Evaluating"):
-#             batch = tuple(t.detach().cpu().numpy() for t in batch)
+        # Eval!
+        logger.info("***** Running evaluation {} *****".format(prefix))
+        logger.info("  Num examples = %d", len(eval_dataset))
+        logger.info("  Batch size = %d", args.eval_batch_size)
+        # eval_loss = 0.0
+        # nb_eval_steps = 0
+        preds = None
+        out_label_ids = None
+        for batch in tqdm(eval_dataloader, desc="Evaluating"):
+            batch = tuple(t.detach().cpu().numpy() for t in batch)
 
-#             runtime.set_input("input_ids", batch[0])
-#             runtime.set_input("attention_mask", batch[1])
-#             runtime.set_input("token_type_ids", batch[2])
+            runtime.set_input("input_ids", batch[0])
+            runtime.set_input("attention_mask", batch[1])
+            runtime.set_input("token_type_ids", batch[2])
 
-#             runtime.run()
+            runtime.run()
 
-#             logits = np.reshape(runtime.get_output(0).asnumpy(), (-1, 2))
-#             if preds is None:
-#                 preds = logits
-#                 # print(preds.shape)
-#                 out_label_ids = batch[3]
-#             else:
-#                 preds = np.append(preds, logits, axis=0)
-#                 out_label_ids = np.append(out_label_ids, batch[3], axis=0)
+            logits = np.reshape(runtime.get_output(0).asnumpy(), (-1, 2))
+            if preds is None:
+                preds = logits
+                # print(preds.shape)
+                out_label_ids = batch[3]
+            else:
+                preds = np.append(preds, logits, axis=0)
+                out_label_ids = np.append(out_label_ids, batch[3], axis=0)
 
-#         # print(preds.shap)
-#         # eval_loss = eval_loss / nb_eval_steps
-#         if args.output_mode == "classification":
-#             preds = np.argmax(preds, axis=1)
-#         elif args.output_mode == "regression":
-#             preds = np.squeeze(preds)
-#         # print(preds)
-#         # print(out_label_ids)
-#         result = compute_metrics(eval_task, preds, out_label_ids)
-#         results.update(result)
+        # print(preds.shap)
+        # eval_loss = eval_loss / nb_eval_steps
+        if args.output_mode == "classification":
+            preds = np.argmax(preds, axis=1)
+        elif args.output_mode == "regression":
+            preds = np.squeeze(preds)
+        # print(preds)
+        # print(out_label_ids)
+        result = compute_metrics(eval_task, preds, out_label_ids)
+        results.update(result)
 
-#         output_eval_file = os.path.join(eval_output_dir, prefix + "_eval_results.txt")
-#         with open(output_eval_file, "w") as writer:
-#             logger.info("***** Eval results {} *****".format(prefix))
-#             for key in sorted(result.keys()):
-#                 logger.info("  %s = %s", key, str(result[key]))
-#                 writer.write("%s = %s\n" % (key, str(result[key])))
+        output_eval_file = os.path.join(eval_output_dir, prefix + "_eval_results.txt")
+        with open(output_eval_file, "w") as writer:
+            logger.info("***** Eval results {} *****".format(prefix))
+            for key in sorted(result.keys()):
+                logger.info("  %s = %s", key, str(result[key]))
+                writer.write("%s = %s\n" % (key, str(result[key])))
 
-#     return results
-
-
-# def time_tvm_model_evaluation():
-#     eval_start_time = time.time()
-#     result = evaluate_tvm(configs, prefix="tvm")
-#     eval_end_time = time.time()
-#     eval_duration_time = eval_end_time - eval_start_time
-#     print(result)
-#     print("Evaluate total time (seconds): {0:.1f}".format(eval_duration_time))
+    return results
 
 
-# # time_tvm_model_evaluation()
+def time_tvm_model_evaluation():
+    eval_start_time = time.time()
+    result = evaluate_tvm(configs, prefix="tvm")
+    eval_end_time = time.time()
+    eval_duration_time = eval_end_time - eval_start_time
+    print(result)
+    print("Evaluate total time (seconds): {0:.1f}".format(eval_duration_time))
 
-# # PyTorch eval
-# if False:
-#     # # Evaluate the original FP32 BERT model
-#     # print("Evaluating PyTorch full precision accuracy and performance:")
-#     # time_model_evaluation(model, configs, tokenizer)
 
-#     # Evaluate the INT8 BERT model after the dynamic quantization
-#     print("Evaluating PyTorch quantization accuracy and performance:")
-#     time_model_evaluation(quantized_model, configs, tokenizer)
+time_tvm_model_evaluation()
+
+# PyTorch eval
+if True:
+    # # Evaluate the original FP32 BERT model
+    # print("Evaluating PyTorch full precision accuracy and performance:")
+    # time_model_evaluation(model, configs, tokenizer)
+
+    # Evaluate the INT8 BERT model after the dynamic quantization
+    print("Evaluating PyTorch quantization accuracy and performance:")
+    time_model_evaluation(quantized_model, configs, tokenizer)
