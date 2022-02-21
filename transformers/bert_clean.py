@@ -6,7 +6,7 @@ from transformers import BertForSequenceClassification
 import tvm
 from tvm import relay
 
-model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+model = BertForSequenceClassification.from_pretrained('bert-base-uncased', return_dict=False)
 
 batch_size = 1
 seq_len = 128
@@ -22,17 +22,7 @@ with torch.no_grad():
     out = model(*inputs)
 
 
-class TraceWrapper(torch.nn.Module):
-    def __init__(self, model):
-        super().__init__()
-        self.model = model
-
-    def forward(self, *inp):
-        out = self.model(*inp)
-        return out["logits"]
-
-
-script_module = torch.jit.trace(TraceWrapper(model), inputs).eval()
+script_module = torch.jit.trace(model, inputs).eval()
 mod, params = relay.frontend.from_pytorch(script_module, input_shapes)
 
 target = "llvm"
