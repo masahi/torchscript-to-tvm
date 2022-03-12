@@ -113,7 +113,40 @@ def resnet3d_test():
     run_on_models([model], inputs, "llvm")
 
 
-imagenet_test()
-segmentation_test()
-detection_test()
-resnet3d_test()
+def test_fcos():
+    fcos = models.detection.fcos_resnet50_fpn(pretrained=True).eval()
+
+    with torch.no_grad():
+        x = torch.rand(1, 3, 224, 224)
+        trace = torch.jit.trace(DetectionModelWrapper(fcos, "boxes"), x)
+        mod, params = relay.frontend.from_pytorch(trace, [("inp", x.shape)])
+        print(mod)
+
+    x = [torch.rand(3, 224, 224)]
+    predictions =  fcos(x)
+
+    print(predictions[0].keys())
+
+
+def test_vit():
+    x = torch.rand(1, 3, 224, 224)
+    vit = models.vit_b_16(pretrained=True).eval()
+    predictions1 = vit(x)
+
+    with torch.no_grad():
+        trace = torch.jit.trace(vit, x)
+        mod, params = relay.frontend.from_pytorch(trace, [("inp", x.shape)])
+        print(relay.transform.InferType()(mod))
+
+
+def test_convnext():
+    x = torch.rand(1, 3, 224, 224)
+    convnext = models.convnext_base(pretrained=True).eval()
+    predictions2 = convnext(x)
+
+    with torch.no_grad():
+        trace = torch.jit.trace(convnext, x)
+        mod, params = relay.frontend.from_pytorch(trace, [("inp", x.shape)])
+        print(relay.transform.InferType()(mod))
+
+test_convnext()

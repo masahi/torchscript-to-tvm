@@ -1,7 +1,8 @@
-import tvm
-import numpy as np
 import torch
 import torchvision
+
+import tvm
+import numpy as np
 import cv2
 from tvm.contrib.download import download
 from tvm import relay
@@ -68,7 +69,7 @@ print(relay.transform.InferType()(mod))
 target = "llvm"
 
 with tvm.transform.PassContext(opt_level=3):
-    vm_exec = relay.vm.compile(mod, target=target, params=params)
+    vm_exec = relay.vm.compile(mod, target=tvm.target.Target(target), params=params)
 
 dev = tvm.device(target, 0)
 vm = VirtualMachine(vm_exec, dev)
