@@ -36,13 +36,9 @@ class TraceWrapper(nn.Module):
         return dict_to_tuple(out[0])
 
 
-from yolort.models import yolov5l
+model = torch.hub.load("zhiqwang/yolov5-rt-stack:main", "yolov5l", pretrained=True)
 
-
-model_func = yolov5l(export_friendly=True, pretrained=True)
-
-
-model = TraceWrapper(model_func)
+model = TraceWrapper(model)
 
 model.eval()
 inp = torch.Tensor(np.random.uniform(0.0, 250.0, size=(1, 3, in_size, in_size)))
@@ -70,8 +66,7 @@ mod, params = relay.frontend.from_pytorch(script_module, shape_list)
 
 # print(relay.transform.InferType()(mod))
 
-target = "cuda"
-# target = "llvm"
+target = "llvm"
 
 with tvm.transform.PassContext(opt_level=3):
     vm_exec = relay.vm.compile(mod, target=target, params=params)
@@ -84,5 +79,5 @@ tvm_res = vm.run()
 with torch.no_grad():
     torch_res = model(torch.from_numpy(img))
 
-for i in range(3):
-    print(np.max(np.abs(torch_res[i].numpy() - tvm_res[i].asnumpy())))
+# for i in range(3):
+#     print(np.max(np.abs(torch_res[i].numpy() - tvm_res[i].asnumpy())))

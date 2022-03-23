@@ -154,7 +154,7 @@ runtime.run()
 for i in range(len(list_of_flows)):
     tvm_out = runtime.get_output(i).numpy()
     torch_out = list_of_flows[i].numpy()
-    np.testing.assert_allclose(tvm_out, torch_out, atol=1e-3, rtol=1e-3)
+    np.testing.assert_allclose(tvm_out, torch_out, atol=1e-2, rtol=1e-2)
 
 ####################################
 # The RAFT model outputs lists of predicted flows where each entry is a
