@@ -13,13 +13,15 @@ pipe = StableDiffusionPipeline.from_pretrained(
     # torch_dtype=torch.float16,
 )
 
+pipe.safety_checker = None
+
 # import time
 # t1 = time.time()
 # sample = pipe("Mt. Fuji in the style of Gauguin", num_inference_steps=1)["images"][0]
 # t2 = time.time()
 
-# sample.save("out.png")
-# print(t2 - t1)
+# # # sample.save("out.png")
+# # # print(t2 - t1)
 
 class UNetWrapper(torch.nn.Module):
     def __init__(self, model, timestep):
@@ -30,19 +32,27 @@ class UNetWrapper(torch.nn.Module):
     def forward(self, latent_model_input, text_embedding):
         return self.model(latent_model_input, self.timestep, text_embedding).sample
 
+
+class CLIPWrapper(torch.nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
+
+    def forward(self, input_ids):
+        return self.model(input_ids)[0]
+
 timestep = 50
 
 with torch.no_grad():
+    clip_traced = torch.jit.trace(CLIPWrapper(pipe.text_encoder), torch.ones(1, 77, dtype=torch.int64))
     unet_traced = torch.jit.trace(UNetWrapper(pipe.unet, timestep), [torch.randn(2, 4, 64, 64), torch.randn(2, 77, 768)])
     vae_dec_traced = torch.jit.trace(pipe.vae.decoder, torch.randn(1, 4, 64, 64))
 
 t1 = time.time()
+mod_clip, params_clip = relay.frontend.from_pytorch(clip_traced, [("text_input_ids", (1, 77))])
 mod_unet, params_unet = relay.frontend.from_pytorch(unet_traced, [("latent_model_input", (2, 4, 64, 64)), ("text_embedding", (2, 77, 768))])
+mod_vae_dec, params_vae_dec = relay.frontend.from_pytorch(vae_dec_traced, [("latents", (1, 4, 64, 64))])
 t2 = time.time()
 
-print(relay.transform.InferType()(mod_unet))
-print("UNet converted in ", t2 - t1)
-
-mod_vae_dec, params_vae_dec = relay.frontend.from_pytorch(vae_dec_traced, [("latents", (1, 4, 64, 64))])
-
-# print(relay.transform.InferType()(mod_vae_dec))
+print(t2 - t1)
+# print(relay.transform.InferType()(mod_unet))
