@@ -59,7 +59,7 @@ def compile_tvm(mod, params, target, tune=False):
         with tvm.transform.PassContext(opt_level=3):
             lib = relay.build(mod, target=target, params=params)
 
-    dev = tvm.device(target, 0)
+    dev = tvm.device(target.kind.name, 0)
     return tvm.contrib.graph_executor.GraphModule(lib["default"](dev))
 
 
@@ -113,16 +113,23 @@ class VAEDecoderTVMWrapper(torch.nn.Module):
         return from_dlpack(self.rt_mod.get_output(0))
 
 
-# opt_passes = tvm.transform.Sequential([
-#     relay.transform.SimplifyInference(),
-#     relay.transform.CombineParallelDense()
-# ])
+opt_passes = tvm.transform.Sequential([
+    relay.transform.SimplifyInference(),
+    relay.transform.SimplifyExpr(),
+    relay.transform.EliminateCommonSubexpr(),
+    relay.transform.CombineParallelDense(min_num_branches=3, to_batch=False)
+])
 
 mod_clip, params_clip = deserialize("clip")
 mod_unet, params_unet = deserialize("unet")
 mod_dec, params_dec = deserialize("dec")
 
 # print(relay.transform.InferType()(mod_unet))
+
+with tvm.transform.PassContext(opt_level=4):
+    mod_unet = opt_passes(mod_unet)
+    mod_clip = opt_passes(mod_clip)
+    mod_dec = opt_passes(mod_dec)
 
 target = tvm.target.Target("llvm")
 tune = False
