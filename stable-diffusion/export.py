@@ -11,8 +11,20 @@ from tvm import relay
 def serialize(mod, params, prefix):
     with open("{}.json".format(prefix), "w") as fo:
         fo.write(tvm.ir.save_json(mod))
-    with open("{}.params".format(prefix), "wb") as fo:
-        fo.write(relay.save_param_dict(params))
+
+    if prefix == "unet":
+        import pickle
+
+        params_dict = {}
+
+        for k, v in params.items():
+            params_dict[k] = v.numpy()
+
+        with open("unet.pkl", "wb") as f:
+            pickle.dump(params_dict, f)
+    else:
+        with open("{}.params".format(prefix), "wb") as fo:
+            fo.write(relay.save_param_dict(params))
 
 
 def export_models():

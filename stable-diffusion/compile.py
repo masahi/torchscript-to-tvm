@@ -1,4 +1,5 @@
 import time
+import pickle
 import tempfile
 from collections import namedtuple
 
@@ -14,8 +15,19 @@ from tvm import meta_schedule as ms
 def deserialize(prefix):
     with open("{}.json".format(prefix), "r") as fi:
         mod = tvm.ir.load_json(fi.read())
-    with open("{}.params".format(prefix), "rb") as fi:
-        params = relay.load_param_dict(fi.read())
+
+    if prefix == "unet":
+        params = {}
+
+        with open("unet.pkl", "rb") as f:
+            params_dict = pickle.load(f)
+            for k, v in params_dict.items():
+                params[k] = tvm.runtime.ndarray.array(v)
+    else:
+        with open("{}.params".format(prefix), "rb") as fi:
+            params = relay.load_param_dict(fi.read())
+
+
     return mod, params
 
 
