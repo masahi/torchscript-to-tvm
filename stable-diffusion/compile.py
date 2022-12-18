@@ -10,6 +10,7 @@ from torch.utils.dlpack import to_dlpack, from_dlpack
 import tvm
 from tvm import relay
 from tvm import meta_schedule as ms
+from tvm.tir.tensor_intrin.cuda import *
 
 
 def deserialize(prefix):
@@ -44,29 +45,34 @@ def compile_tvm(mod, params, target, tune=False):
             mod = seq(mod)
 
     if tune:
-        with tempfile.TemporaryDirectory() as work_dir:
+        work_dir = "work_unet"
+
+        if False:
             with ms.Profiler() as profiler:
                 database = ms.relay_integration.tune_relay(
                     mod=mod,
                     target=target,
                     work_dir=work_dir,
                     max_trials_global=20000,
-                    max_trials_per_task=8,
-                    num_trials_per_iter=8,
-                    strategy="replay-trace",
+                    num_trials_per_iter=64,
+                    max_trials_per_task=256,
+                    # strategy="replay-trace",
                     # max_trials_global=20000,
                     # num_trials_per_iter=64,
                     # max_trials_per_task=256,
-                    # strategy="evolutionary",
                     params=params,
-                )
-                lib = ms.relay_integration.compile_relay(
-                    database=database,
-                    mod=mod,
-                    target=target,
-                    params=params,
+                    module_equality="anchor-block",
                 )
             print(profiler.table())
+        else:
+            database = ms.database.JSONDatabase("{}/database_workload.json".format(work_dir), "{}/database_tuning_record.json".format(work_dir), module_equality="anchor-block")
+
+        lib = ms.relay_integration.compile_relay(
+            database=database,
+            mod=mod,
+            target=target,
+            params=params,
+        )
     else:
         with tvm.transform.PassContext(opt_level=3):
             lib = relay.build(mod, target=target, params=params)
@@ -97,7 +103,8 @@ class UNetTVMWrapper(torch.nn.Module):
             "text_embedding", convert_to_ndarray(encoder_hidden_states)
         )
         self.rt_mod.run()
-        return self.unet_result_type(from_dlpack(self.rt_mod.get_output(0)))
+        # return self.unet_result_type(from_dlpack(self.rt_mod.get_output(0)))
+        return self.unet_result_type(torch.from_numpy(self.rt_mod.get_output(0).numpy()))
 
 
 class CLIPTVMWrapper(torch.nn.Module):
@@ -136,28 +143,28 @@ mod_clip, params_clip = deserialize("clip")
 mod_unet, params_unet = deserialize("unet")
 mod_dec, params_dec = deserialize("dec")
 
-# print(relay.transform.InferType()(mod_unet))
-
 with tvm.transform.PassContext(opt_level=4):
     mod_unet = opt_passes(mod_unet)
     mod_clip = opt_passes(mod_clip)
     mod_dec = opt_passes(mod_dec)
 
-target = tvm.target.Target("llvm")
+#print(relay.transform.InferType()(mod_unet))
+
+# target = tvm.target.Target("llvm -mcpu=cascadelake")
+# tune = False
+
+target = tvm.target.Target("nvidia/geforce-rtx-3070")
+# target = tvm.target.Target("rocm")
 tune = False
 
-# target = tvm.target.Target("nvidia/geforce-rtx-3070")
-# target = tvm.target.Target("rocm")
-# tune = True
+rt_mod_unet = compile_tvm(mod_unet, params_unet, target, tune)
+rt_mod_clip = compile_tvm(mod_clip, params_clip, target, tune)
+rt_mod_dec = compile_tvm(mod_dec, params_dec, target, tune)
 
 pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 
-if "llvm" not in target.kind.name:
-    pipe.to("cuda")
-
-rt_mod_clip = compile_tvm(mod_clip, params_clip, target, tune)
-rt_mod_unet = compile_tvm(mod_unet, params_unet, target, tune)
-rt_mod_dec = compile_tvm(mod_dec, params_dec, target, tune)
+# if "llvm" not in target.kind.name:
+#     pipe.to("cuda")
 
 pipe.text_encoder = CLIPTVMWrapper(
     rt_mod_clip, pipe.text_encoder.config, pipe.text_encoder.device
