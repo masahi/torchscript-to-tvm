@@ -17,17 +17,7 @@ def deserialize(prefix):
     with open("{}.json".format(prefix), "r") as fi:
         mod = tvm.ir.load_json(fi.read())
 
-    if prefix == "unet":
-        params = {}
-
-        with open("unet.pkl", "rb") as f:
-            params_dict = pickle.load(f)
-            for k, v in params_dict.items():
-                params[k] = tvm.runtime.ndarray.array(v)
-    else:
-        with open("{}.params".format(prefix), "rb") as fi:
-            params = relay.load_param_dict(fi.read())
-
+    params = tvm.runtime.load_param_dict_from_file("{}.params".format(prefix))
 
     return mod, params
 

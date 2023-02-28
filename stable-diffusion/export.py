@@ -12,19 +12,7 @@ def serialize(mod, params, prefix):
     with open("{}.json".format(prefix), "w") as fo:
         fo.write(tvm.ir.save_json(mod))
 
-    if prefix == "unet":
-        import pickle
-
-        params_dict = {}
-
-        for k, v in params.items():
-            params_dict[k] = v.numpy()
-
-        with open("unet.pkl", "wb") as f:
-            pickle.dump(params_dict, f)
-    else:
-        with open("{}.params".format(prefix), "wb") as fo:
-            fo.write(relay.save_param_dict(params))
+    tvm.runtime.save_param_dict_to_file(params, "{}.params".format(prefix))
 
 
 def export_models():
@@ -60,9 +48,6 @@ def export_models():
         )
         vae_dec_traced = torch.jit.trace(pipe.vae.decoder, torch.randn(1, 4, 64, 64))
 
-    mod_clip, params_clip = relay.frontend.from_pytorch(
-        clip_traced, [("text_input_ids", (1, 77))]
-    )
     mod_unet, params_unet = relay.frontend.from_pytorch(
         unet_traced,
         [
@@ -71,12 +56,17 @@ def export_models():
             ("text_embedding", (2, 77, 768)),
         ],
     )
+
+    serialize(mod_unet, params_unet, "unet")
+
+    mod_clip, params_clip = relay.frontend.from_pytorch(
+        clip_traced, [("text_input_ids", (1, 77))]
+    )
     mod_vae_dec, params_vae_dec = relay.frontend.from_pytorch(
         vae_dec_traced, [("latents", (1, 4, 64, 64))]
     )
 
     serialize(mod_clip, params_clip, "clip")
-    serialize(mod_unet, params_unet, "unet")
     serialize(mod_vae_dec, params_vae_dec, "dec")
 
 
