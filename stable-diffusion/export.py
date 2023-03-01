@@ -12,7 +12,8 @@ def serialize(mod, params, prefix):
     with open("{}.json".format(prefix), "w") as fo:
         fo.write(tvm.ir.save_json(mod))
 
-    tvm.runtime.save_param_dict_to_file(params, "{}.params".format(prefix))
+    with open("{}.params".format(prefix), "wb") as fo:
+        fo.write(tvm.runtime.save_param_dict(params))
 
 
 def export_models():
