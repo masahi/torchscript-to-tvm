@@ -84,7 +84,7 @@ class UNetTVMWrapper(torch.nn.Module):
         self.unet_result_type = namedtuple("UNetResult", "sample")
         self.device = torch_device
 
-    def forward(self, latent_model_input, timestep, encoder_hidden_states):
+    def forward(self, latent_model_input, timestep, encoder_hidden_states, cross_attention_kwargs=None):
         self.rt_mod.set_input(
             "latent_model_input", convert_to_ndarray(latent_model_input)
         )
@@ -98,11 +98,12 @@ class UNetTVMWrapper(torch.nn.Module):
 
 
 class CLIPTVMWrapper(torch.nn.Module):
-    def __init__(self, rt_mod, config, torch_device):
+    def __init__(self, rt_mod, config, torch_device, dtype):
         super().__init__()
         self.rt_mod = rt_mod
         self.config = config
         self.device = torch_device
+        self.dtype = dtype
 
     def forward(self, input_ids, attention_mask):
         assert attention_mask is None
@@ -157,7 +158,7 @@ pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 #     pipe.to("cuda")
 
 pipe.text_encoder = CLIPTVMWrapper(
-    rt_mod_clip, pipe.text_encoder.config, pipe.text_encoder.device
+    rt_mod_clip, pipe.text_encoder.config, pipe.text_encoder.device, pipe.text_encoder.dtype
 )
 pipe.unet = UNetTVMWrapper(
     rt_mod_unet, pipe.unet.config, pipe.unet.in_channels, pipe.unet.device
